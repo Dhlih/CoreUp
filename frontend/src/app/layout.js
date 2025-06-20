@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from  "../component/secctions/navbar"
-import Footer from  "../component/secctions/footer"
+import Navbar from "../components/sections/Navbar.jsx";
+import Footer from "../components/sections/Footer.jsx";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'CoreUp',
+  title: "CoreUp",
   description: "Made with love for learners.",
 };
 
@@ -24,7 +24,6 @@ export default function RootLayout({ children }) {
       <body>
         <Navbar /> {/* Akan muncul di semua halaman */}
         <main>{children}</main>
-        <Footer />
       </body>
     </html>
   );

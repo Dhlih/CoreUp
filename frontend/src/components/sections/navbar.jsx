@@ -1,24 +1,23 @@
-'use client';
-import { useEffect, useState } from 'react';
-import ModalLogin from '../ui/modal_login';
-import ModalDaftar from '../ui/modal_register';
-
+"use client";
+import { useEffect, useState } from "react";
+import ModalDaftar from "../modal_register";
+import ModalLogin from "../modal_login";
 
 export default function Navbar() {
   const [hasMounted, setHasMounted] = useState(false); // 👈 tambahan
   const [token, setToken] = useState(null);
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [photo, setPhoto] = useState('/images/makima.webp');
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [photo, setPhoto] = useState("/images/makima.webp");
   useEffect(() => {
     setHasMounted(true); // client sudah mount
 
-    const savedToken = localStorage.getItem('token');
+    const savedToken = localStorage.getItem("token");
     if (savedToken) {
       setToken(savedToken);
 
       // Ambil data profil
-      fetch('https://backend-itfest-production.up.railway.app/api/profile', {
+      fetch("https://backend-itfest-production.up.railway.app/api/profile", {
         headers: {
           Authorization: savedToken,
         },
@@ -26,8 +25,8 @@ export default function Navbar() {
         .then((res) => res.json())
         .then((data) => {
           setName(data.data.name);
-          setUsername(data.data.email.split('@')[0]);
-          setPhoto('/images/makima.webp');
+          setUsername(data.data.email.split("@")[0]);
+          setPhoto("/images/makima.webp");
         });
     }
   }, []);
@@ -68,13 +67,13 @@ export default function Navbar() {
           <ModalDaftar />
           <button
             className="btn bg-[#131F24] text-white shadow-md hover:brightness-110 transition text-sm"
-            onClick={() => document.getElementById('modal_login').showModal()}
+            onClick={() => document.getElementById("modal_login").showModal()}
           >
             Login
           </button>
           <button
             className="btn btn-primary text-white shadow-md hover:opacity-90 transition text-sm"
-            onClick={() => document.getElementById('modal_daftar').showModal()}
+            onClick={() => document.getElementById("modal_daftar").showModal()}
           >
             Register
           </button>
