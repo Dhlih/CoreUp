@@ -28,7 +28,10 @@ const ModulCard = ({ title, id, setIsDeleted }) => {
     <div className="bg-[#0F171B] rounded-xl py-8 px-10 ">
       {/* top side */}
       <div className="flex md:flex-row flex-col md:items-center justify-between ">
-        <Link href="/" className="max-w-[65%] text-2xl font-semibold ">
+        <Link
+          href={`/mycourses/${title}`}
+          className="max-w-[65%] text-2xl font-semibold "
+        >
           <h3>{title}</h3>
         </Link>
         {/*  */}
@@ -63,12 +66,15 @@ const ModulCard = ({ title, id, setIsDeleted }) => {
         </div>
 
         <div className="flex items-center md:space-x-[2rem] space-x-[1.5rem] ">
-          <button
-            className="btn bg-[#3B82F6] md:p-6 p-4"
-            onClick={() => console.log(id)}
-          >
-            Lanjutkan
-          </button>
+          <Link href={`/mycourses/${title}`}>
+            <button
+              className="btn bg-[#3B82F6] md:p-6 p-4"
+              onClick={() => console.log(id)}
+            >
+              Lanjutkan
+            </button>
+          </Link>
+
           <button
             className="btn bg-[#F43F5E] md:p-6 p-4"
             onClick={deleteCourse}

@@ -18,7 +18,7 @@ const MyCourse = () => {
         {
           headers: {
             Authorization:
-              "Bearer 5|LZWg36UogSJObeor7Fc5vw3PWEDsnRGACoQ8WxQy1a893890",
+              "Bearer 7|R003ndpqOYcaW3tm73VYlX0vtWr50OkucMRQHco1581dbb1c",
             "Content-Type": "application/json",
           },
         }
