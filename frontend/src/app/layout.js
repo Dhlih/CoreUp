@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Navbar /> {/* Akan muncul di semua halaman */}
-        <main>{children}</main>
+        <main className="pt-[5rem]">{children}</main>
       </body>
     </html>
   );

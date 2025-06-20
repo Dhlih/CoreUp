@@ -1,7 +1,9 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import ModalDaftar from "../modal_register";
 import ModalLogin from "../modal_login";
+import Link from "next/link";
 
 export default function Navbar() {
   const [hasMounted, setHasMounted] = useState(false); // 👈 tambahan
@@ -9,6 +11,7 @@ export default function Navbar() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [photo, setPhoto] = useState("/images/makima.webp");
+
   useEffect(() => {
     setHasMounted(true); // client sudah mount
 
@@ -35,50 +38,64 @@ export default function Navbar() {
   if (!hasMounted) return null;
 
   return (
-    <div className="navbar fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-lg shadow-md border-b border-white/20 px-10">
-      <div className="flex-1">
-        <a className="text-xl font-bold text-white">CoreUp</a>
-      </div>
+    <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg py-[1rem] ">
+      {/* left side */}
+      <div className="max-w-[1250px] w-full mx-auto  flex items-center justify-between ">
+        <div className="flex-1">
+          <a className="text-2xl font-bold text-white" href="/">
+            CoreUp
+          </a>
+        </div>
 
-      {token ? (
-        <div className="flex items-center gap-4">
-          <ul className="hidden md:flex gap-6 text-sm font-medium text-white">
-            <li className="cursor-pointer hover:text-blue-400">Leaderboard</li>
-            <li className="cursor-pointer hover:text-blue-400">My Course</li>
-          </ul>
-          <button className="btn btn-primary text-white text-sm font-medium px-4 py-2 rounded">
-            Create
-          </button>
-          <div className="flex items-center gap-2">
-            <img
-              src={photo}
-              alt="profile"
-              className="w-10 h-10 rounded-full object-cover border border-white/20"
-            />
-            <div className="hidden md:block">
-              <p className="font-semibold text-sm leading-tight">{name}</p>
-              <p className="text-xs text-gray-400">@{username}</p>
+        {/* right side */}
+        {token ? (
+          <div className="flex items-center space-x-[3rem]">
+            <ul className="hidden md:flex space-x-[3rem] text-sm font-medium text-white">
+              <Link
+                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold text-lg"
+                href="/leaderboard"
+              >
+                Leaderboard
+              </Link>
+              <Link
+                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold text-lg"
+                href="/my-courses"
+              >
+                My Courses
+              </Link>
+            </ul>
+            <button className="btn btn-primary text-white text-base font-medium p-5 rounded-lg bg-[#3B82F6] shadow-none">
+              Create
+            </button>
+            <div className="flex items-center ">
+              <img
+                src={photo}
+                alt="profile"
+                className="w-12 h-12 rounded-full object-cover border border-white/20"
+              />
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <ModalLogin />
-          <ModalDaftar />
-          <button
-            className="btn bg-[#131F24] text-white shadow-md hover:brightness-110 transition text-sm"
-            onClick={() => document.getElementById("modal_login").showModal()}
-          >
-            Login
-          </button>
-          <button
-            className="btn btn-primary text-white shadow-md hover:opacity-90 transition text-sm"
-            onClick={() => document.getElementById("modal_daftar").showModal()}
-          >
-            Register
-          </button>
-        </div>
-      )}
+        ) : (
+          <div className="flex gap-2">
+            <ModalLogin />
+            <ModalDaftar />
+            <button
+              className="btn bg-[#131F24] text-white shadow-md hover:brightness-110 transition text-sm"
+              onClick={() => document.getElementById("modal_login").showModal()}
+            >
+              Login
+            </button>
+            <button
+              className="btn btn-primary text-white shadow-md hover:opacity-90 transition text-sm"
+              onClick={() =>
+                document.getElementById("modal_daftar").showModal()
+              }
+            >
+              Register
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

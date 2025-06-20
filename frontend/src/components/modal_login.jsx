@@ -49,7 +49,7 @@ export default function ModalLogin() {
         document.getElementById("modal_login")?.close();
 
         // Routing ke halaman create_course
-        router.push("/create_course");
+        router.push("/create-course");
       } else {
         alert(data.message || "Email atau password salah 😢");
       }

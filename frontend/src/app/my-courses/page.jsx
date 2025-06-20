@@ -43,7 +43,7 @@ const MyCourse = () => {
   );
 
   return (
-    <div className="max-w-[1350px] mx-auto mt-[5rem] md:px-0 px-[2rem] pb-[5rem]">
+    <div className="max-w-[1250px] mx-auto mt-[5rem] md:px-0 px-[2rem] pb-[5rem]">
       {isDeleted && (
         <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
           <Alert text="Berhasil dihapus" />
@@ -54,12 +54,12 @@ const MyCourse = () => {
         <h1 className="font-bold text-4xl ">My Course</h1>
 
         {/* input field */}
-        <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3 md:max-w-[300px] max-w-[200px] ">
+        <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3   ">
           <IoIosSearch className="text-xl opacity-60" />
           <input
             type="text"
             placeholder="Cari kursus saya..."
-            className="rounded-full outline-none bg-transparent text-white w-full"
+            className="rounded-full outline-none bg-transparent text-white "
             onChange={(evt) => setCourseTitle(evt.target.value)}
             value={courseTitle}
           />

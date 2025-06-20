@@ -29,10 +29,10 @@ const ModulCard = ({ title, id, setIsDeleted }) => {
       {/* top side */}
       <div className="flex md:flex-row flex-col md:items-center justify-between ">
         <Link
-          href={`/mycourses/${title}`}
+          href={`/my-courses/${title}/`}
           className="max-w-[65%] text-2xl font-semibold "
         >
-          <h3>{title}</h3>
+          <h3 className="hover:text-white/70">{title}</h3>
         </Link>
         {/*  */}
         <div className="flex items-center space-x-[3rem] md:text-xl text-lg md:mt-0 mt-[1rem]">
@@ -68,7 +68,7 @@ const ModulCard = ({ title, id, setIsDeleted }) => {
         <div className="flex items-center md:space-x-[2rem] space-x-[1.5rem] ">
           <Link href={`/mycourses/${title}`}>
             <button
-              className="btn bg-[#3B82F6] md:p-6 p-4"
+              className="btn bg-[#3B82F6] md:p-6 p-4 hover:bg-[#3B82F6]/70"
               onClick={() => console.log(id)}
             >
               Lanjutkan
@@ -76,7 +76,7 @@ const ModulCard = ({ title, id, setIsDeleted }) => {
           </Link>
 
           <button
-            className="btn bg-[#F43F5E] md:p-6 p-4"
+            className="btn bg-[#F43F5E] md:p-6 p-4 hover:bg-[#F43F5E]/70"
             onClick={deleteCourse}
           >
             Hapus
