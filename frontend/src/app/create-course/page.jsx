@@ -83,9 +83,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen text-white p-6 pt-20">
+    <div className="min-h-screen text-white py-[3rem] px-20">
       {loading ? (
-        <div className="flex flex-col justify-center items-center h-screen space-y-4">
+        <div className="flex flex-col h-screen space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
           <p className="text-white text-sm font-medium">Create a course..</p>
         </div>
@@ -103,7 +103,7 @@ export default function Dashboard() {
             placeholder="Enter topic..."
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            className="w-full px-4 py-3 rounded-md bg-[#1E293B] placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 rounded-lg bg-[#0F171B] placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           />
 
           <input
@@ -111,13 +111,13 @@ export default function Dashboard() {
             placeholder="Enter language..."
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="w-full px-4 py-3 rounded-md bg-[#1E293B] placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 rounded-lg bg-[#0F171B] placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
           />
 
           <select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
-            className="w-full px-4 py-3 rounded-md bg-[#1E293B] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 rounded-lg bg-[#0F171B] text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             required
           >
             <option value="" disabled>
@@ -128,13 +128,15 @@ export default function Dashboard() {
             <option value="advanced">Advanced</option>
           </select>
 
-          <button
-            onClick={handleSubmit}
-            className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition font-semibold"
-            disabled={loading}
-          >
-            Create Roadmap
-          </button>
+          <div className="flex justify-end">
+            <button
+              onClick={handleSubmit}
+              className="btn p-5 bg-[#3B82F6] mt-[0.5rem] text-white rounded-md hover:bg-[#3B82F6]/70 transition font-semibold text-sm"
+              disabled={loading}
+            >
+              Create Roadmap
+            </button>
+          </div>
         </div>
       )}
     </div>

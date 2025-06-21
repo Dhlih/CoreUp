@@ -11,11 +11,9 @@ export default function CoursePage() {
   const [loading, setLoading] = useState(true);
 
   const params = useParams();
-  const courseName = decodeURIComponent(params["course-name"]);
+  const courseTitle = decodeURIComponent(params["course-title"]);
 
   useEffect(() => {
-    console.log(courseName);
-
     const fetchCourse = async () => {
       const session = await getSession();
 
@@ -32,7 +30,7 @@ export default function CoursePage() {
         console.log("courses :", courses);
 
         const matchCourse = courses.find(
-          (course) => course.title === courseName
+          (course) => course.title === courseTitle
         );
 
         const data = await fetch(
@@ -88,7 +86,7 @@ export default function CoursePage() {
               />
 
               <Link
-                href={`/my-courses/${course.title}/${module.title}/${module.id}/${material.id}`}
+                href={`/my-courses/${course.title}/${module.id}/${material.id}`}
               >
                 <p className="font-medium hover:text-white/70">
                   {material?.title}

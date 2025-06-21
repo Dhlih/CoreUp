@@ -1,4 +1,5 @@
 import Footer from "./Footer";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -20,7 +21,11 @@ export default function Hero() {
               level up with a gamified system that makes learning more
               addictive!
             </p>
-            <button className="btn btn-primary shadow-none">Learn Now →</button>
+            <Link href="/create-course">
+              <button className="btn bg-[#3B82F6] shadow-none rounded-lg">
+                Learn Now →
+              </button>
+            </Link>
           </div>
         </div>
       </div>
