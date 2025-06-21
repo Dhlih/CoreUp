@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createSession } from "@/lib/session";
 
 export default function ModalLogin() {
   const router = useRouter();
@@ -37,12 +38,7 @@ export default function ModalLogin() {
 
       if (res.ok) {
         // Simpan token jika ada
-        if (data.access_token && data.token_type) {
-          localStorage.setItem(
-            "token",
-            `${data.token_type} ${data.access_token}`
-          );
-        }
+        await createSession(data.access_token);
 
         // Reset form dan tutup modal
         setFormData({ email: "", password: "" });

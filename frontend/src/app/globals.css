@@ -1,11 +1,13 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* Root CSS Variables */
 :root {
-  --background: #ffffff;
+  --background: #131f24; /* ✅ Ubah sesuai permintaan */
   --foreground: #171717;
 }
 
+/* Optional: support custom inline theming */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -13,6 +15,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark mode preference override */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -20,18 +23,16 @@
   }
 }
 
+/* Base styles */
 body {
-  /* background: var(--background); */
+  background: #131f24; /* ✅ Diubah dari #212c31 */
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* tambahkan ke src/styles/globals.css */
-/* src/styles/globals.css atau tailwind entry kamu */
+/* Custom modal backdrop style (DaisyUI/Headless UI compatibility) */
 .modal::backdrop {
   @apply backdrop-blur-sm bg-black/40;
 }
 
-.btn {
-  border-radius: 8px;
-}
+/* Button base style */

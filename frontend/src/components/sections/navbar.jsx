@@ -4,43 +4,43 @@ import { useEffect, useState } from "react";
 import ModalDaftar from "../modal_register";
 import ModalLogin from "../modal_login";
 import Link from "next/link";
+import { getSession } from "@/lib/session";
 
 export default function Navbar() {
   const [hasMounted, setHasMounted] = useState(false); // 👈 tambahan
-  const [token, setToken] = useState(null);
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [session, setSession] = useState(null);
   const [photo, setPhoto] = useState("/images/makima.webp");
 
   useEffect(() => {
     setHasMounted(true); // client sudah mount
 
-    const savedToken = localStorage.getItem("token");
-    if (savedToken) {
-      setToken(savedToken);
+    const fetchUserData = async () => {
+      const session = await getSession();
 
-      // Ambil data profil
-      fetch("https://backend-itfest-production.up.railway.app/api/profile", {
-        headers: {
-          Authorization: savedToken,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setName(data.data.name);
-          setUsername(data.data.email.split("@")[0]);
-          setPhoto("/images/makima.webp");
-        });
-    }
+      if (session) {
+        // Ambil data profil
+        fetch("https://backend-itfest-production.up.railway.app/api/user", {
+          headers: {
+            Authorization: session.value,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setPhoto("/images/makima.webp");
+            setSession(session);
+          });
+      }
+    };
+
+    fetchUserData();
   }, []);
 
-  // ⛔ jangan render apapun sebelum mounting
   if (!hasMounted) return null;
 
   return (
-    <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg py-[1rem] ">
+    <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg py-[0.8rem] ">
       {/* left side */}
-      <div className="max-w-[1250px] w-full mx-auto  flex items-center justify-between ">
+      <div className="w-full px-20 flex items-center justify-between ">
         <div className="flex-1">
           <a className="text-2xl font-bold text-white" href="/">
             CoreUp
@@ -48,25 +48,30 @@ export default function Navbar() {
         </div>
 
         {/* right side */}
-        {token ? (
+        {session ? (
           <div className="flex items-center space-x-[3rem]">
             <ul className="hidden md:flex space-x-[3rem] text-sm font-medium text-white">
               <Link
-                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold text-lg"
+                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
                 href="/leaderboard"
               >
                 Leaderboard
               </Link>
               <Link
-                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold text-lg"
+                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold "
                 href="/my-courses"
               >
                 My Courses
               </Link>
             </ul>
-            <button className="btn btn-primary text-white text-base font-medium p-5 rounded-lg bg-[#3B82F6] shadow-none">
+
+            <Link
+              className="btn btn-primary text-white  font-medium p-5 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none text-sm"
+              href="/create-course"
+            >
               Create
-            </button>
+            </Link>
+
             <div className="flex items-center ">
               <img
                 src={photo}

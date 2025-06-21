@@ -43,7 +43,7 @@ const MyCourse = () => {
   );
 
   return (
-    <div className="max-w-[1250px] mx-auto mt-[5rem] md:px-0 px-[2rem] pb-[5rem]">
+    <div className="h-screen px-20 py-[3rem]">
       {isDeleted && (
         <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
           <Alert text="Berhasil dihapus" />
@@ -51,15 +51,15 @@ const MyCourse = () => {
       )}
 
       <div className="flex items-center justify-between">
-        <h1 className="font-bold text-4xl ">My Course</h1>
+        <h1 className="font-bold text-3xl ">My Courses</h1>
 
         {/* input field */}
-        <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3   ">
-          <IoIosSearch className="text-xl opacity-60" />
+        <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3  text-sm  ">
+          <IoIosSearch className="opacity-60" />
           <input
             type="text"
             placeholder="Cari kursus saya..."
-            className="rounded-full outline-none bg-transparent text-white "
+            className="rounded-full outline-none bg-transparent text-white text-xs"
             onChange={(evt) => setCourseTitle(evt.target.value)}
             value={courseTitle}
           />
@@ -67,7 +67,7 @@ const MyCourse = () => {
       </div>
 
       {/* main content */}
-      <div className="mt-[3rem] space-y-[2.5rem]">
+      <div className="mt-[2rem] space-y-[2.5rem]">
         {filteredCourses.map((course, idx) => (
           <ModulCard
             title={course.title}
