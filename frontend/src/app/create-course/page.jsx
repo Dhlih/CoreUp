@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSession } from "@/lib/session";
 
-export default function Dashboard() {
+export default function CreateCourse() {
   const router = useRouter();
 
   const [topic, setTopic] = useState("");
@@ -39,13 +39,14 @@ export default function Dashboard() {
   }, []);
 
   const handleSubmit = async () => {
+    const session = await getSession();
+
     if (!topic || !level || !language) {
       alert("Harap isi semua field.");
       return;
     }
 
     setLoading(true);
-    const token = localStorage.getItem("token");
 
     try {
       const response = await fetch(
@@ -54,7 +55,7 @@ export default function Dashboard() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            Authorization: session.value,
           },
           body: JSON.stringify({ topic, level, language }),
         }
@@ -64,14 +65,10 @@ export default function Dashboard() {
       console.log("📦 Data respons dari server:", data);
 
       if (response.ok) {
-        if (data.course?.id) {
-          localStorage.setItem("course_id", data.course.id);
-        }
-
         setTopic("");
         setLevel("");
         setLanguage("");
-        router.push("/course");
+        router.push(`/my-courses/${data.course.title}`);
       } else {
         alert(`❌ Gagal: ${data.message || "Terjadi kesalahan pada data."}`);
       }
@@ -83,14 +80,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen text-white py-[3rem] px-20">
+    <div className="py-[3rem] text-white md:px-20 px-[1.5rem] ">
       {loading ? (
-        <div className="flex flex-col h-screen space-y-4">
+        <div className="flex flex-col  space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
           <p className="text-white text-sm font-medium">Create a course..</p>
         </div>
       ) : (
-        <div className="max-w-xl mx-auto space-y-6 mt-12">
+        <div className="w-full max-w-xl md:mx-auto space-y-6 ">
           <div>
             <p className="text-lg md:text-xl font-medium mb-1">Hello {name}!</p>
             <h1 className="text-2xl md:text-4xl font-bold">
@@ -117,7 +114,7 @@ export default function Dashboard() {
           <select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-[#0F171B] text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full px-4 py-4 rounded-lg bg-[#0F171B] text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             required
           >
             <option value="" disabled>
@@ -131,7 +128,7 @@ export default function Dashboard() {
           <div className="flex justify-end">
             <button
               onClick={handleSubmit}
-              className="btn p-5 bg-[#3B82F6] mt-[0.5rem] text-white rounded-md hover:bg-[#3B82F6]/70 transition font-semibold text-sm"
+              className="btn py-6 px-4 bg-[#3B82F6] mt-[0.5rem] text-white rounded-md hover:bg-[#3B82F6]/70 transition font-semibold text-sm"
               disabled={loading}
             >
               Create Roadmap

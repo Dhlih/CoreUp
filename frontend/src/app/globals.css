@@ -25,7 +25,7 @@
 
 /* Base styles */
 body {
-  background: #131f24; /* ✅ Diubah dari #212c31 */
+  background: #131f24;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }

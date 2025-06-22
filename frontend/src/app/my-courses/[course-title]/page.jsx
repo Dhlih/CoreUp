@@ -58,44 +58,51 @@ export default function CoursePage() {
 
   return (
     <div className="min-h-screen  text-white py-[3.5rem] px-20">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 max-w-[65%]">
         <h1 className="text-4xl font-bold">{course?.title}</h1>
       </div>
-      <p className=" mb-4 max-w-[75%] opacity-80">{course?.description}</p>
+      <p className=" mb-4 max-w-[75%] opacity-80 text-lg">
+        {course?.description}
+      </p>
 
-      {course?.modules?.map((module, index) => (
-        <div key={module?.id}>
-          <div className="flex justify-between items-center my-[2rem] mb-[1.5rem]">
-            <h2 className="text-xl font-semibold ">{module?.title}</h2>
-
-            <button className="btn bg-blue-500 text-white px-4 py-2 rounded-full flex items-center space-x-[0.1rem] ">
-              <MdOutlineAssignment />
-              <span>Quiz</span>
-            </button>
-          </div>
-
-          {module.materials.map((material) => (
-            <div
-              key={material?.id}
-              className="bg-[#0F171B] p-4 rounded-[10px] mb-[1.5rem] flex items-center"
-            >
-              <img
-                src="/images/icon_book.webp"
-                alt="Icon Buku"
-                className="w-6 h-6 mr-4"
-              />
+      <div className="space-y-[3rem]">
+        {course?.modules?.map((module, index) => (
+          <div key={module?.id}>
+            <div className="flex justify-between items-center my-[2rem] mb-[1.5rem]">
+              <h2 className="text-xl font-semibold ">{module?.title}</h2>
 
               <Link
-                href={`/my-courses/${course.title}/${module.id}/${material.id}`}
+                className="btn bg-blue-500 text-white px-4 py-2 rounded-full flex items-center space-x-[0.1rem] "
+                href={`/my-courses/${course.title}/${module.id}/quiz`}
               >
-                <p className="font-medium hover:text-white/70">
-                  {material?.title}
-                </p>
+                <MdOutlineAssignment />
+                <span>Quiz</span>
               </Link>
             </div>
-          ))}
-        </div>
-      ))}
+
+            {module.materials.map((material) => (
+              <div
+                key={material?.id}
+                className="bg-[#0F171B] p-4 rounded-[10px] mb-[1.5rem] flex items-center"
+              >
+                <img
+                  src="/images/icon_book.webp"
+                  alt="Icon Buku"
+                  className="w-6 h-6 mr-4"
+                />
+
+                <Link
+                  href={`/my-courses/${course.title}/${module.id}/${material.id}`}
+                >
+                  <p className="font-medium hover:text-white/70">
+                    {material?.title}
+                  </p>
+                </Link>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

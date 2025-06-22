@@ -4,7 +4,7 @@ import { getSession } from "@/lib/session";
 import Link from "next/link";
 import axios from "axios";
 
-const ModulCard = ({ title, id, setIsDeleted }) => {
+const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
   const deleteCourse = async () => {
     const session = await getSession();
 
@@ -38,7 +38,7 @@ const ModulCard = ({ title, id, setIsDeleted }) => {
         <div className="flex items-center space-x-[3rem] md:text-xl text-lg md:mt-0 mt-[1rem]">
           <div className="flex items-center space-x-[0.5rem] text-base">
             <LuBookMinus />
-            <span>5 modul</span>
+            <span>{moduleAmount} Modul</span>
           </div>
           {/* <div className="flex items-center space-x-[1rem]">
             <LuClock5 />

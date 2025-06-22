@@ -8,6 +8,7 @@ import Link from "next/link";
 const ModuleMaterial = () => {
   const [moduleData, setModuleData] = useState(null);
   const [materialData, setMaterialData] = useState(null);
+  const [session, setSession] = useState(null);
 
   const params = useParams();
   const moduleId = Number(params["module-id"]);
@@ -46,8 +47,11 @@ const ModuleMaterial = () => {
         const module = fullCourse.modules.find((m) => m.id === moduleId);
         const material = module?.materials.find((mat) => mat.id === materialId);
 
+        console.log(material);
+
         setModuleData(module);
         setMaterialData(material);
+        setSession(session);
       } catch (error) {
         console.error("Error fetching material:", error);
       }
@@ -60,8 +64,27 @@ const ModuleMaterial = () => {
     return <div className="text-white px-20 py-[5rem]">Loading...</div>;
   }
 
+  const finishMaterial = async () => {
+    try {
+      const response = await fetch(
+        `https://backend-itfest-production.up.railway.app/api/material/${materialData.id}/done`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: session.value,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="py-[3rem] h-screen px-20 text-white">
+    <div className="py-[4rem] md:px-20 px-[1.5rem] text-white">
       <Link
         href={`/my-courses/${courseTitle}`}
         className="text-[#60A5FA] hover:underline"
@@ -73,11 +96,14 @@ const ModuleMaterial = () => {
         {materialData.title}
       </h1>
 
-      <p className="text-lg opacity-80 md:max-w-[90%] w-full">
+      <p className="text-lg opacity-80 md:max-w-[95%] w-full">
         {materialData.content || "Konten belum tersedia."}
       </p>
 
-      <div className="flex justify-end mt-[2rem] md:mr-[5rem]">
+      <div
+        className="flex justify-end mt-[3rem] md:mr-[5rem]"
+        onClick={finishMaterial}
+      >
         <button className="btn bg-[#3B82F6] hover:bg-[#3B82F6]/70 py-6 px-8 rounded-lg">
           Finish
         </button>

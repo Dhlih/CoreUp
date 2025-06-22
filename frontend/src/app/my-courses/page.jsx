@@ -4,7 +4,6 @@ import { IoIosSearch } from "react-icons/io";
 import ModulCard from "@/components/ModulCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Alert from "@/components/Alert";
 
 const MyCourse = () => {
   const [courses, setCourses] = useState([]);
@@ -43,7 +42,7 @@ const MyCourse = () => {
   );
 
   return (
-    <div className="h-screen px-20 py-[3rem]">
+    <div className="bg-[#131F24] px-20 py-[3rem]">
       {isDeleted && (
         <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
           <Alert text="Berhasil dihapus" />
@@ -55,11 +54,11 @@ const MyCourse = () => {
 
         {/* input field */}
         <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3  text-sm  ">
-          <IoIosSearch className="opacity-60" />
+          <IoIosSearch className="opacity-60 text-lg" />
           <input
             type="text"
             placeholder="Cari kursus saya..."
-            className="rounded-full outline-none bg-transparent text-white text-xs"
+            className="rounded-full outline-none bg-transparent text-white text-sm"
             onChange={(evt) => setCourseTitle(evt.target.value)}
             value={courseTitle}
           />
@@ -74,6 +73,7 @@ const MyCourse = () => {
             key={idx}
             id={course.id}
             setIsDeleted={setIsDeleted}
+            moduleAmount={course.modules.length}
           />
         ))}
       </div>

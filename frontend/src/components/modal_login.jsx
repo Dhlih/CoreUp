@@ -38,6 +38,7 @@ export default function ModalLogin() {
 
       if (res.ok) {
         // Simpan token jika ada
+        console.log("data :", data);
         await createSession(data.access_token);
 
         // Reset form dan tutup modal
