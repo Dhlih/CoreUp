@@ -105,7 +105,7 @@ export default function ModalLogin() {
 
             <button
               type="submit"
-              className="btn btn-primary w-full mt-2"
+              className="btn btn-primary w-full mt-2 shadow-none"
               disabled={loading}
             >
               {loading ? "..." : "Login"}

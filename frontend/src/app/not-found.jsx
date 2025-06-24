@@ -3,20 +3,23 @@ import Link from "next/link";
 
 const NotFound = () => {
   return (
-    <div className="h-screen w-full flex px-20">
+    <div className=" w-full flex px-40 py-[2rem]">
       <div className="w-full flex md:flex-row flex-col items-center justify-between ">
         {/* Text side */}
-        <div className="space-y-[1rem] md:order-1 order-2 text-center md:text-left">
+        <div className="md:order-1 order-2 text-center md:text-left">
           <p className="font-medium text-lg">404 Error!</p>
-          <h1 className="text-4xl font-bold">Oops! : Page Not Found</h1>
-          <p className="text-lg">
+          <h1 className="text-4xl font-bold mt-[0.5rem]">
+            Oops! : Page Not Found
+          </h1>
+          <p className="text-lg mt-[1rem]">
             Halaman ini tidak tersedia. Silakan periksa kembali alamat URL
           </p>
 
-          <Link href="/">
-            <button className="btn bg-[#3B82F6] hover:bg-[#3B82F6]/70 rounded-lg p-4 mt-[1rem] text-white">
-              Back to Home
-            </button>
+          <Link
+            href="/"
+            className="btn bg-[#3B82F6] hover:bg-[#3B82F6]/70 rounded-lg p-6 mt-[1.5rem] text-white"
+          >
+            Back to Home
           </Link>
         </div>
 

@@ -134,7 +134,7 @@ const Quiz = () => {
         </div>
 
         {/* answer option */}
-        <div className="mt-[2rem] rounded-md space-y-[2rem]">
+        <div className="mt-[1.5rem] rounded-md space-y-[2rem]">
           {JSON.parse(quizzes[indexQuestion]?.options || "[]").map(
             (option, idx) => (
               <OptionCard key={idx} optionText={option} />
@@ -160,7 +160,7 @@ const Quiz = () => {
           className="btn bg-[#3B82F6] p-6 rounded-lg text-white"
           onClick={() => updateIndexQuestion(true)}
         >
-          Submit
+          Submit Answer
         </button>
       </div>
     </div>

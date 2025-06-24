@@ -1,10 +1,14 @@
 import { LuBookMinus } from "react-icons/lu";
 import { getSession } from "@/lib/session";
+import ConfirmationModal from "./ConfirmationModal";
 
 import Link from "next/link";
 import axios from "axios";
+import { useState } from "react";
 
 const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
+  const [isDelete, setIsDelete] = useState(false);
+
   const deleteCourse = async () => {
     const session = await getSession();
 
@@ -18,6 +22,7 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
           },
         }
       );
+      setIsDelete(false);
       setIsDeleted(true);
     } catch (error) {
       console.log(error);
@@ -25,7 +30,7 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
   };
 
   return (
-    <div className="bg-[#0F171B] rounded-xl p-6 ">
+    <div className="bg-[#0F171B] rounded-xl p-6 shadow-sm">
       {/* top side */}
       <div className="flex md:flex-row flex-col md:items-center justify-between ">
         <Link
@@ -40,19 +45,11 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
             <LuBookMinus />
             <span>{moduleAmount} Modul</span>
           </div>
-          {/* <div className="flex items-center space-x-[1rem]">
-            <LuClock5 />
-            <span>3h 10m</span>
-          </div>
-          <div className="flex items-center space-x-[1rem]">
-            <TbStairs />
-            <span>Pemula</span>
-          </div> */}
         </div>
       </div>
 
       {/* bottom side */}
-      <div className="flex items-center justify-between space-x-[3rem] mt-[1rem]">
+      <div className="flex items-center justify-between space-x-[3rem] mt-[1.5rem]">
         <div className="w-full ">
           <div className="flex items-center justify-between ">
             <span>Progress</span>
@@ -68,7 +65,7 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
         <div className="flex items-center md:space-x-[2rem] space-x-[1.5rem] ">
           <Link href={`/my-courses/${title}`}>
             <button
-              className="btn bg-[#3B82F6] p-4 hover:bg-[#3B82F6]/70 text-xs rounded-lg"
+              className="btn bg-[#3B82F6] p-6 hover:bg-[#3B82F6]/70 text-sm rounded-lg"
               onClick={() => console.log(id)}
             >
               Lanjutkan
@@ -76,13 +73,20 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
           </Link>
 
           <button
-            className="btn bg-[#F43F5E]  p-4 hover:bg-[#F43F5E]/70 text-xs rounded-lg"
-            onClick={deleteCourse}
+            className="btn bg-[#F43F5E]  p-6 hover:bg-[#F43F5E]/70 text-sm rounded-lg"
+            onClick={() => setIsDelete(!isDelete)}
           >
             Hapus
           </button>
         </div>
       </div>
+
+      {isDelete && (
+        <ConfirmationModal
+          onCancel={() => setIsDelete(false)}
+          onConfirm={deleteCourse}
+        />
+      )}
     </div>
   );
 };

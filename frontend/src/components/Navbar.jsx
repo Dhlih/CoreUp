@@ -5,6 +5,7 @@ import ModalDaftar from "./modal_register";
 import ModalLogin from "./modal_login";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
+import generateUsername from "@/lib/username";
 
 // icons
 import { BiLogOut } from "react-icons/bi";
@@ -91,14 +92,14 @@ export default function Navbar() {
       {/* left side */}
       <div className="relative w-full md:px-20 px-[1rem] flex items-center justify-between ">
         <div className="flex-1">
-          <a className="text-xl font-bold text-white" href="/">
+          <a className="text-2xl font-bold text-white" href="/">
             CoreUp
           </a>
         </div>
 
         {/* right side */}
         {user ? (
-          <div className="flex items-center md:space-x-[3rem] space-x-[2rem] ">
+          <div className="flex items-center md:space-x-[2.5rem] space-x-[2rem] ">
             <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
               <Link
                 className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
@@ -115,19 +116,19 @@ export default function Navbar() {
             </ul>
 
             <Link
-              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-5 p-3 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
+              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-4 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
               href="/create-course"
             >
               Create
             </Link>
 
-            <img
+            <div
+              className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20 cursor-pointer flex items-center justify-center"
               ref={profileImageRef}
-              src={photo}
-              alt="profile"
-              className="md:w-12 md:h-12 w-10 h-10 rounded-full object-cover border border-white/20 cursor-pointer"
               onClick={handleProfileClick}
-            />
+            >
+              {generateUsername(user.data.name)}
+            </div>
           </div>
         ) : (
           <div className="flex space-x-[1.5rem]">
@@ -153,16 +154,18 @@ export default function Navbar() {
         {/* shown after image clicked */}
         {isClicked && (
           <div
-            className="absolute  top-18 md:right-18 right-8  bg-[#212C31] p-4 rounded-xl max-w-[220px] w-full shadow-lg"
+            className="absolute  top-20 md:right-18 right-8  bg-[#212C31] p-4 rounded-xl max-w-[220px] w-full shadow-lg"
             ref={dropdownRef}
           >
             <div className="flex justify-between">
               <div className="flex items-center space-x-[1rem]">
-                <img
-                  src={photo}
-                  alt="profile"
-                  className="w-12 h-12 rounded-full object-cover border border-white/20"
-                />
+                <div
+                  className="w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20 cursor-pointer flex items-center justify-center"
+                  ref={profileImageRef}
+                  onClick={handleProfileClick}
+                >
+                  {generateUsername(user.data.name)}
+                </div>
                 <div>
                   <h3 className="text-xl font-semibold">{user?.data?.name}</h3>
                   <h4 className="font-medium">Level : {user?.data?.level}</h4>

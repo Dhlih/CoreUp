@@ -4,6 +4,7 @@ import { IoIosSearch } from "react-icons/io";
 import ModulCard from "@/components/ModulCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Alert from "@/components/SuccessAlert";
 
 const MyCourse = () => {
   const [courses, setCourses] = useState([]);
@@ -26,6 +27,8 @@ const MyCourse = () => {
       setCourses(response.data);
     };
     getData();
+
+    console.log("is Deleted", isDeleted);
 
     if (isDeleted) {
       const timeout = setTimeout(() => {

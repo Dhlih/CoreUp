@@ -10,10 +10,9 @@ export default function CreateCourse() {
   const [topic, setTopic] = useState("");
   const [level, setLevel] = useState("");
   const [language, setLanguage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [name, setName] = useState(""); // <== nama user dari API
+  const [loading, setLoading] = useState(true);
+  const [name, setName] = useState("");
 
-  // 🔽 Ambil nama user dari /api/profile
   useEffect(() => {
     const fetchProfile = async () => {
       const session = await getSession();
@@ -80,11 +79,19 @@ export default function CreateCourse() {
   };
 
   return (
-    <div className="py-[3rem] text-white md:px-20 px-[1.5rem] ">
+    <div className="md:py-[3rem] text-white md:px-20 px-[1.5rem] ">
       {loading ? (
-        <div className="flex flex-col  space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="text-white text-sm font-medium">Create a course..</p>
+        <div className="flex flex-col justify-center items-center space-y-[1.5rem]">
+          <img src="/images/studying.svg" alt="" className="w-110 h-110" />
+          <p className="md:mt-[-3rem] mt-[-5rem] text-center md:max-w-[50%] w-full mx-auto">
+            Belajarlah hari ini dengan sepenuh hati, agar dirimu di masa depan
+            bisa berkata: ‘Terima kasih, aku bangga padamu.’
+          </p>
+          <progress
+            className="progress md:w-[25%] w-[50%]  mt-[0.5rem]"
+            value={50}
+            max={100}
+          ></progress>
         </div>
       ) : (
         <div className="w-full max-w-xl md:mx-auto space-y-6 ">
@@ -93,6 +100,7 @@ export default function CreateCourse() {
             <h1 className="text-2xl md:text-4xl font-bold">
               What do you want to learn?
             </h1>
+            <img src="/images/studying2.svg" alt="" />
           </div>
 
           <input
