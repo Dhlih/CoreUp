@@ -121,13 +121,23 @@ export default function Navbar() {
             >
               Create
             </Link>
-
+            {/* profile picture */}
             <div
-              className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20 cursor-pointer flex items-center justify-center"
               ref={profileImageRef}
               onClick={handleProfileClick}
+              className="cursor-pointer"
             >
-              {generateUsername(user.data.name)}
+              {user.data.photo ? (
+                <img
+                  src={user.data.photo}
+                  className="w-12 h-12 rounded-full object-cover"
+                  alt=""
+                />
+              ) : (
+                <div className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                  {user.generateUsername(user.data.name)}
+                </div>
+              )}
             </div>
           </div>
         ) : (
@@ -164,7 +174,17 @@ export default function Navbar() {
                   ref={profileImageRef}
                   onClick={handleProfileClick}
                 >
-                  {generateUsername(user.data.name)}
+                  {user.data.photo ? (
+                    <img
+                      src={user.data.photo}
+                      className="w-12 h-12 rounded-full object-cover"
+                      alt=""
+                    />
+                  ) : (
+                    <div className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                      {user.generateUsername(user.data.name)}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">{user?.data?.name}</h3>

@@ -6,6 +6,8 @@ import { useParams, useRouter } from "next/navigation";
 import { MdOutlineAssignment } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { LuBookText } from "react-icons/lu";
+import Loading from "@/components/Loading";
+
 import Link from "next/link";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
@@ -49,6 +51,9 @@ export default function CoursePage() {
         );
 
         const result = await data.json();
+
+        setLoading(false);
+
         console.log("result :", result);
         setCourse(result);
       } catch (error) {
@@ -61,34 +66,29 @@ export default function CoursePage() {
     fetchCourse();
   }, []);
 
-  // Handler untuk quiz button
   const handleQuizClick = (module) => {
     setSelectedModule(module);
     setShowQuizModal(true);
   };
 
-  // Handler untuk konfirmasi quiz
   const handleQuizConfirm = () => {
     setShowQuizModal(false);
     router.push(`/my-courses/${course.title}/${selectedModule.id}/quiz`);
   };
 
-  // Handler untuk close modal
   const handleModalClose = () => {
     setShowQuizModal(false);
     setSelectedModule(null);
   };
 
-  if (loading) return <div className="text-white">Loading...</div>;
+  if (loading) return <Loading />;
 
   return (
     <div className="min-h-screen text-white py-[3.5rem] md:px-20 px-[1.5rem]">
-      <div className="flex justify-between items-center mb-4 md:max-w-[65%]">
+      <div className="flex justify-between items-center mb-4 md:max-w-[80%]">
         <h1 className="text-4xl font-bold">{course?.title}</h1>
       </div>
-      <p className="mb-4 md:max-w-[75%] opacity-80 text-lg md:my-0">
-        {course?.description}
-      </p>
+      <p className="mb-4 opacity-80 text-lg md:my-0">{course?.description}</p>
 
       <div className="space-y-[3rem] mt-[1rem]">
         {course?.modules?.map((module, index) => (
@@ -110,7 +110,7 @@ export default function CoursePage() {
             {module.materials.map((material) => (
               <div
                 key={material?.id}
-                className="bg-[#0F171B] p-5 rounded-[10px] mb-[1.5rem] flex items-center"
+                className="bg-[#0F171B] p-4 rounded-[10px] mb-[1.5rem] flex items-center"
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center space-x-[1.5rem]">

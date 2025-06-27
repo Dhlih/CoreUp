@@ -37,7 +37,9 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
           href={`/my-courses/${title}/`}
           className="max-w-[65%] text-xl font-semibold "
         >
-          <h3 className="hover:text-white/70">{title}</h3>
+          <h3 className="hover:text-white/70">
+            {title.length > 50 ? `${title.slice(0, 65)}...` : title}
+          </h3>
         </Link>
         {/*  */}
         <div className="flex items-center space-x-[3rem] md:text-xl text-lg md:mt-0 mt-[1rem]">
@@ -83,8 +85,13 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
 
       {isDelete && (
         <ConfirmationModal
-          onCancel={() => setIsDelete(false)}
+          onClose={() => setIsDelete(false)}
+          confirmBg={"bg-[#F43F5E]"}
           onConfirm={deleteCourse}
+          confirmText={"Delete"}
+          description={
+            "Apakah Anda yakin ingin menghapus? Tindakan ini tidak dapat dibatalkan."
+          }
         />
       )}
     </div>

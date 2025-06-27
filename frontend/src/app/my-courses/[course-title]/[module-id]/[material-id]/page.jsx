@@ -6,12 +6,14 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import CompletionPage from "@/components/CompletionPage";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 
 const ModuleMaterial = () => {
   const [moduleData, setModuleData] = useState(null);
   const [materialData, setMaterialData] = useState(null);
   const [session, setSession] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const params = useParams();
   const moduleId = Number(params["module-id"]);
@@ -55,6 +57,7 @@ const ModuleMaterial = () => {
         setModuleData(module);
         setMaterialData(material);
         setSession(session);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching material:", error);
       }
@@ -91,6 +94,8 @@ const ModuleMaterial = () => {
     }
   };
 
+  if (loading) return <Loading />;
+
   return isFinished ? (
     <CompletionPage courseTitle={courseTitle} />
   ) : (
@@ -99,7 +104,7 @@ const ModuleMaterial = () => {
         href={`/my-courses/${courseTitle}`}
         className="text-[#60A5FA] hover:underline"
       >
-        <h2 className="text-xl font-medium">{moduleData.title}</h2>
+        <h2 className="text-lg font-medium">{moduleData.title}</h2>
       </Link>
 
       <h1 className="text-4xl font-bold mb-[1.5rem] mt-[1rem] max-w-[85%]">

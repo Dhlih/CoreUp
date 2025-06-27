@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen bg-[#131f24] ">
         <Navbar /> {/* Akan muncul di semua halaman */}
-        <main className="pt-[5rem]">{children}</main>
+        <main className="pt-[5rem] bg-[#131f24] min-h-screen">{children}</main>
       </body>
     </html>
   );

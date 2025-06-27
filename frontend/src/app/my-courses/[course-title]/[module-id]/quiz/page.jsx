@@ -1,7 +1,6 @@
 "use client";
 
 import { LuClock2 } from "react-icons/lu";
-import OptionCard from "@/components/OptionCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
@@ -9,12 +8,17 @@ import { getSession } from "@/lib/session";
 import Link from "next/link";
 import ErrorAlert from "@/components/ErrorAlert";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 
 const Quiz = () => {
   const [indexQuestion, setIndexQuestion] = useState(0);
   const [quizzes, setQuizzes] = useState("");
   const [module, setModule] = useState("");
   const [timeLeft, setTimeLeft] = useState(180); // 2 menit
+  const [loading, setLoading] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [currentAnswer, setCurrentAnswer] = useState("");
 
   const params = useParams();
   const courseTitle = decodeURIComponent(params["course-title"]);
@@ -77,6 +81,10 @@ const Quiz = () => {
           (mod) => mod.id === Number(moduleId)
         );
 
+        console.log("selected module :", selectedModule);
+
+        setLoading(false);
+
         setModule(selectedModule);
         setQuizzes(selectedModule?.quizzes ?? []);
       } catch (error) {
@@ -101,12 +109,61 @@ const Quiz = () => {
     }
   };
 
+  const submitAnswer = async () => {
+    if (!currentAnswer) {
+      showAlert(true);
+    }
+
+    const session = await getSession();
+    const questionId = quizzes[indexQuestion].id;
+    setIsSubmit(true);
+
+    try {
+      const response = await fetch(
+        `https://backend-itfest-production.up.railway.app/api/quiz/${questionId}/submit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: session.value,
+          },
+          body: JSON.stringify({
+            answer: currentAnswer,
+          }),
+        }
+      );
+
+      if (indexQuestion === 4) {
+        router.push(`/my-courses/${courseTitle}`);
+      }
+
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const startNextQuestion = () => {
+    updateIndexQuestion(true);
+    setCurrentAnswer("");
+    setIsSubmit(false);
+  };
+
+  if (loading) return <Loading />;
+
   return (
-    <div className="py-[3rem] pb-[5rem] px-20">
+    <div className="py-[4rem] pb-[5rem] md:px-20 px-[1.5rem]">
       {/* time's up alert */}
       {timeLeft < 1 && (
-        <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
+        <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
           <ErrorAlert text="Waktu habis!" />
+        </div>
+      )}
+
+      {showAlert && (
+        <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
+          <ErrorAlert text="Pilih jawaban!" />
         </div>
       )}
 
@@ -116,7 +173,7 @@ const Quiz = () => {
             href={`/my-courses/${courseTitle}`}
             className="text-[#60A5FA] hover:underline "
           >
-            <h2 className="text-xl font-medium">{module.title}</h2>
+            <h2 className="text-lg font-medium">{module.title}</h2>
           </Link>
         </div>
 
@@ -137,30 +194,49 @@ const Quiz = () => {
         <div className="mt-[1.5rem] rounded-md space-y-[2rem]">
           {JSON.parse(quizzes[indexQuestion]?.options || "[]").map(
             (option, idx) => (
-              <OptionCard key={idx} optionText={option} />
+              <div
+                key={idx}
+                className={`flex items-center space-x-[2rem] p-3 rounded-lg ${
+                  isSubmit
+                    ? // jika
+                      option === quizzes[indexQuestion].answer
+                      ? "bg-[#22C55E]"
+                      : // selain itu
+                      option === currentAnswer
+                      ? "bg-[#F43F5E]"
+                      : "bg-[#0F171B]"
+                    : "bg-[#0F171B]"
+                }
+                `}
+              >
+                <input
+                  type="radio"
+                  name="radio-1"
+                  className="radio"
+                  value={option}
+                  disabled={isSubmit}
+                  checked={currentAnswer === option}
+                  onChange={() => setCurrentAnswer(option)}
+                />
+                <p className={`opacity-80 p-2 rounded `}>{option}</p>
+              </div>
             )
           )}
         </div>
       </div>
 
-      <div
-        className={`flex items-center mt-[2rem] ${
-          indexQuestion > 0 ? "justify-between" : "justify-end"
-        }`}
-      >
-        {indexQuestion > 0 && (
-          <button
-            className="btn bg-[#3B82F6] p-6 rounded-lg text-white"
-            onClick={() => updateIndexQuestion(false)}
-          >
-            Previous
-          </button>
-        )}
+      <div className={`flex items-center mt-[2.5rem] justify-end`}>
         <button
           className="btn bg-[#3B82F6] p-6 rounded-lg text-white"
-          onClick={() => updateIndexQuestion(true)}
+          onClick={() => {
+            if (!isSubmit) {
+              submitAnswer();
+            } else {
+              startNextQuestion();
+            }
+          }}
         >
-          Submit Answer
+          {!isSubmit ? "Submit Answer" : "Lanjutkan"}
         </button>
       </div>
     </div>

@@ -5,24 +5,29 @@ import ModulCard from "@/components/ModulCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Alert from "@/components/SuccessAlert";
+import { getSession } from "@/lib/session";
+import Loading from "@/components/Loading";
 
 const MyCourse = () => {
   const [courses, setCourses] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
   const [courseTitle, setCourseTitle] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
+      const session = await getSession();
+
       const response = await axios.get(
         "https://backend-itfest-production.up.railway.app/api/courses",
         {
           headers: {
-            Authorization:
-              "Bearer 5|UWTJEMGHRbumrs8ayEIyatQgD0KgfQaDg2GAxRlDb2ac8e1e",
+            Authorization: session.value,
             "Content-Type": "application/json",
           },
         }
       );
+      setLoading(false);
       console.log("response :", response.data);
       setCourses(response.data);
     };
@@ -44,16 +49,18 @@ const MyCourse = () => {
     course.title.toLowerCase().includes(courseTitle.toLowerCase())
   );
 
+  if (loading) return <Loading />;
+
   return (
     <div className="bg-[#131F24] px-20 py-[3rem]">
       {isDeleted && (
-        <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
+        <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
           <Alert text="Berhasil dihapus" />
         </div>
       )}
 
       <div className="flex items-center justify-between">
-        <h1 className="font-bold text-3xl ">My Courses</h1>
+        <h1 className="font-bold text-4xl ">My Courses</h1>
 
         {/* input field */}
         <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3  text-sm  ">

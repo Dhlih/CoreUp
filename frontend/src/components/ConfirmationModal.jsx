@@ -23,20 +23,20 @@ const ConfirmationModal = ({
           &#8203;
         </span>
 
-        <div className="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-[#212C31]  rounded-lg shadow-xl rtl:text-right bg sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+        <div className="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-[#212C31]  rounded-xl shadow-xl rtl:text-right bg sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
           <div>
-            <div className="flex items-center justify-center text-6xl">
+            <div className="flex items-center justify-center text-7xl">
               <PiWarningCircle />
             </div>
 
             <div className="mt-2 text-center">
               <h3
-                className="text-lg font-medium leading-6 text-gray-800 capitalize dark:text-white"
+                className="text-xl font-medium leading-6 text-gray-800 capitalize dark:text-white"
                 id="modal-title"
               >
                 Apakah Anda Yakin?
               </h3>
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mt-2 text-gray-500 dark:text-gray-400 max-w-[90%] mx-auto">
                 {description}
               </p>
             </div>

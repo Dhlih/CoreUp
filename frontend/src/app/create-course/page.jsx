@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSession } from "@/lib/session";
+import ErrorAlert from "@/components/ErrorAlert";
+import Loading from "@/components/Loading";
 
 export default function CreateCourse() {
   const router = useRouter();
@@ -10,8 +12,11 @@ export default function CreateCourse() {
   const [topic, setTopic] = useState("");
   const [level, setLevel] = useState("");
   const [language, setLanguage] = useState("");
+  const [createLoading, setCreateLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showAlertModal, setAlertModal] = useState(false);
   const [name, setName] = useState("");
+  const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -28,9 +33,24 @@ export default function CreateCourse() {
         );
 
         const data = await res.json();
+
+        setLoading(false);
+
         setName(data.data.name || "User");
+
+        // Simulasikan progress (bisa diatur sesuai kebutuhan)
+        let val = 0;
+        const interval = setInterval(() => {
+          val += 10;
+          setProgressValue(val);
+          if (val >= 100) {
+            clearInterval(interval);
+            setCreateLoading(false);
+          }
+        }, 200);
       } catch (error) {
         console.error("Gagal ambil profil:", error);
+        setCreateLoading(false);
       }
     };
 
@@ -45,7 +65,8 @@ export default function CreateCourse() {
       return;
     }
 
-    setLoading(true);
+    setCreateLoading(true);
+    setProgressValue(40); // Munculkan progress awal
 
     try {
       const response = await fetch(
@@ -64,34 +85,48 @@ export default function CreateCourse() {
       console.log("📦 Data respons dari server:", data);
 
       if (response.ok) {
-        setTopic("");
-        setLevel("");
-        setLanguage("");
-        router.push(`/my-courses/${data.course.title}`);
+        setProgressValue(80); // Tambahkan progress saat sukses dapat respons
+        setLoading(false);
+
+        // Delay sedikit sebelum set 100%
+        setTimeout(() => {
+          setProgressValue(100);
+          setTimeout(() => {
+            setTopic("");
+            setLevel("");
+            setLanguage("");
+            router.push(`/my-courses/${data.course.title}`);
+          }, 500); // jeda 500ms untuk memberikan waktu user melihat 100%
+        }, 300); // transisi ke 100%
       } else {
-        alert(`❌ Gagal: ${data.message || "Terjadi kesalahan pada data."}`);
+        setCreateLoading(false);
+        setAlertModal(true);
       }
     } catch (error) {
-      alert("🚫 Gagal terhubung ke server.");
-    } finally {
-      setLoading(false);
+      showAlertModal(true);
+      setCreateLoading(false);
     }
   };
 
+  if (loading) return <Loading />;
+
   return (
-    <div className="md:py-[3rem] text-white md:px-20 px-[1.5rem] ">
-      {loading ? (
-        <div className="flex flex-col justify-center items-center space-y-[1.5rem]">
-          <img src="/images/studying.svg" alt="" className="w-110 h-110" />
-          <p className="md:mt-[-3rem] mt-[-5rem] text-center md:max-w-[50%] w-full mx-auto">
-            Belajarlah hari ini dengan sepenuh hati, agar dirimu di masa depan
-            bisa berkata: ‘Terima kasih, aku bangga padamu.’
-          </p>
-          <progress
-            className="progress md:w-[25%] w-[50%]  mt-[0.5rem]"
-            value={50}
-            max={100}
-          ></progress>
+    <div className="md:py-[4rem] text-white md:px-20 px-[1.5rem] ">
+      {createLoading ? (
+        <div className="flex flex-col justify-center items-center space-y-[1rem]">
+          {showAlertModal && <ErrorAlert text={"Terjadi sebuah kesalahan"} />}
+
+          <img src="/images/studying.svg" alt="" className="w-90 h-90" />
+
+          <h1 className="font-semibold text-xl mt-[-2rem]">Loading...</h1>
+          <div className="flex flex-col items-center w-full space-y-4 ">
+            <progress
+              className="progress  w-[30%]"
+              value={progressValue}
+              max={100}
+            ></progress>
+            <p className=" text-gray-300">{progressValue}%</p>
+          </div>
         </div>
       ) : (
         <div className="w-full max-w-xl md:mx-auto space-y-6 ">
@@ -126,18 +161,18 @@ export default function CreateCourse() {
             required
           >
             <option value="" disabled>
-              Select level{" "}
+              Select level
             </option>
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
           </select>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end ">
             <button
               onClick={handleSubmit}
               className="btn py-6 px-4 bg-[#3B82F6] mt-[0.5rem] text-white rounded-md hover:bg-[#3B82F6]/70 transition font-semibold text-sm"
-              disabled={loading}
+              disabled={createLoading}
             >
               Create Roadmap
             </button>
