@@ -1,27 +1,35 @@
-export const getCourseProgress = (course) => {
-  let totalTasks = 0;
-  let completedTasks = 0;
+export const getCourseProgress = (courses, quizzes) => {
+  const progressMap = {};
 
-  course.modules.forEach((module) => {
-    // Hitung semua materi
-    module.materials.forEach((material) => {
-      totalTasks++;
-      if (material.is_done === 1) completedTasks++;
+  courses.forEach((course) => {
+    let total = 0;
+    let done = 0;
+
+    // ambil semua module id dalam course
+    const moduleIds = course.modules.map((mod) => mod.id);
+
+    // hitung dari materials
+    course.modules.forEach((mod) => {
+      mod.materials.forEach((mat) => {
+        total++;
+        if (mat.is_done === 1) done++;
+      });
     });
 
-    // Anggap semua quiz selesai (kamu bisa ganti logika ini sesuai DB user)
-    module.quizzes.forEach((quiz) => {
-      totalTasks++;
-      // Misal quiz disimpan dengan is_done, atau simulasikan quiz selesai:
-      // if (quiz.is_done === 1) completedTasks++;
-      // Anggap user jawab semua quiz pertama saja untuk contoh:
-      if (quiz.id === 1 || quiz.id === 6 || quiz.id === 11) {
-        completedTasks++;
-      }
+    // hitung dari quizzes yang cocok
+    const relatedQuizzes = quizzes.filter((quiz) =>
+      moduleIds.includes(quiz.module_id)
+    );
+
+    relatedQuizzes.forEach((quiz) => {
+      total++;
+      if (quiz.is_done === 1) done++;
     });
+
+    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+    progressMap[course.id] = percent;
   });
 
-  const progress =
-    totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-  return progress;
+  console.log(progressMap);
+  return progressMap;
 };

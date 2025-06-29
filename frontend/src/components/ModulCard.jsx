@@ -6,7 +6,13 @@ import Link from "next/link";
 import axios from "axios";
 import { useState } from "react";
 
-const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
+const ModulCard = ({
+  title,
+  id,
+  setIsDeleted,
+  moduleAmount,
+  courseProgress,
+}) => {
   const [isDelete, setIsDelete] = useState(false);
 
   const deleteCourse = async () => {
@@ -55,11 +61,11 @@ const ModulCard = ({ title, id, setIsDeleted, moduleAmount }) => {
         <div className="w-full ">
           <div className="flex items-center justify-between ">
             <span>Progress</span>
-            <span>80%</span>
+            <span>{courseProgress}%</span>
           </div>
           <progress
             className="progress w-full "
-            value={50}
+            value={courseProgress}
             max={100}
           ></progress>
         </div>

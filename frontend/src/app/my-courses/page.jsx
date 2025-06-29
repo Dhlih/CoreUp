@@ -7,41 +7,52 @@ import axios from "axios";
 import Alert from "@/components/SuccessAlert";
 import { getSession } from "@/lib/session";
 import Loading from "@/components/Loading";
+import { getCourseProgress } from "@/lib/progress";
 
 const MyCourse = () => {
   const [courses, setCourses] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
   const [courseTitle, setCourseTitle] = useState("");
   const [loading, setLoading] = useState(true);
+  const [courseProgress, setCourseProgress] = useState(0);
 
   useEffect(() => {
-    const getData = async () => {
-      const session = await getSession();
+    const loadCoursesWithProgress = async () => {
+      try {
+        const session = await getSession();
 
-      const response = await axios.get(
-        "https://backend-itfest-production.up.railway.app/api/courses",
-        {
-          headers: {
-            Authorization: session.value,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setLoading(false);
-      console.log("response :", response.data);
-      setCourses(response.data);
+        // fetch courses
+        const courseRes = await axios.get(
+          "https://backend-itfest-production.up.railway.app/api/courses",
+          {
+            headers: {
+              Authorization: session.value,
+            },
+          }
+        );
+
+        // fetch quiz-user
+        const quizRes = await axios.get(
+          "https://backend-itfest-production.up.railway.app/api/quiz-user",
+          {
+            headers: {
+              Authorization: session.value,
+            },
+          }
+        );
+
+        // hitung progress berdasarkan 2 data di atas
+        const progressCourses = getCourseProgress(courseRes.data, quizRes.data);
+        setCourses(courseRes.data);
+        setCourseProgress(progressCourses);
+      } catch (err) {
+        console.error("Gagal memuat data course dan quiz:", err);
+      } finally {
+        setLoading(false);
+      }
     };
-    getData();
 
-    console.log("is Deleted", isDeleted);
-
-    if (isDeleted) {
-      const timeout = setTimeout(() => {
-        setIsDeleted(false);
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    }
+    loadCoursesWithProgress();
   }, [isDeleted]);
 
   // Filter courses berdasarkan courseTitle
@@ -84,6 +95,7 @@ const MyCourse = () => {
             id={course.id}
             setIsDeleted={setIsDeleted}
             moduleAmount={course.modules.length}
+            courseProgress={courseProgress[course.id] || 0}
           />
         ))}
       </div>

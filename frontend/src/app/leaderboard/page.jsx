@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
 import Loading from "@/components/Loading";
+import { getUserRank } from "@/lib/rank";
 
 const Leaderboard = () => {
   const [users, setUsers] = useState([]);
@@ -11,20 +12,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const session = await getSession(); // pastikan getSession diimpor
-
-        const response = await fetch(
-          "https://backend-itfest-production.up.railway.app/api/user/all",
-          {
-            headers: {
-              Authorization: session.value,
-            },
-          }
-        );
-        const result = await response.json();
-
-        // Urutkan berdasarkan exp DESCENDING
-        const sortedUsers = result.data.sort((a, b) => b.exp - a.exp);
+        const sortedUsers = (await getUserRank()).sortedUsers;
         setUsers(sortedUsers);
         setLoading(false);
       } catch (error) {

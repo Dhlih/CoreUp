@@ -20,7 +20,6 @@ import { MdOutlineLeaderboard } from "react-icons/md";
 export default function Navbar() {
   const [hasMounted, setHasMounted] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-  const [photo, setPhoto] = useState("/images/makima.webp");
   const [user, setUser] = useState("");
   const pathName = usePathname();
 
@@ -54,7 +53,6 @@ export default function Navbar() {
 
     const fetchUserData = async () => {
       const session = await getSession();
-      console.log("session :", session);
 
       if (session) {
         // Ambil data profil
@@ -65,8 +63,6 @@ export default function Navbar() {
         })
           .then((res) => res.json())
           .then((data) => {
-            setPhoto("/images/makima.webp");
-            console.log("data :", data);
             setUser(data);
           });
       }
@@ -78,8 +74,21 @@ export default function Navbar() {
   if (!hasMounted) return null;
 
   const signOutUser = async () => {
-    const isLogout = await deleteSession();
-    if (isLogout) router.push("/");
+    const session = await getSession();
+    try {
+      await fetch(
+        `https://backend-itfest-production.up.railway.app/api/auth/logout`,
+        {
+          headers: {
+            Authorization: session.value,
+          },
+        }
+      );
+      const isLogout = await deleteSession();
+      if (isLogout) router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleProfileClick = (event) => {
@@ -135,7 +144,7 @@ export default function Navbar() {
                   alt=""
                 />
               ) : (
-                <div className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
                   {generateUsername(user.data.name)}
                 </div>
               )}
@@ -171,14 +180,14 @@ export default function Navbar() {
             <div className="flex justify-between">
               <div className="flex items-center space-x-[1rem]">
                 <div
-                  className="w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20 cursor-pointer flex items-center justify-center"
+                  className=" bg-[#131F24] rounded-full object-cover border border-white/20 cursor-pointer flex items-center justify-center"
                   ref={profileImageRef}
                   onClick={handleProfileClick}
                 >
                   {user.data.photo ? (
                     <img
                       src={user.data.photo}
-                      className="w-12 h-12 rounded-full object-cover"
+                      className="w-14 h-14 rounded-full object-cover"
                       alt=""
                     />
                   ) : (

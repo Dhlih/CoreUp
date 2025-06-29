@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import { HiOutlineBadgeCheck } from "react-icons/hi";
-import { PiRankingLight } from "react-icons/pi";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlineModeEdit } from "react-icons/md";
@@ -10,6 +9,10 @@ import { getSession } from "@/lib/session";
 import Alert from "@/components/SuccessAlert";
 import ErrorAlert from "@/components/ErrorAlert";
 import { IoCloseOutline } from "react-icons/io5";
+import generateUsername from "@/lib/username";
+import { getUserRank } from "@/lib/rank";
+import { RiFireLine } from "react-icons/ri";
+import { countExpLeft } from "@/lib/exp";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -20,14 +23,14 @@ const Profile = () => {
   const [img, setImg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [rank, setRank] = useState("");
+  const [exp, setExp] = useState("");
 
   const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const session = await getSession();
-
-      console.log("session : ", session.value);
 
       const response = await fetch(
         `https://backend-itfest-production.up.railway.app/api/user`,
@@ -39,10 +42,15 @@ const Profile = () => {
         }
       );
       const user = await response.json();
-      console.log("user data :", user);
+      const exp = await countExpLeft();
+      console.log("exp :", exp);
+      const rank = await getUserRank();
+
+      setExp(exp);
       setUser(user.data);
       setName(user.data.name);
       setPassword(user.data.password);
+      setRank(rank);
     };
 
     fetchUserData();
@@ -110,11 +118,17 @@ const Profile = () => {
               />
             </div>
             <div className="flex justify-center relative">
-              <img
-                src={img || "/images/makima.webp"}
-                alt=""
-                className="md:w-20 md:h-20 w-12 h-12 rounded-full object-cover"
-              />
+              {user.photo ? (
+                <img
+                  src={user.photo}
+                  className="w-12 h-12 rounded-full object-cover"
+                  alt=""
+                />
+              ) : (
+                <div className="w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                  {generateUsername(user.name)}
+                </div>
+              )}
               <input
                 type="file"
                 accept="image/*"
@@ -175,25 +189,48 @@ const Profile = () => {
       <div className="py-[4rem]   bg-[#131F24]  md:px-30 px-[1.5rem] flex flex-col space-y-[2rem]">
         <h1 className="font-bold md:text-4xl text-3xl ">My Profile</h1>
 
-        <div className="bg-[#0F171B] flex items-center justify-between p-6 rounded-lg">
-          <div className="flex items-center space-x-[1.5rem]">
-            <img
-              src="/images/makima.webp"
-              alt=""
-              className="md:w-16 md:h-16 w-12 h-12 rounded-full object-cover"
-            />
-            <div>
-              <h3 className="font-semibold text-xl">{user.name}</h3>
-              <p className="opacity-80">{user.email}</p>
+        <div className="bg-[#0F171B] p-6 rounded-xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-[1.5rem]">
+              {user.photo ? (
+                <img
+                  src={user.photo}
+                  className="w-16 h-16 rounded-full object-cover"
+                  alt=""
+                />
+              ) : (
+                <div className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                  {generateUsername(user.name)}
+                </div>
+              )}
+              <div>
+                <h3 className="font-semibold text-xl">{user.name}</h3>
+                <p className="opacity-80">{user.email}</p>
+              </div>
             </div>
+            <button
+              className="md:py-2 py-[6px] md:px-6 px-2 md:rounded-lg rounded-md bg-[#4F9CF9] hover:bg-[#4F9CF9]/70 font-semibold cursor-pointer flex items-center justify-center md:self-auto self-start mt-[-10px]"
+              onClick={() => setIsEdit(true)}
+            >
+              <span className="hidden md:block">Edit</span>
+              <MdOutlineModeEdit className="md:hidden md:text-xl text-sm" />
+            </button>
           </div>
-          <button
-            className="md:py-2 py-[6px] md:px-6 px-2 md:rounded-lg rounded-md bg-[#4F9CF9] hover:bg-[#4F9CF9]/70 font-semibold cursor-pointer flex items-center justify-center md:self-auto self-start mt-[-10px]"
-            onClick={() => setIsEdit(true)}
-          >
-            <span className="hidden md:block">Edit</span>
-            <MdOutlineModeEdit className="md:hidden md:text-xl text-sm" />
-          </button>
+
+          {/* user level */}
+          <div className="w-full mt-[1.5rem]">
+            <div className="flex items-center justify-between ">
+              <span>Level {user?.level}</span>
+              <span>
+                {user?.exp} / {exp?.expLeft} EXP
+              </span>
+            </div>
+            <progress
+              className="progress w-full transition-none"
+              value={exp.progressValue}
+              max={100}
+            ></progress>
+          </div>
         </div>
 
         {/* statistics */}
@@ -203,8 +240,8 @@ const Profile = () => {
             <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Current Rank</h3>
               <div className="flex items-center space-x-[1rem]">
-                <PiRankingLight className="text-3xl" />
-                <span className="text-3xl font-semibold">20</span>
+                <RiFireLine className="text-3xl" />
+                <span className="text-3xl font-semibold">{rank.userRank}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
@@ -232,7 +269,7 @@ const Profile = () => {
         </div>
 
         {/* achivement */}
-        <div>
+        {/* <div>
           <h2 className="text-3xl font-semibold my-[2rem]">Achivement</h2>
           <div className="space-y-[2rem]">
             <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem]  w-full">
@@ -251,7 +288,7 @@ const Profile = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
