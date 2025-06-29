@@ -25,7 +25,3 @@ export const getCourseProgress = (course) => {
     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
   return progress;
 };
-
-// Contoh panggil:
-const progress = calculateCourseProgress(courseData); // Misal courseData dari API
-console.log(`Progress: ${progress}%`);

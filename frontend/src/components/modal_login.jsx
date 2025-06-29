@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSession } from "@/lib/session";
+import ErrorAlert from "./ErrorAlert";
 
 export default function ModalLogin() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function ModalLogin() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -51,7 +53,12 @@ export default function ModalLogin() {
         alert(data.message || "Email atau password salah 😢");
       }
     } catch (error) {
-      alert("Gagal terhubung ke server 😓");
+      setShowAlert(true);
+      document.getElementById("modal_login")?.close();
+
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 1000);
     } finally {
       setLoading(false);
     }
@@ -59,8 +66,14 @@ export default function ModalLogin() {
 
   return (
     <>
+      {showAlert && (
+        <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
+          <ErrorAlert text="Terjadi kesalahan!" />
+        </div>
+      )}
+
       <dialog id="modal_login" className="modal">
-        <div className="modal-box max-w-sm">
+        <div className="modal-box max-w-[320px]">
           {/* Tombol close */}
           <form method="dialog" className="absolute right-2 top-2">
             <button className="btn btn-sm btn-circle btn-ghost">✕</button>
@@ -105,7 +118,7 @@ export default function ModalLogin() {
 
             <button
               type="submit"
-              className="btn btn-primary w-full mt-2 shadow-none"
+              className="btn btn-primary w-full mt-2 shadow-none rounded-lg bg-[#3B82F6]"
               disabled={loading}
             >
               {loading ? "..." : "Login"}

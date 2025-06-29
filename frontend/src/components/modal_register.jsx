@@ -11,6 +11,7 @@ export default function ModalDaftar() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -49,7 +50,12 @@ export default function ModalDaftar() {
         alert(data.message || "Pendaftaran gagal 😢");
       }
     } catch (error) {
-      alert("Gagal terhubung ke server 😓");
+      setShowAlert(true);
+      document.getElementById("modal_login")?.close();
+
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 1000);
     } finally {
       setLoading(false);
     }
@@ -57,8 +63,14 @@ export default function ModalDaftar() {
 
   return (
     <>
+      {showAlert && (
+        <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
+          <ErrorAlert text="Terjadi kesalahan!" />
+        </div>
+      )}
+
       <dialog id="modal_daftar" className="modal">
-        <div className="modal-box max-w-sm">
+        <div className="modal-box max-w-[350px]">
           <form method="dialog" className="absolute right-2 top-2">
             <button className="btn btn-sm btn-circle btn-ghost">✕</button>
           </form>
@@ -120,7 +132,7 @@ export default function ModalDaftar() {
 
             <button
               type="submit"
-              className="btn btn-primary w-full mt-2 shadow-none"
+              className="btn btn-primary w-full mt-2 shadow-none rounded-lg bg-[#3B82F6]"
               disabled={loading}
             >
               {loading ? "..." : "Register"}
