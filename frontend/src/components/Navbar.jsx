@@ -53,6 +53,7 @@ export default function Navbar() {
 
     const fetchUserData = async () => {
       const session = await getSession();
+      console.log("session : ", session);
 
       if (session) {
         // Ambil data profil
@@ -140,7 +141,7 @@ export default function Navbar() {
               {user.data.photo ? (
                 <img
                   src={user.data.photo}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover border-white/20 "
                   alt=""
                 />
               ) : (

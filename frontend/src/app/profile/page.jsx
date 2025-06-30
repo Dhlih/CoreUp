@@ -43,6 +43,9 @@ const Profile = () => {
       );
       const user = await response.json();
       const exp = await countExpLeft();
+
+      console.log("user : ", user);
+
       console.log("exp :", exp);
       const rank = await getUserRank();
 
@@ -86,7 +89,11 @@ const Profile = () => {
       console.log(error);
     }
 
+    setIsEdit(false);
     setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 1000);
   };
 
   const handleUploadFile = (e) => {
@@ -110,7 +117,7 @@ const Profile = () => {
 
       {isEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center  ">
-          <div className="bg-[#212C31] p-6 rounded-lg w-full max-w-sm mx-4 shadow-lg relative">
+          <div className="bg-[#212C31] p-6 rounded-xl w-full max-w-sm mx-4 shadow-lg relative">
             <div className="flex justify-end">
               <IoCloseOutline
                 className="text-2xl cursor-pointer"
@@ -118,14 +125,14 @@ const Profile = () => {
               />
             </div>
             <div className="flex justify-center relative">
-              {user.photo ? (
+              {user.photo || img ? (
                 <img
-                  src={user.photo}
-                  className="w-12 h-12 rounded-full object-cover"
+                  src={user.photo || img}
+                  className="w-18 h-18 rounded-full object-cover border-white/20 "
                   alt=""
                 />
               ) : (
-                <div className="w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
                   {generateUsername(user.name)}
                 </div>
               )}

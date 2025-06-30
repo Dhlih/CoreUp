@@ -66,15 +66,12 @@ const ModuleMaterial = () => {
     fetchMaterial();
   }, []);
 
-  if (!materialData || !moduleData) {
-    return <div className="text-white px-20 py-[5rem]">Loading...</div>;
-  }
-
   const finishMaterial = async () => {
+    if (materialData.is_done) {
+      router.push(`/my-courses/${courseTitle}`);
+    }
+
     try {
-      if (materialData.is_done) {
-        router.push(`/my-courses/${courseTitle}`);
-      }
       const response = await fetch(
         `https://backend-itfest-production.up.railway.app/api/material/${materialData.id}/done`,
         {
@@ -87,10 +84,16 @@ const ModuleMaterial = () => {
       );
 
       if (response.ok) {
+        const text = await response.text();
+        const data = text ? JSON.parse(text) : null;
+
+        console.log("update data:", data);
         setIsFinished(true);
+      } else {
+        console.error("Gagal mengupdate material");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error saat finishMaterial:", error);
     }
   };
 
@@ -99,7 +102,7 @@ const ModuleMaterial = () => {
   return isFinished ? (
     <CompletionPage courseTitle={courseTitle} />
   ) : (
-    <div className="py-[4rem] md:px-40 px-[1.5rem] text-white">
+    <div className="py-[4rem] md:px-30 px-[1.5rem] text-white">
       <Link
         href={`/my-courses/${courseTitle}`}
         className="text-[#60A5FA] hover:underline"
