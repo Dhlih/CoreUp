@@ -7,7 +7,6 @@ import { MdOutlineAssignment } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { LuBookText } from "react-icons/lu";
 import Loading from "@/components/Loading";
-
 import Link from "next/link";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
@@ -35,8 +34,6 @@ export default function CoursePage() {
           }
         );
         const courses = await response.json();
-        console.log("courses :", courses);
-
         const matchCourse = courses.find(
           (course) => course.title === courseTitle
         );
@@ -51,10 +48,6 @@ export default function CoursePage() {
         );
 
         const result = await data.json();
-
-        setLoading(false);
-
-        console.log("result :", result);
         setCourse(result);
       } catch (error) {
         console.error("Error fetching course:", error);
@@ -108,35 +101,31 @@ export default function CoursePage() {
             </div>
 
             {module.materials.map((material) => (
-              <div
+              <Link
                 key={material?.id}
-                className="bg-[#0F171B] p-4 rounded-[10px] mb-[1.5rem] flex items-center"
+                href={`/my-courses/${course.title}/${module.id}/${material.id}`}
+                className="block bg-[#0F171B] p-4 rounded-[10px] mb-[1.5rem] hover:bg-[#1c2a31] transition"
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center space-x-[1.5rem]">
                     <div className="bg-[#131F24] p-3 text-xl rounded-lg">
                       <LuBookText />
                     </div>
-                    <Link
-                      href={`/my-courses/${course.title}/${module.id}/${material.id}`}
-                    >
-                      <p className="font-medium text-lg hover:text-white/70">
-                        {material?.title}
-                      </p>
-                    </Link>
+                    <p className="font-medium text-lg text-white">
+                      {material?.title}
+                    </p>
                   </div>
 
                   {material.is_done === 1 && (
                     <FaRegCircleCheck className="text-3xl opacity-50" />
                   )}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ))}
       </div>
 
-      {/* Modal dengan selectedModule yang benar */}
       {showQuizModal && selectedModule && (
         <ConfirmationModal
           onClose={handleModalClose}
