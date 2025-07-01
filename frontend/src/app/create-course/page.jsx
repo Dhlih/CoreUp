@@ -23,14 +23,11 @@ export default function CreateCourse() {
       const session = await getSession();
 
       try {
-        const res = await fetch(
-          "https://backend-itfest-production.up.railway.app/api/user",
-          {
-            headers: {
-              Authorization: session.value,
-            },
-          }
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+          headers: {
+            Authorization: session.value,
+          },
+        });
 
         const data = await res.json();
 
@@ -70,7 +67,7 @@ export default function CreateCourse() {
 
     try {
       const response = await fetch(
-        "https://backend-itfest-production.up.railway.app/api/courses",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
         {
           method: "POST",
           headers: {

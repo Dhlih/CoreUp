@@ -5,7 +5,7 @@ export const getUserRank = async () => {
     const session = await getSession();
 
     const response = await fetch(
-      "https://backend-itfest-production.up.railway.app/api/user/all",
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user/all`,
       {
         headers: {
           Authorization: session.value,
@@ -17,7 +17,7 @@ export const getUserRank = async () => {
     const sortedUsers = result.data.sort((a, b) => b.exp - a.exp);
 
     const userResponse = await fetch(
-      "https://backend-itfest-production.up.railway.app/api/user",
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
       {
         headers: {
           Authorization: session.value,

@@ -20,7 +20,7 @@ const ModulCard = ({
 
     try {
       await axios.delete(
-        `https://backend-itfest-production.up.railway.app/api/courses/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${id}`,
         {
           headers: {
             Authorization: session.value,

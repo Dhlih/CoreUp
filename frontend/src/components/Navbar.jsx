@@ -6,6 +6,7 @@ import ModalLogin from "./modal_login";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
+import { PiBrainLight } from "react-icons/pi";
 
 // icons
 import { BiLogOut } from "react-icons/bi";
@@ -57,7 +58,7 @@ export default function Navbar() {
 
       if (session) {
         // Ambil data profil
-        fetch("https://backend-itfest-production.up.railway.app/api/user", {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
           headers: {
             Authorization: session.value,
           },
@@ -77,14 +78,11 @@ export default function Navbar() {
   const signOutUser = async () => {
     const session = await getSession();
     try {
-      await fetch(
-        `https://backend-itfest-production.up.railway.app/api/auth/logout`,
-        {
-          headers: {
-            Authorization: session.value,
-          },
-        }
-      );
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+        headers: {
+          Authorization: session.value,
+        },
+      });
       const isLogout = await deleteSession();
       if (isLogout) router.push("/");
     } catch (error) {
@@ -101,11 +99,10 @@ export default function Navbar() {
     <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg md:py-[0.8rem] py-[1rem] ">
       {/* left side */}
       <div className="relative w-full md:px-20 px-[1rem] flex items-center justify-between ">
-        <div className="flex-1">
-          <a className="text-2xl font-bold text-white" href="/">
-            CoreUp
-          </a>
-        </div>
+        <Link href="/" className="flex items-center space-x-[0.8rem]">
+          <PiBrainLight className="text-5xl text-[#4F9CF9]" />
+          <h2 className="text-2xl font-bold text-white">CoreUp</h2>
+        </Link>
 
         {/* right side */}
         {user ? (

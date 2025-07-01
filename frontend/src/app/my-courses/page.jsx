@@ -23,7 +23,7 @@ const MyCourse = () => {
 
         // fetch courses
         const courseRes = await axios.get(
-          "https://backend-itfest-production.up.railway.app/api/courses",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
           {
             headers: {
               Authorization: session.value,
@@ -33,7 +33,7 @@ const MyCourse = () => {
 
         // fetch quiz-user
         const quizRes = await axios.get(
-          "https://backend-itfest-production.up.railway.app/api/quiz-user",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/quiz-user`,
           {
             headers: {
               Authorization: session.value,

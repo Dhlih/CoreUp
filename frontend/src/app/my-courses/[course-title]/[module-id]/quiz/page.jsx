@@ -61,7 +61,7 @@ const Quiz = () => {
       const session = await getSession();
       try {
         const response = await fetch(
-          "https://backend-itfest-production.up.railway.app/api/courses/",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
           {
             headers: { Authorization: session.value },
           }
@@ -73,7 +73,7 @@ const Quiz = () => {
         );
 
         const detailResponse = await axios.get(
-          `https://backend-itfest-production.up.railway.app/api/courses/${selectedCourse.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${selectedCourse.id}`,
           {
             headers: {
               Authorization: session.value,
@@ -115,7 +115,7 @@ const Quiz = () => {
 
     try {
       const response = await fetch(
-        `https://backend-itfest-production.up.railway.app/api/quiz/${questionId}/submit`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/quiz/${questionId}/submit`,
         {
           method: "POST",
           headers: {

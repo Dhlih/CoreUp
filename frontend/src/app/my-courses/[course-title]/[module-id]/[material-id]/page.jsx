@@ -27,7 +27,7 @@ const ModuleMaterial = () => {
 
       try {
         const response = await fetch(
-          "https://backend-itfest-production.up.railway.app/api/courses/",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
           {
             headers: {
               Authorization: session.value,
@@ -40,7 +40,7 @@ const ModuleMaterial = () => {
         if (!course) return;
 
         const res = await fetch(
-          `https://backend-itfest-production.up.railway.app/api/courses/${course.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${course.id}`,
           {
             headers: {
               Authorization: session.value,
@@ -73,9 +73,9 @@ const ModuleMaterial = () => {
 
     try {
       const response = await fetch(
-        `https://backend-itfest-production.up.railway.app/api/material/${materialData.id}/done`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/material/${materialData.id}/done`,
         {
-          method: "PATCH",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: session.value,

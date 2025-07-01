@@ -26,7 +26,7 @@ export default function CoursePage() {
 
       try {
         const response = await fetch(
-          "https://backend-itfest-production.up.railway.app/api/courses/",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
           {
             headers: {
               Authorization: session.value,
@@ -39,7 +39,7 @@ export default function CoursePage() {
         );
 
         const data = await fetch(
-          `https://backend-itfest-production.up.railway.app/api/courses/${matchCourse.id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${matchCourse.id}`,
           {
             headers: {
               Authorization: session.value,

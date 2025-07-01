@@ -31,9 +31,7 @@ const Leaderboard = () => {
     <div className="md:px-20 px-[1.5rem] py-[4rem]">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Leaderboard</h1>
-        <div className="bg-[#0F171B] rounded-full px-6 py-2">
-          Reset in 5d:10m
-        </div>
+        <div className="bg-[#0F171B] rounded-full px-6 py-2">All time</div>
       </div>
 
       {/* Top 3 Leader */}

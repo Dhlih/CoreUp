@@ -9,7 +9,7 @@ const CompletionPage = ({ courseTitle }) => {
     const fetchCourseData = async () => {
       try {
         const res = await fetch(
-          "https://backend-itfest-production.up.railway.app/api/courses",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
           {
             headers: {
               Authorization:

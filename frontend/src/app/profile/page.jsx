@@ -11,8 +11,10 @@ import ErrorAlert from "@/components/ErrorAlert";
 import { IoCloseOutline } from "react-icons/io5";
 import generateUsername from "@/lib/username";
 import { getUserRank } from "@/lib/rank";
-import { RiFireLine } from "react-icons/ri";
 import { countExpLeft } from "@/lib/exp";
+import { RiFireLine } from "react-icons/ri";
+import { IoMdBook } from "react-icons/io";
+import Link from "next/link";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -20,58 +22,74 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [img, setImg] = useState("");
+  const [img, setImg] = useState(null);
+  const [previewImg, setPreviewImg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [rank, setRank] = useState("");
   const [exp, setExp] = useState("");
+  const [courses, setCourses] = useState([]);
 
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const session = await getSession();
+  const fetchUserData = async () => {
+    const session = await getSession();
 
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: session.value,
+        },
+      }
+    );
+
+    const user = await response.json();
+    const exp = await countExpLeft();
+    const rank = await getUserRank();
+
+    setExp(exp);
+    setUser(user.data);
+    setName(user.data.name);
+    setRank(rank);
+  };
+
+  const fetchCourseData = async () => {
+    const session = await getSession();
+
+    try {
       const response = await fetch(
-        `https://backend-itfest-production.up.railway.app/api/user`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
         {
           headers: {
-            "Content-Type": "application/json",
             Authorization: session.value,
           },
         }
       );
-      const user = await response.json();
-      const exp = await countExpLeft();
+      const data = await response.json();
+      setCourses(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      console.log("user : ", user);
-
-      console.log("exp :", exp);
-      const rank = await getUserRank();
-
-      setExp(exp);
-      setUser(user.data);
-      setName(user.data.name);
-      setPassword(user.data.password);
-      setRank(rank);
-    };
-
+  useEffect(() => {
     fetchUserData();
+    fetchCourseData();
   }, []);
 
   const editProfile = async () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("password", password);
-    formData.append("photo", img);
     formData.append("password_confirmation", passwordConfirmation);
+    if (img) formData.append("photo", img);
 
     try {
       const session = await getSession();
-
-      console.log("session :", session);
       const response = await fetch(
-        "https://backend-itfest-production.up.railway.app/api/user/update",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/update`,
         {
           method: "POST",
           headers: {
@@ -82,24 +100,24 @@ const Profile = () => {
       );
 
       if (response.ok) {
-        console.log("berhasil mengedit");
         setIsSuccess(true);
+        fetchUserData();
       }
     } catch (error) {
       console.log(error);
+      setIsSuccess(false);
     }
 
     setIsEdit(false);
     setShowAlert(true);
-    setTimeout(() => {
-      setShowAlert(false);
-    }, 1000);
+    setTimeout(() => setShowAlert(false), 1000);
   };
 
   const handleUploadFile = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      setImg(URL.createObjectURL(selectedFile));
+      setImg(selectedFile);
+      setPreviewImg(URL.createObjectURL(selectedFile));
     }
   };
 
@@ -116,7 +134,7 @@ const Profile = () => {
       )}
 
       {isEdit && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center  ">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="bg-[#212C31] p-6 rounded-xl w-full max-w-sm mx-4 shadow-lg relative">
             <div className="flex justify-end">
               <IoCloseOutline
@@ -125,14 +143,14 @@ const Profile = () => {
               />
             </div>
             <div className="flex justify-center relative">
-              {user.photo || img ? (
+              {previewImg || user.photo ? (
                 <img
-                  src={user.photo || img}
-                  className="w-18 h-18 rounded-full object-cover border-white/20 "
+                  src={previewImg || user.photo}
+                  className="w-18 h-18 rounded-full object-cover border-white/20"
                   alt=""
                 />
               ) : (
-                <div className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
                   {generateUsername(user.name)}
                 </div>
               )}
@@ -144,7 +162,7 @@ const Profile = () => {
                 className="hidden"
               />
               <div
-                className="absolute top-10 right-26 bg-[#3B82F6]  p-2 rounded-full text-sm cursor-pointer"
+                className="absolute top-10 right-26 bg-[#3B82F6] p-2 rounded-full text-sm cursor-pointer"
                 onClick={() => fileInputRef.current.click()}
               >
                 <MdOutlineModeEdit />
@@ -193,8 +211,8 @@ const Profile = () => {
         </div>
       )}
 
-      <div className="py-[4rem]   bg-[#131F24]  md:px-30 px-[1.5rem] flex flex-col space-y-[2rem]">
-        <h1 className="font-bold md:text-4xl text-3xl ">My Profile</h1>
+      <div className="py-[4rem] bg-[#131F24] md:px-30 px-[1.5rem] flex flex-col space-y-[2rem]">
+        <h1 className="font-bold md:text-4xl text-3xl">My Profile</h1>
 
         <div className="bg-[#0F171B] p-6 rounded-xl">
           <div className="flex items-center justify-between">
@@ -206,7 +224,7 @@ const Profile = () => {
                   alt=""
                 />
               ) : (
-                <div className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
                   {generateUsername(user.name)}
                 </div>
               )}
@@ -224,9 +242,8 @@ const Profile = () => {
             </button>
           </div>
 
-          {/* user level */}
-          <div className="w-full mt-[1.5rem]">
-            <div className="flex items-center justify-between ">
+          <div className="w-full mt-[1rem]">
+            <div className="flex items-center justify-between">
               <span>Level {user?.level}</span>
               <span>
                 {user?.exp} / {exp?.expLeft} EXP
@@ -240,7 +257,6 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* statistics */}
         <div>
           <h2 className="text-3xl font-semibold my-[2rem]">Statistics</h2>
           <div className="grid md:grid-cols-4 grid-cols-2 gap-[2rem] max-w-[500px] md:max-w-none">
@@ -275,27 +291,31 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* achivement */}
-        {/* <div>
-          <h2 className="text-3xl font-semibold my-[2rem]">Achivement</h2>
-          <div className="space-y-[2rem]">
-            <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem]  w-full">
-              <h3>Current Level</h3>
-              <div className="flex items-center space-x-[1rem]">
-                <FaRegStar className="text-3xl" />
-                <span className="text-3xl font-semibold">{user?.level}</span>
-              </div>
-            </div>
-
-            <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem]  w-full">
-              <h3>Current Level</h3>
-              <div className="flex items-center space-x-[1rem]">
-                <FaRegStar className="text-3xl" />
-                <span className="text-3xl font-semibold">{user?.level}</span>
-              </div>
-            </div>
+        {/* ✅ Tambahan: My Courses */}
+        <div>
+          <div className="flex items-center justify-between my-[1.5rem]">
+            <h2 className="text-3xl font-semibold">My Courses</h2>
+            <Link
+              href="/my-courses"
+              className="text-[#4F9CF9] text-lg hover:text-[#4F9CF9]/70"
+            >
+              View all
+            </Link>
           </div>
-        </div> */}
+          {courses?.slice(0, 4).map((course, index) => (
+            <div
+              className="bg-[#0F171B] px-6 py-4 rounded-xl flex items-center space-x-[1.5rem]"
+              key={index}
+            >
+              <div className="bg-[#131F24] p-4 rounded-lg">
+                <IoMdBook className="text-3xl" />
+              </div>
+              <Link href={`/my-courses/${course.title}`}>
+                <h3 className="font-medium text-xl">{course.title}</h3>
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
