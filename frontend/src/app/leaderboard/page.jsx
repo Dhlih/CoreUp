@@ -52,7 +52,7 @@ const Leaderboard = () => {
               <div key={actual.id}>
                 <div className="flex flex-col items-center justify-center">
                   {!user.img ? (
-                    <div className="bg-[#212C31] flex items-center justify-center w-14 h-14 p-4 rounded-full">
+                    <div className="bg-[#212C31] flex items-center justify-center md:w-14 md:h-14 h-12 w-12 p-4 rounded-full">
                       <p>{generateUsername(user.name)}</p>
                     </div>
                   ) : (
@@ -64,11 +64,11 @@ const Leaderboard = () => {
                   )}
 
                   <p className="mt-[0.5rem] font-semibold">{actual.name}</p>
-                  <p>{actual.exp} EXP</p>
+                  <p className="text-sm opacity-80">{actual.exp} EXP</p>
                 </div>
 
                 <div
-                  className={`rounded-lg ${rankClass[index]} mt-[1rem] flex items-center justify-center md:p-[3rem] p-[2rem]`}
+                  className={`rounded-lg ${rankClass[index]} mt-[1rem] flex items-center justify-center md:p-[3rem] p-[1.7rem]`}
                 >
                   <p className="md:text-3xl text-xl font-bold">
                     {rankLabel[index]}

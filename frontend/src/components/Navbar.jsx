@@ -49,27 +49,26 @@ export default function Navbar() {
     };
   }, [isClicked]);
 
+  const fetchUserData = async () => {
+    const session = await getSession();
+    console.log("session : ", session);
+
+    if (session) {
+      // Ambil data profil
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+        headers: {
+          Authorization: session.value,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUser(data);
+        });
+    }
+  };
+
   useEffect(() => {
     setHasMounted(true); // client sudah mount
-
-    const fetchUserData = async () => {
-      const session = await getSession();
-      console.log("session : ", session);
-
-      if (session) {
-        // Ambil data profil
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-          headers: {
-            Authorization: session.value,
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setUser(data);
-          });
-      }
-    };
-
     fetchUserData();
   }, [pathName]);
 
@@ -85,6 +84,7 @@ export default function Navbar() {
       });
       const isLogout = await deleteSession();
       if (isLogout) router.push("/");
+      fetchUserData();
     } catch (error) {
       console.log(error);
     }
@@ -100,8 +100,8 @@ export default function Navbar() {
       {/* left side */}
       <div className="relative w-full md:px-20 px-[1rem] flex items-center justify-between ">
         <Link href="/" className="flex items-center space-x-[0.8rem]">
-          <PiBrainLight className="text-5xl text-[#4F9CF9]" />
-          <h2 className="text-2xl font-bold text-white">CoreUp</h2>
+          <PiBrainLight className="md:text-5xl text-4xl text-[#4F9CF9]" />
+          <h2 className="md:text-2xl text-xl font-bold text-white">CoreUp</h2>
         </Link>
 
         {/* right side */}
@@ -149,17 +149,17 @@ export default function Navbar() {
             </div>
           </div>
         ) : (
-          <div className="flex space-x-[1.5rem]">
+          <div className="flex md:space-x-[1.5rem] space-x-[0.7rem]">
             <ModalLogin />
             <ModalDaftar />
             <button
-              className="btn bg-[#0F171B] text-white  hover:brightness-110 p-6 transition text-sm shadow-none rounded-lg"
+              className="btn bg-[#0F171B] text-white  hover:brightness-110 md:p-6 p-4 transition text-sm shadow-none rounded-lg"
               onClick={() => document.getElementById("modal_login").showModal()}
             >
               Login
             </button>
             <button
-              className="btn bg-[#3B82F6] rounded-lg text-white shadow-none p-6 hover:opacity-90 transition text-sm "
+              className="btn bg-[#3B82F6] rounded-lg text-white shadow-none md:p-6 p-4 hover:opacity-90 transition text-sm "
               onClick={() =>
                 document.getElementById("modal_daftar").showModal()
               }

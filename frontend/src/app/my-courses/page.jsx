@@ -63,15 +63,15 @@ const MyCourse = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="bg-[#131F24] px-20 py-[3rem]">
+    <div className="bg-[#131F24] md:px-20 px-[1.5rem] py-[3rem]">
       {isDeleted && (
         <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
           <Alert text="Berhasil dihapus" />
         </div>
       )}
 
-      <div className="flex items-center justify-between">
-        <h1 className="font-bold text-4xl ">My Courses</h1>
+      <div className="flex md:flex-row flex-col md:items-center justify-between">
+        <h1 className="font-bold text-4xl md:mb-0 mb-[1.5rem]">My Courses</h1>
 
         {/* input field */}
         <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3  text-sm  ">

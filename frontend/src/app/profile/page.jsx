@@ -258,7 +258,7 @@ const Profile = () => {
         </div>
 
         <div>
-          <h2 className="text-3xl font-semibold my-[2rem]">Statistics</h2>
+          <h2 className="text-2xl font-semibold my-[2rem]">Statistics</h2>
           <div className="grid md:grid-cols-4 grid-cols-2 gap-[2rem] max-w-[500px] md:max-w-none">
             <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Current Rank</h3>
@@ -291,10 +291,9 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* ✅ Tambahan: My Courses */}
         <div>
           <div className="flex items-center justify-between my-[1.5rem]">
-            <h2 className="text-3xl font-semibold">My Courses</h2>
+            <h2 className="text-2xl font-semibold">My Courses</h2>
             <Link
               href="/my-courses"
               className="text-[#4F9CF9] text-lg hover:text-[#4F9CF9]/70"
@@ -311,7 +310,9 @@ const Profile = () => {
                 <IoMdBook className="text-3xl" />
               </div>
               <Link href={`/my-courses/${course.title}`}>
-                <h3 className="font-medium text-xl">{course.title}</h3>
+                <h3 className=" md:text-xl text-base font-semibold">
+                  {course.title}
+                </h3>
               </Link>
             </div>
           ))}
