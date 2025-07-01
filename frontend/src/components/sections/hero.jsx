@@ -15,13 +15,13 @@ export default function Hero() {
             <h1 className="md:text-5xl text-4xl font-bold leading-14">
               Experience The Excitement Of Learning Anything With CoreUp
             </h1>
-            <p className="py-6   text-lg opacity-80">
+            <p className="py-6  text-lg opacity-80">
               Get an automated learning roadmap, master your dream skills, and
               level up with a gamified system that makes learning more
               addictive!
             </p>
             <Link
-              href="/create-course "
+              href="/create-course"
               className="btn bg-[#3B82F6] p-6 shadow-none rounded-lg mt-[1rem]"
             >
               Learn Now →

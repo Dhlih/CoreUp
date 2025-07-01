@@ -108,7 +108,7 @@ export default function CreateCourse() {
   if (loading) return <Loading />;
 
   return (
-    <div className="md:py-[4rem] text-white md:px-20 px-[1.5rem] ">
+    <div className="py-[4rem]  text-white md:px-20 px-[1.5rem] ">
       {createLoading ? (
         <div className="flex flex-col justify-center items-center space-y-[1rem]">
           {showAlertModal && <ErrorAlert text={"Terjadi sebuah kesalahan"} />}

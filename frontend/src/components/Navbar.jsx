@@ -78,13 +78,18 @@ export default function Navbar() {
     const session = await getSession();
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+        method: "POST",
         headers: {
           Authorization: session.value,
         },
       });
       const isLogout = await deleteSession();
-      if (isLogout) router.push("/");
-      fetchUserData();
+
+      if (isLogout) {
+        router.push("/");
+        setUser(null);
+        setIsClicked(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -99,14 +104,14 @@ export default function Navbar() {
     <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg md:py-[0.8rem] py-[1rem] ">
       {/* left side */}
       <div className="relative w-full md:px-20 px-[1rem] flex items-center justify-between ">
-        <Link href="/" className="flex items-center space-x-[0.8rem]">
+        <Link href="/" className="flex items-center space-x-[0.5rem]">
           <PiBrainLight className="md:text-5xl text-4xl text-[#4F9CF9]" />
           <h2 className="md:text-2xl text-xl font-bold text-white">CoreUp</h2>
         </Link>
 
         {/* right side */}
         {user ? (
-          <div className="flex items-center md:space-x-[2.5rem] space-x-[2rem] ">
+          <div className="flex items-center md:space-x-[2.5rem] space-x-[1.5rem] ">
             <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
               <Link
                 className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
@@ -135,15 +140,15 @@ export default function Navbar() {
               onClick={handleProfileClick}
               className="cursor-pointer"
             >
-              {user.data.photo ? (
+              {user?.data?.photo ? (
                 <img
-                  src={user.data.photo}
+                  src={user?.data?.photo}
                   className="w-12 h-12 rounded-full object-cover border-white/20 "
                   alt=""
                 />
               ) : (
                 <div className="w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
-                  {generateUsername(user.data.name)}
+                  {generateUsername(user?.data?.name)}
                 </div>
               )}
             </div>
@@ -153,13 +158,13 @@ export default function Navbar() {
             <ModalLogin />
             <ModalDaftar />
             <button
-              className="btn bg-[#0F171B] text-white  hover:brightness-110 md:p-6 p-4 transition text-sm shadow-none rounded-lg"
+              className="btn bg-[#0F171B] text-white  hover:brightness-110 md:p-6 p-4 transition md:text-sm text-xs shadow-none rounded-lg"
               onClick={() => document.getElementById("modal_login").showModal()}
             >
               Login
             </button>
             <button
-              className="btn bg-[#3B82F6] rounded-lg text-white shadow-none md:p-6 p-4 hover:opacity-90 transition text-sm "
+              className="btn bg-[#3B82F6] rounded-lg text-white shadow-none md:p-6 p-4 hover:opacity-90 transition md:text-sm text-xs "
               onClick={() =>
                 document.getElementById("modal_daftar").showModal()
               }
@@ -182,15 +187,15 @@ export default function Navbar() {
                   ref={profileImageRef}
                   onClick={handleProfileClick}
                 >
-                  {user.data.photo ? (
+                  {user?.data?.photo ? (
                     <img
-                      src={user.data.photo}
+                      src={user?.data?.photo}
                       className="w-14 h-14 rounded-full object-cover"
                       alt=""
                     />
                   ) : (
                     <div className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
-                      {generateUsername(user.data.name)}
+                      {generateUsername(user?.data?.name)}
                     </div>
                   )}
                 </div>
@@ -205,30 +210,30 @@ export default function Navbar() {
               />
             </div>
 
-            <div className="flex flex-col p-2 space-y-[0.7rem]">
+            <div className="flex flex-col ">
               <Link
                 href="/my-courses"
-                className="cursor-pointer w-full mt-[1rem] hover:text-white/70  rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full mt-[1rem] p-2 hover:bg-[#0F171B]/70 rounded-lg   flex items-center space-x-[1rem]"
               >
                 <IoMdBook className="text-xl" />
                 <span>My Courses</span>
               </Link>
               <Link
                 href="/profile"
-                className="cursor-pointer w-full mt-[1rem] hover:text-white/70  rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full mt-[1rem]  p-2 hover:bg-[#0F171B]/70   rounded-lg   flex items-center space-x-[1rem]"
               >
                 <CgProfile className="text-xl" />
                 <span>Your Profile</span>
               </Link>
               <Link
                 href="/leaderboard"
-                className="cursor-pointer w-full mt-[1rem] hover:text-white/70  rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full mt-[1rem]  p-2 hover:bg-[#0F171B]/70   rounded-lg   flex items-center space-x-[1rem]"
               >
                 <MdOutlineLeaderboard className="text-xl" />
                 <span>Leaderboard</span>
               </Link>
               <button
-                className="cursor-pointer w-full mt-[1rem] hover:text-white/70  rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full mt-[1rem]  p-2 hover:bg-[#0F171B]/70   rounded-lg   flex items-center space-x-[1rem]"
                 onClick={signOutUser}
               >
                 <BiLogOut className="text-xl" />

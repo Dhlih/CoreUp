@@ -50,7 +50,7 @@ export default function ModalLogin() {
         // Routing ke halaman create_course
         router.push("/create-course");
       } else {
-        alert(data.message || "Email atau password salah 😢");
+        setShowAlert(true);
       }
     } catch (error) {
       setShowAlert(true);
