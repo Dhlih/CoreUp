@@ -57,7 +57,7 @@ const ModulCard = ({
 
           <div className="flex items-center space-x-[0.5rem] text-base">
             <LuClock2 />
-            <span>1h</span>
+            <span>1 hour</span>
           </div>
         </div>
       </div>
