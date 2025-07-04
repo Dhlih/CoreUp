@@ -22,6 +22,7 @@ export default function Navbar() {
   const [hasMounted, setHasMounted] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [user, setUser] = useState("");
+  const [isSuccess, setIsSuccess] = useState(null);
   const pathName = usePathname();
 
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function Navbar() {
   useEffect(() => {
     setHasMounted(true); // client sudah mount
     fetchUserData();
-  }, [pathName]);
+  }, [pathName, isSuccess]);
 
   if (!hasMounted) return null;
 
@@ -155,7 +156,7 @@ export default function Navbar() {
           </div>
         ) : (
           <div className="flex md:space-x-[1.5rem] space-x-[0.7rem]">
-            <ModalLogin />
+            <ModalLogin setIsSuccess={setIsSuccess} />
             <ModalDaftar />
             <button
               className="btn bg-[#0F171B] text-white  hover:brightness-110 md:p-6 p-4 transition md:text-sm text-xs shadow-none rounded-lg"

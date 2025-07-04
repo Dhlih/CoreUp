@@ -1,9 +1,39 @@
+"use client";
+
 import Footer from "../Footer";
-import Link from "next/link";
+import { getSession } from "@/lib/session";
+import { useEffect, useState } from "react";
+import ErrorAlert from "../ErrorAlert";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const [user, setUser] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+
+  const router = useRouter();
+
+  const checkSession = async () => {
+    const session = await getSession;
+    const user = setUser(session);
+
+    if (!user) {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 1000);
+    }
+
+    router.push("/create-course");
+  };
+
   return (
     <div>
+      {showAlert && (
+        <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50">
+          <ErrorAlert text="Login first!" />
+        </div>
+      )}
+
       <div
         className="hero min-h-screen"
         style={{
@@ -20,12 +50,12 @@ export default function Hero() {
               level up with a gamified system that makes learning more
               addictive!
             </p>
-            <Link
-              href="/create-course"
+            <button
               className="btn bg-[#3B82F6] p-6 shadow-none rounded-lg mt-[1rem]"
+              onClick={checkSession}
             >
               Learn Now →
-            </Link>
+            </button>
           </div>
         </div>
       </div>

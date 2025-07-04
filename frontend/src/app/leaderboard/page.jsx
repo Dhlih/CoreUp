@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
 import Loading from "@/components/Loading";
-import { getUserRank } from "@/lib/rank";
+import { getLeaderboardRank, getRankColor } from "@/lib/rank";
 import { FaCrown } from "react-icons/fa6";
+import { getUserRank } from "@/lib/rank";
+import { GiRank2 } from "react-icons/gi";
 
 const Leaderboard = () => {
   const [otherUsers, setOtherUsers] = useState([]);
@@ -13,7 +14,7 @@ const Leaderboard = () => {
 
   const fetchData = async () => {
     try {
-      const sortedUsers = (await getUserRank()).sortedUsers;
+      const sortedUsers = (await getLeaderboardRank()).sortedUsers;
       const topThree = sortedUsers.slice(0, 3);
       const otherUsers = sortedUsers.slice(4);
 
@@ -50,7 +51,7 @@ const Leaderboard = () => {
               "bg-blue-600 md:h-[170px] h-[130px]",
               "bg-[#93C5FD] md:h-[110px] h-[80px]",
             ];
-            const rankLabel = ["2nd", "1st", "3rd"];
+            const rankLabel = ["2", "1", "3"];
             const heightOrder = [1, 0, 2];
 
             // satu data saja ambil dari topthree
@@ -75,16 +76,23 @@ const Leaderboard = () => {
                     />
                   )}
 
-                  <p className="mt-[0.5rem] font-semibold text-center mx-auto">
+                  <p className="mt-[0.5rem] font-semibold text-center ">
                     {actual.name}
                   </p>
-                  <p className="text-sm opacity-80">{actual.exp} EXP</p>
+                  <div className="flex items-center justify-start space-x-1">
+                    <GiRank2
+                      className={`text-xl ${getRankColor(actual.exp)}`}
+                    />
+                    <span className="font-semibold text-xs">
+                      {getUserRank(actual.exp)}
+                    </span>
+                  </div>
                 </div>
 
                 <div
-                  className={`rounded-lg ${rankClass[index]} mt-[1rem] flex items-center justify-center md:p-[3rem] p-[1.7rem]`}
+                  className={`rounded-lg ${rankClass[index]} mt-[1rem] flex items-center justify-center md:p-[3rem] p-[1rem]`}
                 >
-                  <p className="md:text-3xl text-xl font-bold">
+                  <p className="md:text-3xl text-2xl font-bold">
                     {rankLabel[index]}
                   </p>
                 </div>
@@ -103,6 +111,7 @@ const Leaderboard = () => {
                   <th className="px-6 py-3">Username</th>
                   <th className="px-6 py-3">Exp</th>
                   <th className="px-6 py-3">Level</th>
+                  <th className="px-6 py-3">Rank Badge</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,7 +120,7 @@ const Leaderboard = () => {
                     key={user.id}
                     className="bg-[#0F171B] hover:bg-[#212C31] cursor-pointer transition-colors rounded-lg"
                   >
-                    <td className="px-6 py-4 text-2xl font-semibold text-white rounded-lg">
+                    <td className="px-6 py-4 md:text-2xl text-lg font-semibold text-white rounded-lg">
                       {index + 4}
                     </td>
                     <td className="px-6 py-4 flex items-center space-x-3">
@@ -135,6 +144,16 @@ const Leaderboard = () => {
                     </td>
                     <td className="px-6 py-4">{user.exp} EXP</td>
                     <td className="px-6 py-4 rounded-r-lg">{user.level}</td>
+                    <td className="px-6 py-4 rounded-r-lg">
+                      <div className="flex items-center justify-start space-x-2">
+                        <GiRank2
+                          className={`text-3xl ${getRankColor(user?.exp)}`}
+                        />
+                        <span className="font-semibold">
+                          {getUserRank(user.exp)}
+                        </span>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

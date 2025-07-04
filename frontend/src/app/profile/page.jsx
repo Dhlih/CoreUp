@@ -1,20 +1,26 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { HiOutlineBadgeCheck } from "react-icons/hi";
+import Link from "next/link";
+
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlineModeEdit } from "react-icons/md";
-import { getSession } from "@/lib/session";
-import Alert from "@/components/SuccessAlert";
-import ErrorAlert from "@/components/ErrorAlert";
 import { IoCloseOutline } from "react-icons/io5";
-import generateUsername from "@/lib/username";
-import { getUserRank } from "@/lib/rank";
-import { countExpLeft } from "@/lib/exp";
 import { RiFireLine } from "react-icons/ri";
 import { IoMdBook } from "react-icons/io";
-import Link from "next/link";
+import { GiRank2 } from "react-icons/gi";
+
+import Alert from "@/components/SuccessAlert";
+import ErrorAlert from "@/components/ErrorAlert";
+
+import generateUsername from "@/lib/username";
+import { getLeaderboardRank, getRankColor } from "@/lib/rank";
+import { countExpLeft } from "@/lib/exp";
+import { getSession } from "@/lib/session";
+import { getUserRank } from "@/lib/rank";
+
+import Loading from "@/components/Loading";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -29,6 +35,7 @@ const Profile = () => {
   const [rank, setRank] = useState("");
   const [exp, setExp] = useState("");
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fileInputRef = useRef(null);
 
@@ -49,7 +56,7 @@ const Profile = () => {
     const exp = await countExpLeft();
 
     console.log("exp di profile :", exp);
-    const rank = await getUserRank();
+    const rank = await getLeaderboardRank();
 
     setExp(exp);
     setUser(user.data);
@@ -79,6 +86,7 @@ const Profile = () => {
   useEffect(() => {
     fetchUserData();
     fetchCourseData();
+    setLoading(false);
   }, []);
 
   const editProfile = async () => {
@@ -122,6 +130,8 @@ const Profile = () => {
       setPreviewImg(URL.createObjectURL(selectedFile));
     }
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="w-full relative min-h-screen">
@@ -263,7 +273,7 @@ const Profile = () => {
           <h2 className="text-2xl font-semibold my-[2rem]">Statistics</h2>
           <div className="grid md:grid-cols-4 grid-cols-2 gap-[2rem] max-w-[500px] md:max-w-none">
             <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
-              <h3>Current Rank</h3>
+              <h3>Leaderboard Rank</h3>
               <div className="flex items-center space-x-[1rem]">
                 <RiFireLine className="text-3xl" />
                 <span className="text-3xl font-semibold">{rank.userRank}</span>
@@ -284,10 +294,12 @@ const Profile = () => {
               </div>
             </div>
             <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
-              <h3>Course Done</h3>
+              <h3>Current Rank</h3>
               <div className="flex items-center space-x-[1rem]">
-                <HiOutlineBadgeCheck className="text-3xl" />
-                <span className="text-3xl font-semibold">10</span>
+                <GiRank2 className={`text-3xl ${getRankColor(user?.exp)} `} />
+                <span className="text-3xl font-semibold">
+                  {getUserRank(user?.exp)}
+                </span>
               </div>
             </div>
           </div>

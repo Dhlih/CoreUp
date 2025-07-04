@@ -22,6 +22,7 @@ export default function ModalDaftar() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     setMessage("");
 
@@ -47,7 +48,7 @@ export default function ModalDaftar() {
         document.getElementById("modal_daftar")?.close(); // tutup modal daftar
         document.getElementById("modal_login")?.showModal(); // buka modal login
       } else {
-        alert(data.message || "Pendaftaran gagal 😢");
+        setShowAlert(true);
       }
     } catch (error) {
       setShowAlert(true);
@@ -97,6 +98,7 @@ export default function ModalDaftar() {
               value={formData.name}
               onChange={handleChange}
               className="input input-bordered w-full"
+              maxLength={10}
               required
             />
 
@@ -107,6 +109,7 @@ export default function ModalDaftar() {
               value={formData.email}
               onChange={handleChange}
               className="input input-bordered w-full"
+              maxLength={50}
               required
             />
 

@@ -56,7 +56,7 @@ const ModulCard = ({
         <div className="flex items-center space-x-[2rem] md:text-xl text-lg md:mt-0 mt-[1rem]">
           <div className="flex items-center space-x-[0.5rem] text-base">
             <LuBookMinus />
-            <span>{moduleAmount} Modul</span>
+            <span>{moduleAmount} Module</span>
           </div>
         </div>
       </div>

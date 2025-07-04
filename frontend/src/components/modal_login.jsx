@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { createSession } from "@/lib/session";
 import ErrorAlert from "./ErrorAlert";
 
-export default function ModalLogin() {
+export default function ModalLogin({ setIsSuccess }) {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -46,6 +46,8 @@ export default function ModalLogin() {
         // Reset form dan tutup modal
         setFormData({ email: "", password: "" });
         document.getElementById("modal_login")?.close();
+
+        setIsSuccess(true);
 
         // Routing ke halaman create_course
         router.push("/create-course");
