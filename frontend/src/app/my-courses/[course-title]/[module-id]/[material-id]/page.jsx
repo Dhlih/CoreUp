@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getSession } from "@/lib/session";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import CompletionPage from "@/components/CompletionPage";
+import CompletionMaterial from "@/components/CompletionMaterial";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
 
@@ -100,7 +100,7 @@ const ModuleMaterial = () => {
   if (loading) return <Loading />;
 
   return isFinished ? (
-    <CompletionPage courseTitle={courseTitle} />
+    <CompletionMaterial courseTitle={courseTitle} />
   ) : (
     <div className="py-[4rem] md:px-30 px-[1.5rem] text-white">
       <Link

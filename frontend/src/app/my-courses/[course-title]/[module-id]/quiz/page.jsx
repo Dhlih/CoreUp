@@ -8,16 +8,22 @@ import { getSession } from "@/lib/session";
 import Link from "next/link";
 import ErrorAlert from "@/components/ErrorAlert";
 import Loading from "@/components/Loading";
+import CompletionQuiz from "@/components/CompletionQuiz";
+import { getCourseProgress } from "@/lib/progress";
 
 const Quiz = () => {
   const [indexQuestion, setIndexQuestion] = useState(0);
   const [quizzes, setQuizzes] = useState("");
   const [module, setModule] = useState("");
-  const [timeLeft, setTimeLeft] = useState(180); // ✅ timer default jadi 10 detik
+  const [timeLeft, setTimeLeft] = useState(180);
   const [loading, setLoading] = useState(true);
   const [showAlert, setShowAlert] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [currentAnswer, setCurrentAnswer] = useState("");
+  const [showCompletionPage, setShowCompletionPage] = useState(false);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [courseId, setCourseId] = useState("");
+  const [previousProgress, setPreviousProgress] = useState(null);
 
   const params = useParams();
   const courseTitle = decodeURIComponent(params["course-title"]);
@@ -55,43 +61,48 @@ const Quiz = () => {
     return `${m}:${s}`;
   };
 
-  // ✅ Fetch kuis
+  const fetchQuizzes = async () => {
+    const session = await getSession();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
+        {
+          headers: { Authorization: session.value },
+        }
+      );
+
+      const courseList = await response.json();
+      const selectedCourse = courseList.find(
+        (item) => item.title === courseTitle
+      );
+
+      const detailResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${selectedCourse.id}`,
+        {
+          headers: {
+            Authorization: session.value,
+          },
+        }
+      );
+
+      const moduleList = detailResponse.data.modules;
+      const selectedModule = moduleList.find((mod) => mod.id === moduleId);
+
+      setModule(selectedModule);
+      setQuizzes(selectedModule?.quizzes ?? []);
+      setLoading(false);
+      setCourseId(selectedCourse.id);
+    } catch (error) {
+      console.error("Failed to fetch quizzes:", error);
+    }
+  };
+
+  const getProgress = async () => {
+    const previousProgress = await getCourseProgress();
+    setPreviousProgress(previousProgress);
+  };
+
   useEffect(() => {
-    const fetchQuizzes = async () => {
-      const session = await getSession();
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
-          {
-            headers: { Authorization: session.value },
-          }
-        );
-
-        const courseList = await response.json();
-        const selectedCourse = courseList.find(
-          (item) => item.title === courseTitle
-        );
-
-        const detailResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${selectedCourse.id}`,
-          {
-            headers: {
-              Authorization: session.value,
-            },
-          }
-        );
-
-        const moduleList = detailResponse.data.modules;
-        const selectedModule = moduleList.find((mod) => mod.id === moduleId);
-
-        setModule(selectedModule);
-        setQuizzes(selectedModule?.quizzes ?? []);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch quizzes:", error);
-      }
-    };
-
     fetchQuizzes();
   }, []);
 
@@ -106,12 +117,19 @@ const Quiz = () => {
   const submitAnswer = async () => {
     if (!currentAnswer) {
       setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 1000);
       return;
     }
 
     const session = await getSession();
     const questionId = quizzes[indexQuestion].id;
     setIsSubmit(true);
+
+    if (quizzes[indexQuestion].answer === currentAnswer) {
+      setCorrectAnswers(correctAnswers + 1);
+    }
 
     try {
       const response = await fetch(
@@ -131,9 +149,7 @@ const Quiz = () => {
 
       // ✅ Redirect terakhir pakai useEffect (supaya gak error)
       if (indexQuestion === quizzes.length - 1) {
-        setTimeout(() => {
-          router.push(`/my-courses/${courseTitle}`);
-        }, 1000);
+        setShowCompletionPage(true);
       }
     } catch (error) {
       console.log(error);
@@ -147,6 +163,17 @@ const Quiz = () => {
   };
 
   if (loading) return <Loading />;
+
+  if (showCompletionPage)
+    return (
+      <CompletionQuiz
+        courseTitle={courseTitle}
+        title={"Quiz Complete!"}
+        correctAnswers={correctAnswers}
+        previousProgress={previousProgress[courseId]}
+        courseId={courseId}
+      />
+    );
 
   return (
     <div className="py-[4rem] pb-[5rem] md:px-20 px-[1.5rem]">
@@ -164,6 +191,18 @@ const Quiz = () => {
       )}
 
       <div>
+        {/* mobile timer */}
+        <div className="flex justify-end w-full md:hidden">
+          <div
+            className={`rounded-full bg-[#4F9CF9] py-2 px-6 flex font-medium  items-center space-x-[0.5rem] mb-[1.5rem]  ${
+              timeLeft <= 30 ? "text-red-500" : "text-white"
+            }`}
+          >
+            <LuClock2 />
+            <span>{formatTime(timeLeft)}</span>
+          </div>
+        </div>
+
         <div className="flex md:flex-row flex-col md:items-center justify-between">
           <Link
             href={`/my-courses/${courseTitle}`}
@@ -180,7 +219,11 @@ const Quiz = () => {
           </p>
 
           {/* TIMER */}
-          <div className="rounded-full bg-[#4F9CF9] py-2 px-6 flex items-center space-x-[0.5rem] text-white">
+          <div
+            className={`rounded-full bg-[#4F9CF9] py-2 px-6 md:flex hidden font-medium  items-center space-x-[0.5rem] mb-[1.5rem]  ${
+              timeLeft < 30 ? "text-red-500" : "text-white"
+            }`}
+          >
             <LuClock2 />
             <span>{formatTime(timeLeft)}</span>
           </div>
@@ -201,7 +244,7 @@ const Quiz = () => {
                       ? "bg-[#F43F5E]"
                       : "bg-[#0F171B]"
                     : currentAnswer === option
-                    ? "bg-[#1e293b]"
+                    ? "bg-[#212C31]"
                     : "bg-[#0F171B]"
                 }`}
               >
@@ -223,7 +266,7 @@ const Quiz = () => {
 
       <div className="flex items-center mt-[2.5rem] justify-end">
         <button
-          className="btn bg-[#3B82F6] p-6 rounded-lg text-white"
+          className="btn bg-[#3B82F6] p-6 rounded-lg text-white md:w-auto w-full"
           onClick={() => {
             if (!isSubmit) {
               submitAnswer();

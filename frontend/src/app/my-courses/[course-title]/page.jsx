@@ -81,7 +81,9 @@ export default function CoursePage() {
       <div className="flex justify-between items-center mb-4 md:max-w-[80%]">
         <h1 className="text-4xl font-bold">{course?.title}</h1>
       </div>
-      <p className="mb-4 opacity-80 text-lg md:my-0">{course?.description}</p>
+      <p className="mb-4 opacity-80 text-lg md:my-0 md:max-w-[90%]">
+        {course?.description}
+      </p>
 
       <div className="space-y-[3rem] mt-[1rem]">
         {course?.modules?.map((module, index) => (
@@ -90,14 +92,6 @@ export default function CoursePage() {
               <h2 className="text-2xl font-semibold md:max-w-[70%] w-full">
                 {module?.title}
               </h2>
-
-              <button
-                className="btn bg-[#4F9CF9] text-white px-6 py-2 rounded-full flex items-center space-x-[0.1rem] md:w-auto w-full hover:bg-[#4F9CF9]/70 transition-colors"
-                onClick={() => handleQuizClick(module)}
-              >
-                <MdOutlineAssignment className="text-lg" />
-                <span>Quiz</span>
-              </button>
             </div>
 
             {module.materials.map((material) => (
@@ -122,6 +116,13 @@ export default function CoursePage() {
                 </div>
               </Link>
             ))}
+            <button
+              className="btn bg-[#4F9CF9] text-white p-6 mt-[1.5rem] rounded-lg flex items-center space-x-[0.1rem] w-full hover:bg-[#4F9CF9]/70 transition-colors"
+              onClick={() => handleQuizClick(module)}
+            >
+              <MdOutlineAssignment className="text-2xl" />
+              <span className="text-lg"> Quiz</span>
+            </button>
           </div>
         ))}
       </div>

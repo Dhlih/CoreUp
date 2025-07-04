@@ -101,10 +101,10 @@ export default function Navbar() {
   };
 
   return (
-    <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg md:py-[0.8rem] py-[1rem] ">
+    <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg py-[0.8rem] ">
       {/* left side */}
       <div className="relative w-full md:px-20 px-[1rem] flex items-center justify-between ">
-        <Link href="/" className="flex items-center space-x-[0.5rem]">
+        <Link href="/" className="flex items-center space-x-[0.8rem]">
           <PiBrainLight className="md:text-5xl text-4xl text-[#4F9CF9]" />
           <h2 className="md:text-2xl text-xl font-bold text-white">CoreUp</h2>
         </Link>
@@ -128,7 +128,7 @@ export default function Navbar() {
             </ul>
 
             <Link
-              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-4 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
+              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-3 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
               href="/create-course"
             >
               Create
@@ -143,11 +143,11 @@ export default function Navbar() {
               {user?.data?.photo ? (
                 <img
                   src={user?.data?.photo}
-                  className="w-12 h-12 rounded-full object-cover border-white/20 "
+                  className="md:w-14 md:h-14 w-12 h-12 rounded-full object-cover border-white/20 "
                   alt=""
                 />
               ) : (
-                <div className="w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div className="md:w-14 md:h-14 w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
                   {generateUsername(user?.data?.name)}
                 </div>
               )}
@@ -177,13 +177,13 @@ export default function Navbar() {
         {/* shown after image clicked */}
         {isClicked && (
           <div
-            className="absolute  top-20 md:right-18 right-8  bg-[#212C31] p-4 rounded-xl max-w-[220px] w-full shadow-lg"
+            className="absolute py-2  top-20 md:right-18 right-8  bg-[#212C31]  rounded-xl max-w-[220px] w-full shadow-lg"
             ref={dropdownRef}
           >
             <div className="flex justify-between">
-              <div className="flex items-center space-x-[1rem]">
+              <div className="flex items-center space-x-[0.8rem] p-3">
                 <div
-                  className=" bg-[#131F24] rounded-full object-cover border border-white/20 cursor-pointer flex items-center justify-center"
+                  className=" bg-[#131F24] rounded-full object-cover border  border-white/20 cursor-pointer flex items-center justify-center"
                   ref={profileImageRef}
                   onClick={handleProfileClick}
                 >
@@ -205,35 +205,35 @@ export default function Navbar() {
                 </div>
               </div>
               <IoCloseOutline
-                className="text-2xl cursor-pointer"
+                className="text-2xl cursor-pointer mr-3 mt-2"
                 onClick={() => setIsClicked(false)}
               />
             </div>
 
-            <div className="flex flex-col ">
+            <div className="flex flex-col space-y-[0.5rem]">
               <Link
                 href="/my-courses"
-                className="cursor-pointer w-full mt-[1rem] p-2 hover:bg-[#0F171B]/70 rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full  py-3 px-5 hover:bg-[#0F171B]/70  flex items-center space-x-[1rem]"
               >
                 <IoMdBook className="text-xl" />
                 <span>My Courses</span>
               </Link>
               <Link
                 href="/profile"
-                className="cursor-pointer w-full mt-[1rem]  p-2 hover:bg-[#0F171B]/70   rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full py-3 px-5 hover:bg-[#0F171B]/70  flex items-center space-x-[1rem]"
               >
                 <CgProfile className="text-xl" />
                 <span>Your Profile</span>
               </Link>
               <Link
                 href="/leaderboard"
-                className="cursor-pointer w-full mt-[1rem]  p-2 hover:bg-[#0F171B]/70   rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full  py-3 px-5 hover:bg-[#0F171B]/70   flex items-center space-x-[1rem]"
               >
                 <MdOutlineLeaderboard className="text-xl" />
                 <span>Leaderboard</span>
               </Link>
               <button
-                className="cursor-pointer w-full mt-[1rem]  p-2 hover:bg-[#0F171B]/70   rounded-lg   flex items-center space-x-[1rem]"
+                className="cursor-pointer w-full  py-3 px-5  hover:bg-[#0F171B]/70    flex items-center space-x-[1rem]"
                 onClick={signOutUser}
               >
                 <BiLogOut className="text-xl" />

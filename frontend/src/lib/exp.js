@@ -19,6 +19,8 @@ export const countExpLeft = async () => {
     const currentLevelStart = user.data.level * expPerLevel;
     const nextLevelExp = (user.data.level + 1) * expPerLevel; // 1000
 
+    console.log("next level exp : ", nextLevelExp);
+
     const expLeft = nextLevelExp - user.data.exp;
     const progress = ((user.data.exp - currentLevelStart) / expPerLevel) * 100;
 

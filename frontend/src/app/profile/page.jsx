@@ -47,6 +47,8 @@ const Profile = () => {
 
     const user = await response.json();
     const exp = await countExpLeft();
+
+    console.log("exp di profile :", exp);
     const rank = await getUserRank();
 
     setExp(exp);
@@ -246,7 +248,7 @@ const Profile = () => {
             <div className="flex items-center justify-between">
               <span>Level {user?.level}</span>
               <span>
-                {user?.exp} / {exp?.expLeft} EXP
+                {user?.exp} / {exp?.nextLevelExp} EXP
               </span>
             </div>
             <progress

@@ -5,7 +5,7 @@ import { LuClock2 } from "react-icons/lu";
 
 import Link from "next/link";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ModulCard = ({
   title,
@@ -15,6 +15,10 @@ const ModulCard = ({
   courseProgress,
 }) => {
   const [isDelete, setIsDelete] = useState(false);
+
+  useEffect(() => {
+    console.log(courseProgress);
+  }, []);
 
   const deleteCourse = async () => {
     const session = await getSession();
@@ -54,11 +58,6 @@ const ModulCard = ({
             <LuBookMinus />
             <span>{moduleAmount} Modul</span>
           </div>
-
-          <div className="flex items-center space-x-[0.5rem] text-base">
-            <LuClock2 />
-            <span>1 hour</span>
-          </div>
         </div>
       </div>
 
@@ -82,7 +81,7 @@ const ModulCard = ({
               className="btn bg-[#3B82F6] md:p-6 p-4 hover:bg-[#3B82F6]/70 text-sm rounded-lg"
               onClick={() => console.log(id)}
             >
-              Lanjutkan
+              Continue
             </button>
           </Link>
 
@@ -90,7 +89,7 @@ const ModulCard = ({
             className="btn bg-[#F43F5E] md:p-6 p-4 hover:bg-[#F43F5E]/70 text-sm rounded-lg"
             onClick={() => setIsDelete(!isDelete)}
           >
-            Hapus
+            Delete
           </button>
         </div>
       </div>

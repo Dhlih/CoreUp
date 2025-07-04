@@ -30,19 +30,8 @@ const MyCourse = () => {
             },
           }
         );
-
-        // fetch quiz-user
-        const quizRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/quiz-user`,
-          {
-            headers: {
-              Authorization: session.value,
-            },
-          }
-        );
-
         // hitung progress berdasarkan 2 data di atas
-        const progressCourses = getCourseProgress(courseRes.data, quizRes.data);
+        const progressCourses = getCourseProgress();
         setCourses(courseRes.data);
         setCourseProgress(progressCourses);
       } catch (err) {
@@ -54,6 +43,10 @@ const MyCourse = () => {
 
     loadCoursesWithProgress();
   }, [isDeleted]);
+
+  useEffect(() => {
+    console.log(courseProgress);
+  }, []);
 
   // Filter courses berdasarkan courseTitle
   const filteredCourses = courses.filter((course) =>
@@ -78,7 +71,7 @@ const MyCourse = () => {
           <IoIosSearch className="opacity-60 text-lg" />
           <input
             type="text"
-            placeholder="Cari kursus saya..."
+            placeholder="Enter course title..."
             className="rounded-full outline-none bg-transparent text-white text-sm"
             onChange={(evt) => setCourseTitle(evt.target.value)}
             value={courseTitle}
