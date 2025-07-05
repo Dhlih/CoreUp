@@ -5,13 +5,18 @@ import { TbTargetArrow } from "react-icons/tb";
 import { RiProgress5Line } from "react-icons/ri";
 import { getCourseProgress } from "@/lib/progress";
 
-const CompletionMaterial = ({ courseTitle, previousProgress, courseId }) => {
+const CompletionMaterial = ({
+  courseTitle,
+  previousProgress,
+  courseId,
+  isDone,
+}) => {
   const [progress, setProgress] = useState(0);
-  const accuracy = (correctAnswers / 5) * 100;
 
   const countProgressIncrease = async () => {
     const currentProgress = await getCourseProgress();
-    const progressIncrease = previousProgress - currentProgress[courseId];
+    const progressIncrease = currentProgress[courseId] - previousProgress;
+    console.log("increase : ", progressIncrease);
     return progressIncrease;
   };
 
@@ -43,7 +48,7 @@ const CompletionMaterial = ({ courseTitle, previousProgress, courseId }) => {
 
           <div className="flex items-center space-x-[0.5rem] mt-[1rem]">
             <TbTargetArrow className="text-3xl" />
-            <h3 className="font-semibold text-2xl ">+ 50</h3>
+            <h3 className="font-semibold text-2xl ">+ {isDone ? 0 : 50}</h3>
           </div>
         </div>
       </div>

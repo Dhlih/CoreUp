@@ -83,7 +83,7 @@ const Leaderboard = () => {
                     <GiRank2
                       className={`text-xl ${getRankColor(actual.exp)}`}
                     />
-                    <span className="font-semibold text-xs">
+                    <span className="font-semibold md:text-base text-sm">
                       {getUserRank(actual.exp)}
                     </span>
                   </div>

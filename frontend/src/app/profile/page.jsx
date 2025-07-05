@@ -19,6 +19,7 @@ import { getLeaderboardRank, getRankColor } from "@/lib/rank";
 import { countExpLeft } from "@/lib/exp";
 import { getSession } from "@/lib/session";
 import { getUserRank } from "@/lib/rank";
+import { TbMilitaryRank } from "react-icons/tb";
 
 import Loading from "@/components/Loading";
 
@@ -272,34 +273,32 @@ const Profile = () => {
         <div>
           <h2 className="text-2xl font-semibold my-[2rem]">Statistics</h2>
           <div className="grid md:grid-cols-4 grid-cols-2 gap-[2rem] max-w-[500px] md:max-w-none">
-            <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
-              <h3>Leaderboard Rank</h3>
-              <div className="flex items-center space-x-[1rem]">
-                <RiFireLine className="text-3xl" />
-                <span className="text-3xl font-semibold">{rank.userRank}</span>
+            <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
+              <h3>Rank</h3>
+              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl ">
+                <RiFireLine />
+                <span className="font-semibold">{rank.userRank}</span>
               </div>
             </div>
-            <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
+            <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Current Level</h3>
-              <div className="flex items-center space-x-[1rem]">
-                <FaRegStar className="text-3xl" />
-                <span className="text-3xl font-semibold">{user?.level}</span>
+              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
+                <FaRegStar />
+                <span className=" font-semibold">{user?.level}</span>
               </div>
             </div>
-            <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
+            <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Current Exp</h3>
-              <div className="flex items-center space-x-[1rem]">
-                <AiOutlineThunderbolt className="text-3xl" />
-                <span className="text-3xl font-semibold">{user?.exp}</span>
+              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
+                <AiOutlineThunderbolt />
+                <span className="font-semibold">{user?.exp}</span>
               </div>
             </div>
-            <div className="bg-[#0F171B] p-6 rounded-lg space-y-[1rem] max-w-[250px] w-full">
-              <h3>Current Rank</h3>
-              <div className="flex items-center space-x-[1rem]">
-                <GiRank2 className={`text-3xl ${getRankColor(user?.exp)} `} />
-                <span className="text-3xl font-semibold">
-                  {getUserRank(user?.exp)}
-                </span>
+            <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
+              <h3>Current Exp</h3>
+              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
+                <GiRank2 className={`${getRankColor(user?.exp)}`} />
+                <span className="font-semibold">{getUserRank(user?.exp)}</span>
               </div>
             </div>
           </div>
@@ -315,21 +314,23 @@ const Profile = () => {
               View all
             </Link>
           </div>
-          {courses?.slice(0, 4).map((course, index) => (
-            <div
-              className="bg-[#0F171B] px-6 py-4 rounded-xl flex items-center space-x-[1.5rem]"
-              key={index}
-            >
-              <div className="bg-[#131F24] p-4 rounded-lg">
-                <IoMdBook className="text-3xl" />
+          <div className="flex flex-col space-y-[1.5rem]">
+            {courses?.slice(0, 4).map((course, index) => (
+              <div
+                className="bg-[#0F171B] px-6 py-4 rounded-xl flex items-center space-x-[1.5rem]"
+                key={index}
+              >
+                <div className="bg-[#131F24] p-4 rounded-lg">
+                  <IoMdBook className="md:text-3xl text-xl" />
+                </div>
+                <Link href={`/my-courses/${course.title}`}>
+                  <h3 className=" md:text-xl text-base font-semibold">
+                    {course.title}
+                  </h3>
+                </Link>
               </div>
-              <Link href={`/my-courses/${course.title}`}>
-                <h3 className=" md:text-xl text-base font-semibold">
-                  {course.title}
-                </h3>
-              </Link>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import Link from "next/link";
 import CompletionMaterial from "@/components/CompletionMaterial";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
+import { getCourseProgress } from "@/lib/progress";
 
 const ModuleMaterial = () => {
   const [moduleData, setModuleData] = useState(null);
@@ -14,6 +15,8 @@ const ModuleMaterial = () => {
   const [session, setSession] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [courseId, setCourseId] = useState("");
+  const [previousProgress, setPreviousProgress] = useState(null);
 
   const params = useParams();
   const moduleId = Number(params["module-id"]);
@@ -21,56 +24,51 @@ const ModuleMaterial = () => {
   const courseTitle = decodeURIComponent(params["course-title"]);
   const router = useRouter();
 
+  const getProgress = async () => {
+    const previousProgress = await getCourseProgress();
+    setPreviousProgress(previousProgress);
+  };
+
+  const fetchMaterial = async () => {
+    const session = await getSession();
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
+        {
+          headers: {
+            Authorization: session.value,
+          },
+        }
+      );
+      const courses = await response.json();
+
+      const course = courses.find((c) => c.title === courseTitle);
+      console.log("course :", course);
+
+      if (!course) return;
+      setCourseId(course.id);
+
+      const module = course.modules.find((m) => m.id === moduleId);
+      const material = module?.materials.find((mat) => mat.id === materialId);
+
+      console.log("material :", material);
+
+      setModuleData(module);
+      setMaterialData(material);
+      setSession(session);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching material:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchMaterial = async () => {
-      const session = await getSession();
-
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
-          {
-            headers: {
-              Authorization: session.value,
-            },
-          }
-        );
-        const courses = await response.json();
-
-        const course = courses.find((c) => c.title === courseTitle);
-        if (!course) return;
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${course.id}`,
-          {
-            headers: {
-              Authorization: session.value,
-            },
-          }
-        );
-        const fullCourse = await res.json();
-
-        const module = fullCourse.modules.find((m) => m.id === moduleId);
-        const material = module?.materials.find((mat) => mat.id === materialId);
-
-        console.log("material :", material);
-
-        setModuleData(module);
-        setMaterialData(material);
-        setSession(session);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching material:", error);
-      }
-    };
-
+    getProgress();
     fetchMaterial();
   }, []);
 
   const finishMaterial = async () => {
-    if (materialData.is_done) {
-      router.push(`/my-courses/${courseTitle}`);
-    }
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/material/${materialData.id}/done`,
@@ -100,7 +98,12 @@ const ModuleMaterial = () => {
   if (loading) return <Loading />;
 
   return isFinished ? (
-    <CompletionMaterial courseTitle={courseTitle} />
+    <CompletionMaterial
+      courseTitle={courseTitle}
+      isDone={materialData.is_done}
+      courseId={courseId}
+      previousProgress={previousProgress[courseId]}
+    />
   ) : (
     <div className="py-[4rem] md:px-30 px-[1.5rem] text-white">
       <Link
@@ -121,7 +124,7 @@ const ModuleMaterial = () => {
       <div className="flex justify-end mt-[3rem] md:mr-[5rem]">
         <button
           onClick={finishMaterial}
-          className="btn bg-[#3B82F6] hover:bg-[#3B82F6]/70 py-6 px-8 rounded-lg"
+          className="btn bg-[#3B82F6] hover:bg-[#3B82F6]/70 p-6 rounded-lg"
         >
           Finish Reading
         </button>

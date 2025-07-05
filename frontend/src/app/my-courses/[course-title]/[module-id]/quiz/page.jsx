@@ -103,6 +103,7 @@ const Quiz = () => {
   };
 
   useEffect(() => {
+    getProgress();
     fetchQuizzes();
   }, []);
 

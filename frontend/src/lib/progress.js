@@ -6,7 +6,7 @@ export const getCourseProgress = async () => {
     const session = await getSession();
 
     // fetch courses
-    const courses = await axios.get(
+    const courseRes = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
       {
         headers: {
@@ -16,7 +16,7 @@ export const getCourseProgress = async () => {
     );
 
     // fetch quiz-user
-    const quizzes = await axios.get(
+    const quizRes = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/api/quiz-user`,
       {
         headers: {
@@ -24,6 +24,9 @@ export const getCourseProgress = async () => {
         },
       }
     );
+
+    const courses = courseRes.data;
+    const quizzes = quizRes.data;
 
     const progressMap = {};
 
