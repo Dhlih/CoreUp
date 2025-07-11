@@ -14,7 +14,7 @@ export default function CreateCourse() {
   const [language, setLanguage] = useState("");
   const [createLoading, setCreateLoading] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showAlertModal, setAlertModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
   const [name, setName] = useState("");
   const [progressValue, setProgressValue] = useState(0);
 
@@ -97,10 +97,10 @@ export default function CreateCourse() {
         }, 300); // transisi ke 100%
       } else {
         setCreateLoading(false);
-        setAlertModal(true);
+        setShowAlertModal(true);
       }
     } catch (error) {
-      showAlertModal(true);
+      setShowAlertModal(true);
       setCreateLoading(false);
     }
   };

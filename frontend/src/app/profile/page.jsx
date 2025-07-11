@@ -281,21 +281,21 @@ const Profile = () => {
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
-              <h3>Current Level</h3>
+              <h3>Level</h3>
               <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
                 <FaRegStar />
                 <span className=" font-semibold">{user?.level}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
-              <h3>Current Exp</h3>
+              <h3>Exp</h3>
               <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
                 <AiOutlineThunderbolt />
                 <span className="font-semibold">{user?.exp}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
-              <h3>Current Exp</h3>
+              <h3>Rank Badge</h3>
               <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
                 <GiRank2 className={`${getRankColor(user?.exp)}`} />
                 <span className="font-semibold">{getUserRank(user?.exp)}</span>
@@ -324,9 +324,7 @@ const Profile = () => {
                   <IoMdBook className="md:text-3xl text-xl" />
                 </div>
                 <Link href={`/my-courses/${course.title}`}>
-                  <h3 className=" md:text-xl text-base font-semibold">
-                    {course.title}
-                  </h3>
+                  <h3 className=" md:text-xl text-base ">{course.title}</h3>
                 </Link>
               </div>
             ))}
