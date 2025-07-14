@@ -275,28 +275,28 @@ const Profile = () => {
           <div className="grid md:grid-cols-4 grid-cols-2 gap-[2rem] max-w-[500px] md:max-w-none">
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Rank</h3>
-              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl ">
+              <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl ">
                 <RiFireLine />
                 <span className="font-semibold">{rank.userRank}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Level</h3>
-              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
+              <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
                 <FaRegStar />
                 <span className=" font-semibold">{user?.level}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Exp</h3>
-              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
+              <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
                 <AiOutlineThunderbolt />
                 <span className="font-semibold">{user?.exp}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Rank Badge</h3>
-              <div className="flex items-center space-x-[1rem] md:text-3xl text-xl">
+              <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
                 <GiRank2 className={`${getRankColor(user?.exp)}`} />
                 <span className="font-semibold">{getUserRank(user?.exp)}</span>
               </div>
