@@ -160,7 +160,7 @@ export default function CreateDiscussion() {
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               ></path>
             </svg>
-            <span>Ukuran gambar tidak boleh lebih dari 3 MB.</span>
+            <span>Image size must not exceed 3 MB.</span>
           </div>
         )}
 

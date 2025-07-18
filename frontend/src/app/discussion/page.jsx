@@ -249,11 +249,11 @@ export default function Discussion() {
 
       <dialog id="delete_modal" className="modal">
         <div className="modal-box bg-[#1c2a30] text-white">
-          <h3 className="font-bold text-lg">Hapus Postingan?</h3>
-          <p className="py-4">Postingan akan dihapus secara permanen. Lanjutkan?</p>
+          <h3 className="font-bold text-lg">Delete Post?</h3>
+          <p className="py-4">The post will be permanently deleted. Continue?</p>
           <div className="modal-action">
             <form method="dialog" className="flex gap-2">
-              <button className="btn btn-outline">Batal</button>
+              <button className="btn btn-outline">Cancel</button>
               <button
                 className="btn bg-red-600 text-white hover:bg-red-700"
                 onClick={async () => {
@@ -282,7 +282,7 @@ export default function Discussion() {
                   }
                 }}
               >
-                Hapus
+                Delete
               </button>
             </form>
           </div>
