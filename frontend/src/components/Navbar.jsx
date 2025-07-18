@@ -104,7 +104,7 @@ export default function Navbar() {
   return (
     <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg md:py-[1rem] py-[0.8rem] ">
       {/* left side */}
-      <div className="relative w-full md:px-20 px-[1rem] flex items-center justify-between ">
+      <div className="relative w-full md:px-15 px-[1rem] flex items-center justify-between ">
         <Link href="/" className="flex items-center space-x-[0.8rem]">
           <PiBrainLight className="text-5xl text-[#4F9CF9]" />
           <h2 className="md:text-2xl text-xl font-bold text-white">CoreUp</h2>

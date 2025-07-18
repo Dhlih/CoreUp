@@ -33,22 +33,13 @@ export default function CoursePage() {
             },
           }
         );
+
         const courses = await response.json();
         const matchCourse = courses.find(
           (course) => course.title === courseTitle
         );
 
-        const data = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${matchCourse.id}`,
-          {
-            headers: {
-              Authorization: session.value,
-            },
-          }
-        );
-
-        const result = await data.json();
-        setCourse(result);
+        setCourse(matchCourse);
       } catch (error) {
         console.error("Error fetching course:", error);
       } finally {
@@ -81,9 +72,7 @@ export default function CoursePage() {
       <div className="flex justify-between items-center mb-4 md:max-w-[80%]">
         <h1 className="text-4xl font-bold">{course?.title}</h1>
       </div>
-      <p className="mb-4 opacity-80 text-lg md:my-0 md:max-w-[90%]">
-        {course?.description}
-      </p>
+      <p className="mb-4 opacity-80 text-lg md:my-0 ">{course?.description}</p>
 
       <div className="space-y-[3rem] mt-[1rem]">
         {course?.modules?.map((module, index) => (

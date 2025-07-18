@@ -55,6 +55,7 @@ const Profile = () => {
 
     const user = await response.json();
     const exp = await countExpLeft();
+    console.log("user : ", user);
 
     console.log("exp di profile :", exp);
     const rank = await getLeaderboardRank();
@@ -204,13 +205,7 @@ const Profile = () => {
                 type="text"
                 className="w-full bg-[#131F24] rounded-lg py-2 px-4"
                 onChange={(evt) => setPassword(evt.target.value)}
-              />
-
-              <span>Password Confirmation :</span>
-              <input
-                type="text"
-                className="w-full bg-[#131F24] rounded-lg py-2 px-4"
-                onChange={(evt) => setPasswordConfirmation(evt.target.value)}
+                placeholder="Your password or new password"
               />
 
               <button
@@ -276,21 +271,21 @@ const Profile = () => {
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Rank</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl ">
-                <RiFireLine />
+                <RiFireLine className="text-[#F97316]" />
                 <span className="font-semibold">{rank.userRank}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Level</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
-                <FaRegStar />
+                <FaRegStar className="text-[#38BDF8]" />
                 <span className=" font-semibold">{user?.level}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Exp</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
-                <AiOutlineThunderbolt />
+                <AiOutlineThunderbolt className="text-[#EAB308]" />
                 <span className="font-semibold">{user?.exp}</span>
               </div>
             </div>

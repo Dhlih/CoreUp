@@ -30,7 +30,6 @@ const Quiz = () => {
   const moduleId = Number(params["module-id"]);
   const router = useRouter();
 
-  // ✅ TIMER
   useEffect(() => {
     if (timeLeft <= 0) return;
 
@@ -76,16 +75,8 @@ const Quiz = () => {
         (item) => item.title === courseTitle
       );
 
-      const detailResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${selectedCourse.id}`,
-        {
-          headers: {
-            Authorization: session.value,
-          },
-        }
-      );
-
-      const moduleList = detailResponse.data.modules;
+      console.log(selectedCourse);
+      const moduleList = selectedCourse.modules;
       const selectedModule = moduleList.find((mod) => mod.id === moduleId);
 
       setModule(selectedModule);
@@ -148,7 +139,6 @@ const Quiz = () => {
       const data = await response.json();
       console.log(data.message);
 
-      // ✅ Redirect terakhir pakai useEffect (supaya gak error)
       if (indexQuestion === quizzes.length - 1) {
         setShowCompletionPage(true);
       }

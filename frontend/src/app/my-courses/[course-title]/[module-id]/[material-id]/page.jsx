@@ -113,7 +113,7 @@ const ModuleMaterial = () => {
         <h2 className="text-lg font-medium">{moduleData.title}</h2>
       </Link>
 
-      <h1 className="text-4xl font-bold mb-[1.5rem] mt-[1rem] max-w-[85%]">
+      <h1 className="text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[85%]">
         {materialData.title}
       </h1>
 
