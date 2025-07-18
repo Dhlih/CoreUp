@@ -97,16 +97,31 @@ const MyCourse = () => {
 
       {/* main content */}
       <div className="mt-[2rem] space-y-[2.5rem]">
-        {filteredCourses.map((course, idx) => (
-          <ModulCard
-            title={course.title}
-            key={idx}
-            id={course.id}
-            setIsDeleted={setIsDeleted}
-            moduleAmount={course.modules.length}
-            courseProgress={courseProgress[course.id] || 0}
-          />
-        ))}
+       
+   {courses.length === 0 ? (
+  <div className="flex items-center justify-center h-[50vh]">
+    <p className="text-gray-400 text-center text-lg">
+      Haven't created a course yet.
+    </p>
+  </div>
+) : filteredCourses.length === 0 ? (
+  <div className="flex items-center justify-center h-[50vh]">
+    <p className="text-gray-400 text-center text-lg">
+      No course matched your search.
+    </p>
+  </div>
+) : (
+  filteredCourses.map((course, idx) => (
+    <ModulCard
+      title={course.title}
+      key={idx}
+      id={course.id}
+      setIsDeleted={setIsDeleted}
+      moduleAmount={course.modules.length}
+      courseProgress={courseProgress[course.id] || 0}
+    />
+  ))
+)}
       </div>
     </div>
   );
