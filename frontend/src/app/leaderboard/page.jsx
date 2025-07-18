@@ -31,7 +31,37 @@ const Leaderboard = () => {
     fetchData();
   }, []);
 
-  if (loading) return <Loading />;
+  if (loading) {
+  return (
+    <div className="md:px-20 px-[1.5rem] py-[4rem] animate-pulse">
+      <div className="flex justify-between items-center mb-4">
+        <div className="h-8 w-40 bg-gray-700 rounded" />
+        <div className="h-8 w-24 bg-gray-700 rounded-full" />
+      </div>
+
+      <div className="bg-[#0F171B] rounded-xl flex items-end justify-center md:space-x-[6rem] space-x-[1.5rem] pt-[2rem]">
+        {[...Array(3)].map((_, index) => (
+          <div key={index} className="flex flex-col items-center space-y-2">
+            <div className="bg-gray-700 rounded-full w-10 h-10" />
+            <div className="h-4 w-20 bg-gray-700 rounded" />
+            <div className="h-4 w-16 bg-gray-700 rounded" />
+            <div className="rounded-lg bg-gray-700 w-16 md:w-24 h-16 md:h-24 mt-2" />
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 space-y-4">
+        {[...Array(5)].map((_, index) => (
+          <div
+            key={index}
+            className="bg-[#0F171B] rounded-lg h-12 md:h-14 w-full"
+          ></div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
   return (
     <div className="md:px-20 px-[1.5rem] py-[4rem]">

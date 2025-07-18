@@ -74,7 +74,29 @@ export default function CoursePage() {
     setSelectedModule(null);
   };
 
-  if (loading) return <Loading />;
+ if (loading) {
+    return (
+      <div className="min-h-screen text-white py-[3.5rem] md:px-20 px-[1.5rem] animate-pulse">
+        <div className="h-10 w-1/2 bg-gray-700 rounded mb-4"></div>
+        <div className="h-6 w-3/4 bg-gray-700 rounded mb-6"></div>
+
+        <div className="space-y-8">
+          {[...Array(3)].map((_, idx) => (
+            <div key={idx}>
+              <div className="h-8 bg-gray-700 w-3/4 rounded mb-4"></div>
+              {[...Array(4)].map((_, j) => (
+                <div
+                  key={j}
+                  className="h-15 bg-gray-800 rounded mb-3"
+                ></div>
+              ))}
+              <div className="h-12 bg-blue-700/70 rounded"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen text-white py-[3.5rem] md:px-20 px-[1.5rem]">
