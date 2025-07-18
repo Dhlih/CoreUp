@@ -58,7 +58,7 @@ export default function Navbar() {
       // Ambil data profil
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       })
         .then((res) => res.json())
@@ -81,7 +81,7 @@ export default function Navbar() {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
         method: "POST",
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       });
       const isLogout = await deleteSession();
@@ -115,11 +115,11 @@ export default function Navbar() {
           <div className="flex items-center md:space-x-[2.5rem] space-x-[1.5rem] ">
             <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
               <Link
-  className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
-  href="/discussion"
->
-  Discussion
-</Link>
+                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
+                href="/discussion"
+              >
+                Discussion
+              </Link>
 
               <Link
                 className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
@@ -151,11 +151,11 @@ export default function Navbar() {
               {user?.data?.photo ? (
                 <img
                   src={user?.data?.photo}
-                  className="md:w-14 md:h-14 w-12 h-12 rounded-full object-cover border-white/20 "
+                  className=" w-13 h-13 rounded-full object-cover border-white/20 "
                   alt=""
                 />
               ) : (
-                <div className="md:w-14 md:h-14 w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div className=" w-13 h-13 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
                   {generateUsername(user?.data?.name)}
                 </div>
               )}

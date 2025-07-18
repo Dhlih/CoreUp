@@ -66,7 +66,7 @@ const Quiz = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
         {
-          headers: { Authorization: session.value },
+          headers: { Authorization: session.token },
         }
       );
 
@@ -130,7 +130,7 @@ const Quiz = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: session.value,
+            Authorization: session.token,
           },
           body: JSON.stringify({ answer: currentAnswer }),
         }

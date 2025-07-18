@@ -48,7 +48,7 @@ const Profile = () => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: session.value,
+          Authorization: session.token,
         },
       }
     );
@@ -74,7 +74,7 @@ const Profile = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
         {
           headers: {
-            Authorization: session.value,
+            Authorization: session.token,
           },
         }
       );
@@ -105,7 +105,7 @@ const Profile = () => {
         {
           method: "POST",
           headers: {
-            Authorization: session.value,
+            Authorization: session.token,
           },
           body: formData,
         }

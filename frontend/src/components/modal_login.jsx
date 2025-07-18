@@ -49,7 +49,6 @@ export default function ModalLogin({ setIsSuccess }) {
 
         setIsSuccess(true);
 
-        // Routing ke halaman create_course
         router.push("/create-course");
       } else {
         setShowAlert(true);

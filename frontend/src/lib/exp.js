@@ -9,7 +9,7 @@ export const countExpLeft = async () => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
       {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       }
     );

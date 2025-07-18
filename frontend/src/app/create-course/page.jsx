@@ -20,11 +20,12 @@ export default function CreateCourse() {
   useEffect(() => {
     const fetchProfile = async () => {
       const session = await getSession();
+      console.log("session di create course : ", session);
 
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
           headers: {
-            Authorization: session.value,
+            Authorization: session.token,
           },
         });
 
@@ -73,7 +74,7 @@ export default function CreateCourse() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: session.value,
+            Authorization: session.token,
           },
           body: JSON.stringify({ topic, level, language }),
         }

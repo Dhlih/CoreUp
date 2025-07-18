@@ -8,7 +8,7 @@ export const getLeaderboardRank = async () => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/user/all`,
       {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       }
     );
@@ -20,7 +20,7 @@ export const getLeaderboardRank = async () => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
       {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       }
     );

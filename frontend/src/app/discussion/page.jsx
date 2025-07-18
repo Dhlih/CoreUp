@@ -2,7 +2,9 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Funnel, Search } from "lucide-react";
+import { MdOutlineFilterAlt } from "react-icons/md";
+import { IoIosSearch } from "react-icons/io";
+
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
 
@@ -30,8 +32,12 @@ export default function Discussion() {
 
   const filteredPosts = posts
     .filter((post) => {
-      const descriptionMatch = post.description?.toLowerCase().includes(searchTerm.toLowerCase());
-      const nameMatch = post.user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      const descriptionMatch = post.description
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const nameMatch = post.user?.name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
       return descriptionMatch || nameMatch;
     })
     .sort((a, b) => {
@@ -46,25 +52,32 @@ export default function Discussion() {
       const session = await getSession();
 
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: session.value,
-          },
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/posts/`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: session.token,
+            },
+          }
+        );
 
         const baseData = await res.json();
+
         const basePosts = baseData.data || [];
 
         const postsWithComments = await Promise.all(
           basePosts.map(async (post) => {
             try {
-              const detailRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post.id}`, {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: session.value,
-                },
-              });
+              const detailRes = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post.id}`,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: session.token,
+                  },
+                }
+              );
 
               const detailData = await detailRes.json();
               return {
@@ -72,7 +85,10 @@ export default function Discussion() {
                 comments_count: detailData.data.comments?.length || 0,
               };
             } catch (err) {
-              console.error(`Gagal ambil komentar untuk post ID ${post.id}`, err);
+              console.error(
+                `Gagal ambil komentar untuk post ID ${post.id}`,
+                err
+              );
               return { ...post, comments_count: 0 };
             }
           })
@@ -84,12 +100,15 @@ export default function Discussion() {
       }
 
       try {
-        const profileRes = await fetch("https://coreup-api.up.railway.app/api/user", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: session.value,
-          },
-        });
+        const profileRes = await fetch(
+          "https://coreup-api.up.railway.app/api/user",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: session.token,
+            },
+          }
+        );
 
         const profileData = await profileRes.json();
         setCurrentUserId(profileData.data.id);
@@ -118,15 +137,15 @@ export default function Discussion() {
   );
 
   return (
-    <div className="min-h-screen bg-[#131F24] text-white px-4 md:px-20 py-6">
+    <div className="min-h-screen bg-[#131F24] text-white px-4 md:px-20 py-[3rem]">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-4 md:mb-2">Discussion</h1>
+          <h1 className="text-4xl font-bold mb-4 md:mb-[1rem]">Discussion</h1>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <div className="flex items-center gap-2 w-full sm:max-w-md">
+            <div className="flex items-center gap-4 w-full sm:max-w-md">
               <div className="flex items-center bg-[#0F171B] px-3 py-2 rounded-md w-full">
-                <Search className="text-white/50 w-4 h-4 mr-2" />
+                <IoIosSearch className="text-white/50 mr-2 text-2xl" />
                 <input
                   type="text"
                   placeholder="Search Discussion..."
@@ -137,18 +156,18 @@ export default function Discussion() {
               </div>
               <button
                 onClick={handleFilterClick}
-                className={`p-2 rounded-md border ${
+                className={`p-2 rounded-md cursor-pointer ${
                   filterByCommentCount
                     ? "bg-blue-600 border-blue-400"
                     : "bg-[#0F171B] border-white/10"
                 }`}
               >
-                <Funnel className="text-white/50 w-4 h-4" />
+                <MdOutlineFilterAlt className="text-white/50 text-2xl" />
               </button>
             </div>
 
-            <Link href="/create-discussion" className="w-full sm:w-auto">
-              <button className="bg-blue-500 hover:bg-blue-600 text-sm font-medium px-4 py-2 rounded-md w-full sm:w-auto">
+            <Link href="/create-discussion" className="w-full sm:w-auto ">
+              <button className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-sm font-medium px-4 py-3 rounded-md w-full sm:w-auto">
                 Create Discussion
               </button>
             </Link>
@@ -156,6 +175,7 @@ export default function Discussion() {
         </div>
       </div>
 
+      {/* comment lists */}
       <div className="space-y-4">
         {isLoading ? (
           <>
@@ -169,7 +189,7 @@ export default function Discussion() {
           filteredPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-[#0F171B] p-4 rounded-lg shadow hover:shadow-lg transition relative"
+              className="bg-[#0F171B] p-4 rounded-lg shadow transition relative"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-4">
@@ -191,7 +211,9 @@ export default function Discussion() {
                   )}
 
                   <div>
-                    <p className="font-semibold">{post.user?.name || "Anonim"}</p>
+                    <p className="font-semibold">
+                      {post.user?.name || "Anonim"}
+                    </p>
                     <p className="text-sm text-gray-400">
                       Posted{" "}
                       {post.created_at
@@ -205,7 +227,9 @@ export default function Discussion() {
                   <div className="relative inline-block text-left">
                     <button
                       onClick={() => {
-                        const dropdown = document.getElementById(`dropdown-${post.id}`);
+                        const dropdown = document.getElementById(
+                          `dropdown-${post.id}`
+                        );
                         dropdown.classList.toggle("hidden");
                       }}
                       className="text-white/70 hover:text-white"
@@ -218,7 +242,9 @@ export default function Discussion() {
                       className="absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-[#1c2a30] ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-20"
                     >
                       <button
-                        onClick={() => router.push(`/create-discussion?id=${post.id}`)}
+                        onClick={() =>
+                          router.push(`/create-discussion?id=${post.id}`)
+                        }
                         className="block px-4 py-2 text-sm text-white hover:bg-blue-600 w-full text-left"
                       >
                         Edit
@@ -237,7 +263,12 @@ export default function Discussion() {
                 )}
               </div>
 
-              <p className="text-sm text-gray-100">{post.description}</p>
+              <Link
+                href={`/discussion/${post.id}`}
+                className="text-sm text-gray-100 hover:text-gray/70"
+              >
+                {post.description}
+              </Link>
 
               <div className="mt-2 text-sm text-gray-400 flex items-center gap-2">
                 💬 {post.comments_count || 0}
@@ -250,7 +281,9 @@ export default function Discussion() {
       <dialog id="delete_modal" className="modal">
         <div className="modal-box bg-[#1c2a30] text-white">
           <h3 className="font-bold text-lg">Delete Post?</h3>
-          <p className="py-4">The post will be permanently deleted. Continue?</p>
+          <p className="py-4">
+            The post will be permanently deleted. Continue?
+          </p>
           <div className="modal-action">
             <form method="dialog" className="flex gap-2">
               <button className="btn btn-outline">Cancel</button>
@@ -264,13 +297,15 @@ export default function Discussion() {
                       {
                         method: "DELETE",
                         headers: {
-                          Authorization: session.value,
+                          Authorization: session.token,
                         },
                       }
                     );
 
                     if (res.ok) {
-                      setPosts((prev) => prev.filter((p) => p.id !== selectedPostId));
+                      setPosts((prev) =>
+                        prev.filter((p) => p.id !== selectedPostId)
+                      );
                     } else {
                       alert("Gagal menghapus postingan.");
                     }

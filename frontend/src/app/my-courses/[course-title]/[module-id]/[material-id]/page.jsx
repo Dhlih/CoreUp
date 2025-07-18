@@ -37,7 +37,7 @@ const ModuleMaterial = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
         {
           headers: {
-            Authorization: session.value,
+            Authorization: session.token,
           },
         }
       );
@@ -76,7 +76,7 @@ const ModuleMaterial = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: session.value,
+            Authorization: session.token,
           },
         }
       );
@@ -96,19 +96,18 @@ const ModuleMaterial = () => {
   };
 
   if (loading)
-  return (
-    <div className="py-[4rem] px-30 animate-pulse text-white space-y-4">
-      <div className="h-6 bg-gray-700 rounded w-1/4"></div>
-      <div className="h-10 bg-gray-700 rounded w-3/4 mt-4"></div>
-      <div className="h-4 bg-gray-700 rounded w-full mt-2"></div>
-      <div className="h-4 bg-gray-700 rounded w-[95%] mt-2"></div>
-      <div className="h-4 bg-gray-700 rounded w-[90%] mt-2"></div>
-      <div className="flex justify-end mt-[3rem] md:mr-[5rem]">
-        <div className="h-10 w-36 bg-gray-700 rounded-lg"></div>
+    return (
+      <div className="py-[4rem] px-30 animate-pulse text-white space-y-4">
+        <div className="h-6 bg-gray-700 rounded w-1/4"></div>
+        <div className="h-10 bg-gray-700 rounded w-3/4 mt-4"></div>
+        <div className="h-4 bg-gray-700 rounded w-full mt-2"></div>
+        <div className="h-4 bg-gray-700 rounded w-[95%] mt-2"></div>
+        <div className="h-4 bg-gray-700 rounded w-[90%] mt-2"></div>
+        <div className="flex justify-end mt-[3rem] md:mr-[5rem]">
+          <div className="h-10 w-36 bg-gray-700 rounded-lg"></div>
+        </div>
       </div>
-    </div>
-  );
-
+    );
 
   return isFinished ? (
     <CompletionMaterial

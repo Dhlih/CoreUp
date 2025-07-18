@@ -28,7 +28,7 @@ const ModulCard = ({
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${id}`,
         {
           headers: {
-            Authorization: session.value,
+            Authorization: session.token,
             "Content-Type": "application/json",
           },
         }

@@ -29,7 +29,7 @@ export default function CoursePage() {
           `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
           {
             headers: {
-              Authorization: session.value,
+              Authorization: session.token,
             },
           }
         );
@@ -65,7 +65,7 @@ export default function CoursePage() {
     setSelectedModule(null);
   };
 
- if (loading) {
+  if (loading) {
     return (
       <div className="min-h-screen text-white py-[3.5rem] md:px-20 px-[1.5rem] animate-pulse">
         <div className="h-10 w-1/2 bg-gray-700 rounded mb-4"></div>
@@ -76,10 +76,7 @@ export default function CoursePage() {
             <div key={idx}>
               <div className="h-8 bg-gray-700 w-3/4 rounded mb-4"></div>
               {[...Array(4)].map((_, j) => (
-                <div
-                  key={j}
-                  className="h-15 bg-gray-800 rounded mb-3"
-                ></div>
+                <div key={j} className="h-15 bg-gray-800 rounded mb-3"></div>
               ))}
               <div className="h-12 bg-blue-700/70 rounded"></div>
             </div>

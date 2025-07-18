@@ -8,7 +8,7 @@ export const getSessionUser = async () => {
     const session = cookieStore.get("token");
     if (!session) return null;
 
-    const token = session.value;
+    const token = session.token;
 
     const res = await fetch("https://coreup-api.up.railway.app/api/user", {
       headers: {

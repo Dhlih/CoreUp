@@ -16,35 +16,36 @@ export default function CreateDiscussion() {
   const postId = searchParams.get("id");
   const isEditMode = Boolean(postId);
 
-
   // ambil session saat pertama kali load
   useEffect(() => {
-  const fetchAll = async () => {
-    const s = await getSession();
-    setSession(s);
+    const fetchAll = async () => {
+      const s = await getSession();
+      setSession(s);
 
-    if (postId) {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: s.value,
-          },
-        });
-        const data = await res.json();
-        if (res.ok && data.data) {
-          setDescription(data.data.description);
-          setPreview(data.data.photo); // URL dari server
+      if (postId) {
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: s.value,
+              },
+            }
+          );
+          const data = await res.json();
+          if (res.ok && data.data) {
+            setDescription(data.data.description);
+            setPreview(data.data.photo); // URL dari server
+          }
+        } catch (error) {
+          console.error("Gagal ambil data postingan:", error);
         }
-      } catch (error) {
-        console.error("Gagal ambil data postingan:", error);
       }
-    }
-  };
+    };
 
-  fetchAll();
-}, [postId]);
-
+    fetchAll();
+  }, [postId]);
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -64,55 +65,55 @@ export default function CreateDiscussion() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!description || !session) return;
+    e.preventDefault();
+    if (!description || !session) return;
 
-  setLoading(true);
+    setLoading(true);
 
-  const formData = new FormData();
-  formData.append("description", description);
-  if (photo) {
-    formData.append("photo", photo);
-  }
-
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts${isEditMode ? `/${postId}` : ""}`,
-      {
-      method: isEditMode ? "PUT" : "POST",
-        headers: {
-          Authorization: session.value,
-        },
-        body: formData,
-      }
-    );
-
-    const data = await res.json();
-    if (res.ok) {
-      router.push("/discussion");
-    } else {
-      console.error(data);
-      alert("Gagal menyimpan postingan!");
+    const formData = new FormData();
+    formData.append("description", description);
+    if (photo) {
+      formData.append("photo", photo);
     }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Terjadi kesalahan.");
-  } finally {
-    setLoading(false);
-  }
-};
 
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/posts${
+          isEditMode ? `/${postId}` : ""
+        }`,
+        {
+          method: isEditMode ? "PUT" : "POST",
+          headers: {
+            Authorization: session.token,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        router.push("/discussion");
+      } else {
+        console.error(data);
+        alert("Gagal menyimpan postingan!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Terjadi kesalahan.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#131F24] text-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#131F24] text-white px-4 py-[3rem]">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md space-y-4 bg-[#0F171B] p-6 rounded-lg shadow-lg"
       >
-<h1 className="text-2xl font-bold text-center">
-  {isEditMode ? "Edit Discussion" : "Create Discussion"}
-</h1>
-
+        <h1 className="text-2xl font-bold text-center">
+          {isEditMode ? "Edit Discussion" : "Create Discussion"}
+        </h1>
 
         <textarea
           placeholder="Insert Description."
@@ -164,18 +165,17 @@ export default function CreateDiscussion() {
           </div>
         )}
 
-       <button
-  type="submit"
-  disabled={loading}
-  className={`${
-    loading
-      ? "bg-gray-700 cursor-not-allowed"
-      : "bg-blue-500 hover:bg-blue-600"
-  } text-white px-4 py-2 rounded transition w-full`}
->
-  {loading ? "..." : isEditMode ? "Update" : "Post"}
-</button>
-
+        <button
+          type="submit"
+          disabled={loading}
+          className={`${
+            loading
+              ? "bg-gray-700 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
+          } text-white px-4 py-2 rounded transition w-full`}
+        >
+          {loading ? "..." : isEditMode ? "Update" : "Post"}
+        </button>
       </form>
     </div>
   );
