@@ -11,7 +11,7 @@ export default function Discussion() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterByCommentCount, setFilterByCommentCount] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUserId, setCurrentUserId] = useState(null); // 🔹 simpan ID user login
+  const [currentUserId, setCurrentUserId] = useState(null);
   const profileImageRef = useRef(null);
   const router = useRouter();
   const [selectedPostId, setSelectedPostId] = useState(null);
@@ -46,27 +46,51 @@ export default function Discussion() {
       const session = await getSession();
 
       try {
-        // 🔹 Ambil postingan
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: session.value,
           },
         });
-        const data = await res.json();
-        setPosts(data.data || []);
+
+        const baseData = await res.json();
+        const basePosts = baseData.data || [];
+
+        const postsWithComments = await Promise.all(
+          basePosts.map(async (post) => {
+            try {
+              const detailRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post.id}`, {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: session.value,
+                },
+              });
+
+              const detailData = await detailRes.json();
+              return {
+                ...post,
+                comments_count: detailData.data.comments?.length || 0,
+              };
+            } catch (err) {
+              console.error(`Gagal ambil komentar untuk post ID ${post.id}`, err);
+              return { ...post, comments_count: 0 };
+            }
+          })
+        );
+
+        setPosts(postsWithComments);
       } catch (error) {
         console.error("Gagal mengambil data postingan:", error);
       }
 
       try {
-        // 🔹 Ambil profil user
         const profileRes = await fetch("https://coreup-api.up.railway.app/api/user", {
           headers: {
             "Content-Type": "application/json",
             Authorization: session.value,
           },
         });
+
         const profileData = await profileRes.json();
         setCurrentUserId(profileData.data.id);
       } catch (error) {
@@ -177,87 +201,40 @@ export default function Discussion() {
                   </div>
                 </div>
 
-                {/* 🔹 Tombol titik tiga jika userId cocok */}
-               {post.user?.id === currentUserId && (
-  <div className="relative inline-block text-left">
-    <button
-      onClick={() => {
-        const dropdown = document.getElementById(`dropdown-${post.id}`);
-        dropdown.classList.toggle("hidden");
-      }}
-      className="text-white/70 hover:text-white"
-    >
-      ⋮
-    </button>
+                {post.user?.id === currentUserId && (
+                  <div className="relative inline-block text-left">
+                    <button
+                      onClick={() => {
+                        const dropdown = document.getElementById(`dropdown-${post.id}`);
+                        dropdown.classList.toggle("hidden");
+                      }}
+                      className="text-white/70 hover:text-white"
+                    >
+                      ⋮
+                    </button>
 
-    <div
-      id={`dropdown-${post.id}`}
-      className="absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-[#1c2a30] ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-20"
-    >
-      <button
-        onClick={() => router.push(`/create-discussion?id=${post.id}`)}
-        className="block px-4 py-2 text-sm text-white hover:bg-blue-600 w-full text-left"
-      >
-        Edit
-      </button>
-     <button
-  onClick={() => {
-    setSelectedPostId(post.id);
-    document.getElementById("delete_modal").showModal();
-  }}
-  className="block px-4 py-2 text-sm text-white hover:bg-red-600 w-full text-left"
->
-  Delete
-</button>
-
-    </div>
-  </div>
-)}
-<dialog id="delete_modal" className="modal">
-  <div className="modal-box bg-[#1c2a30] text-white">
-    <h3 className="font-bold text-lg">Hapus Postingan?</h3>
-    <p className="py-4">Postingan akan dihapus secara permanen. Lanjutkan?</p>
-    <div className="modal-action">
-      <form method="dialog" className="flex gap-2">
-        <button className="btn btn-outline">Batal</button>
-        <button
-          className="btn bg-red-600 text-white hover:bg-red-700"
-          onClick={async () => {
-            try {
-              const session = await getSession();
-              const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${selectedPostId}`,
-                {
-                  method: "DELETE",
-                  headers: {
-                    Authorization: session.value,
-                  },
-                }
-              );
-
-              if (res.ok) {
-                setPosts((prev) =>
-                  prev.filter((p) => p.id !== selectedPostId)
-                );
-              } else {
-                alert("Gagal menghapus postingan.");
-              }
-            } catch (error) {
-              console.error("Error:", error);
-              alert("Terjadi kesalahan saat menghapus.");
-            } finally {
-              setSelectedPostId(null);
-            }
-          }}
-        >
-          Hapus
-        </button>
-      </form>
-    </div>
-  </div>
-</dialog>
-
-
+                    <div
+                      id={`dropdown-${post.id}`}
+                      className="absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-[#1c2a30] ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-20"
+                    >
+                      <button
+                        onClick={() => router.push(`/create-discussion?id=${post.id}`)}
+                        className="block px-4 py-2 text-sm text-white hover:bg-blue-600 w-full text-left"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedPostId(post.id);
+                          document.getElementById("delete_modal").showModal();
+                        }}
+                        className="block px-4 py-2 text-sm text-white hover:bg-red-600 w-full text-left"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <p className="text-sm text-gray-100">{post.description}</p>
@@ -269,6 +246,48 @@ export default function Discussion() {
           ))
         )}
       </div>
+
+      <dialog id="delete_modal" className="modal">
+        <div className="modal-box bg-[#1c2a30] text-white">
+          <h3 className="font-bold text-lg">Hapus Postingan?</h3>
+          <p className="py-4">Postingan akan dihapus secara permanen. Lanjutkan?</p>
+          <div className="modal-action">
+            <form method="dialog" className="flex gap-2">
+              <button className="btn btn-outline">Batal</button>
+              <button
+                className="btn bg-red-600 text-white hover:bg-red-700"
+                onClick={async () => {
+                  try {
+                    const session = await getSession();
+                    const res = await fetch(
+                      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${selectedPostId}`,
+                      {
+                        method: "DELETE",
+                        headers: {
+                          Authorization: session.value,
+                        },
+                      }
+                    );
+
+                    if (res.ok) {
+                      setPosts((prev) => prev.filter((p) => p.id !== selectedPostId));
+                    } else {
+                      alert("Gagal menghapus postingan.");
+                    }
+                  } catch (error) {
+                    console.error("Error:", error);
+                    alert("Terjadi kesalahan saat menghapus.");
+                  } finally {
+                    setSelectedPostId(null);
+                  }
+                }}
+              >
+                Hapus
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

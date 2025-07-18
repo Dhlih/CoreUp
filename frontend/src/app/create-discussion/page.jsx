@@ -104,10 +104,10 @@ export default function CreateDiscussion() {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#131F24] text-white px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 bg-gray-800 p-6 rounded-lg shadow-lg"
+        className="w-full max-w-md space-y-4 bg-[#0F171B] p-6 rounded-lg shadow-lg"
       >
 <h1 className="text-2xl font-bold text-center">
   {isEditMode ? "Edit Discussion" : "Create Discussion"}
@@ -164,14 +164,18 @@ export default function CreateDiscussion() {
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition w-full"
-        >
-        {loading ? "..." : isEditMode ? "Update" : "Post"}
+       <button
+  type="submit"
+  disabled={loading}
+  className={`${
+    loading
+      ? "bg-gray-700 cursor-not-allowed"
+      : "bg-blue-500 hover:bg-blue-600"
+  } text-white px-4 py-2 rounded transition w-full`}
+>
+  {loading ? "..." : isEditMode ? "Update" : "Post"}
+</button>
 
-        </button>
       </form>
     </div>
   );
