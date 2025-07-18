@@ -53,7 +53,23 @@ const MyCourse = () => {
     course.title.toLowerCase().includes(courseTitle.toLowerCase())
   );
 
-  if (loading) return <Loading />;
+  if (loading) {
+    return (
+      <div className="bg-[#131F24] md:px-20 px-[1.5rem] py-[3rem]">
+        <h1 className="font-bold text-4xl mb-[2rem]">My Courses</h1>
+        {[...Array(3)].map((_, idx) => (
+          <div
+            key={idx}
+            className="animate-pulse bg-[#0F171B] rounded-2xl p-6 mb-[1.5rem] space-y-4"
+          >
+            <div className="h-6 bg-gray-700 rounded w-1/3" />
+            <div className="h-4 bg-gray-700 rounded w-1/2" />
+            <div className="h-3 bg-gray-800 rounded w-1/4" />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#131F24] md:px-20 px-[1.5rem] py-[3rem]">
@@ -81,16 +97,31 @@ const MyCourse = () => {
 
       {/* main content */}
       <div className="mt-[2rem] space-y-[2.5rem]">
-        {filteredCourses.map((course, idx) => (
-          <ModulCard
-            title={course.title}
-            key={idx}
-            id={course.id}
-            setIsDeleted={setIsDeleted}
-            moduleAmount={course.modules.length}
-            courseProgress={courseProgress[course.id] || 0}
-          />
-        ))}
+       
+   {courses.length === 0 ? (
+  <div className="flex items-center justify-center h-[50vh]">
+    <p className="text-gray-400 text-center text-lg">
+      Haven't created a course yet.
+    </p>
+  </div>
+) : filteredCourses.length === 0 ? (
+  <div className="flex items-center justify-center h-[50vh]">
+    <p className="text-gray-400 text-center text-lg">
+      No course matched your search.
+    </p>
+  </div>
+) : (
+  filteredCourses.map((course, idx) => (
+    <ModulCard
+      title={course.title}
+      key={idx}
+      id={course.id}
+      setIsDeleted={setIsDeleted}
+      moduleAmount={course.modules.length}
+      courseProgress={courseProgress[course.id] || 0}
+    />
+  ))
+)}
       </div>
     </div>
   );

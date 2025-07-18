@@ -115,6 +115,13 @@ export default function Navbar() {
           <div className="flex items-center md:space-x-[2.5rem] space-x-[1.5rem] ">
             <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
               <Link
+  className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
+  href="/discussion"
+>
+  Discussion
+</Link>
+
+              <Link
                 className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
                 href="/leaderboard"
               >
