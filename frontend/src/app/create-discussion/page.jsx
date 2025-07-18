@@ -27,6 +27,7 @@ export default function CreateDiscussion() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}`, {
           headers: {
+            "Content-Type": "application/json",
             Authorization: s.value,
           },
         });
@@ -80,7 +81,6 @@ export default function CreateDiscussion() {
       {
       method: isEditMode ? "PUT" : "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: session.value,
         },
         body: formData,

@@ -14,6 +14,7 @@ export default function Discussion() {
   const [currentUserId, setCurrentUserId] = useState(null); // 🔹 simpan ID user login
   const profileImageRef = useRef(null);
   const router = useRouter();
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   const handleProfileClick = () => {
     console.log("Klik profil user");
@@ -199,40 +200,63 @@ export default function Discussion() {
       >
         Edit
       </button>
-      <button
-        onClick={async () => {
-          const confirmDelete = confirm("Yakin ingin menghapus postingan?");
-          if (!confirmDelete) return;
+     <button
+  onClick={() => {
+    setSelectedPostId(post.id);
+    document.getElementById("delete_modal").showModal();
+  }}
+  className="block px-4 py-2 text-sm text-white hover:bg-red-600 w-full text-left"
+>
+  Delete
+</button>
 
-          try {
-            const session = await getSession();
-            const res = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post.id}`,
-              {
-                method: "DELETE",
-                headers: {
-                  Authorization: session.value,
-                },
-              }
-            );
-
-            if (res.ok) {
-              setPosts((prev) => prev.filter((p) => p.id !== post.id));
-            } else {
-              alert("Gagal menghapus postingan.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("Terjadi kesalahan saat menghapus.");
-          }
-        }}
-        className="block px-4 py-2 text-sm text-white hover:bg-red-600 w-full text-left"
-      >
-        Delete
-      </button>
     </div>
   </div>
 )}
+<dialog id="delete_modal" className="modal">
+  <div className="modal-box bg-[#1c2a30] text-white">
+    <h3 className="font-bold text-lg">Hapus Postingan?</h3>
+    <p className="py-4">Postingan akan dihapus secara permanen. Lanjutkan?</p>
+    <div className="modal-action">
+      <form method="dialog" className="flex gap-2">
+        <button className="btn btn-outline">Batal</button>
+        <button
+          className="btn bg-red-600 text-white hover:bg-red-700"
+          onClick={async () => {
+            try {
+              const session = await getSession();
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${selectedPostId}`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: session.value,
+                  },
+                }
+              );
+
+              if (res.ok) {
+                setPosts((prev) =>
+                  prev.filter((p) => p.id !== selectedPostId)
+                );
+              } else {
+                alert("Gagal menghapus postingan.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Terjadi kesalahan saat menghapus.");
+            } finally {
+              setSelectedPostId(null);
+            }
+          }}
+        >
+          Hapus
+        </button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
 
               </div>
 
