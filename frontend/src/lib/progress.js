@@ -56,10 +56,6 @@ export const getCourseProgress = async () => {
       });
 
       const percent = total === 0 ? 0 : Math.round((done / total) * 100);
-      // {
-      //   "c1": 80,
-      //   "c2": 45,
-      // }
       progressMap[course.id] = percent;
     });
 

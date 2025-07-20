@@ -82,7 +82,7 @@ export default function CreateDiscussion() {
           isEditMode ? `/${postId}` : ""
         }`,
         {
-          method: isEditMode ? "PUT" : "POST",
+          method: "POST",
           headers: {
             Authorization: session.token,
           },

@@ -19,7 +19,6 @@ import { getLeaderboardRank, getRankColor } from "@/lib/rank";
 import { countExpLeft } from "@/lib/exp";
 import { getSession } from "@/lib/session";
 import { getUserRank } from "@/lib/rank";
-import { TbMilitaryRank } from "react-icons/tb";
 
 import Loading from "@/components/Loading";
 
@@ -27,8 +26,8 @@ const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [user, setUser] = useState("");
   const [name, setName] = useState("");
+  const [session, setSession] = useState(null);
   const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [img, setImg] = useState(null);
   const [previewImg, setPreviewImg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -42,27 +41,12 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     const session = await getSession();
+    setSession(session);
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: session.token,
-        },
-      }
-    );
-
-    const user = await response.json();
     const exp = await countExpLeft();
-    console.log("user : ", user);
-
-    console.log("exp di profile :", exp);
     const rank = await getLeaderboardRank();
 
     setExp(exp);
-    setUser(user.data);
-    setName(user.data.name);
     setRank(rank);
   };
 
@@ -95,7 +79,6 @@ const Profile = () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("password", password);
-    formData.append("password_confirmation", passwordConfirmation);
     if (img) formData.append("photo", img);
 
     try {
@@ -157,15 +140,15 @@ const Profile = () => {
               />
             </div>
             <div className="flex justify-center relative">
-              {previewImg || user.photo ? (
+              {previewImg || session.photo ? (
                 <img
-                  src={previewImg || user.photo}
+                  src={previewImg || session.photo}
                   className="w-18 h-18 rounded-full object-cover border-white/20"
                   alt=""
                 />
               ) : (
                 <div className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
-                  {generateUsername(user.name)}
+                  {generateUsername(session?.name)}
                 </div>
               )}
               <input
@@ -197,7 +180,7 @@ const Profile = () => {
                 type="text"
                 className="w-full bg-[#131F24] rounded-lg p-2 px-4"
                 disabled={true}
-                value={user?.email}
+                value={session?.email}
               />
 
               <span>Password :</span>
@@ -225,20 +208,20 @@ const Profile = () => {
         <div className="bg-[#0F171B] p-6 rounded-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-[1.5rem]">
-              {user.photo ? (
+              {session?.photo ? (
                 <img
-                  src={user.photo}
+                  src={session?.photo}
                   className="w-16 h-16 rounded-full object-cover"
                   alt=""
                 />
               ) : (
                 <div className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
-                  {generateUsername(user.name)}
+                  {generateUsername(session?.name)}
                 </div>
               )}
               <div>
-                <h3 className="font-semibold text-xl">{user.name}</h3>
-                <p className="opacity-80">{user.email}</p>
+                <h3 className="font-semibold text-xl">{session?.name}</h3>
+                <p className="opacity-80">{session?.email}</p>
               </div>
             </div>
             <button
@@ -252,9 +235,9 @@ const Profile = () => {
 
           <div className="w-full mt-[1rem]">
             <div className="flex items-center justify-between">
-              <span>Level {user?.level}</span>
+              <span>Level {session?.level}</span>
               <span>
-                {user?.exp} / {exp?.nextLevelExp} EXP
+                {session?.exp} / {exp?.nextLevelExp} EXP
               </span>
             </div>
             <progress
@@ -279,21 +262,23 @@ const Profile = () => {
               <h3>Level</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
                 <FaRegStar className="text-[#38BDF8]" />
-                <span className=" font-semibold">{user?.level}</span>
+                <span className=" font-semibold">{session?.level}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Exp</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
                 <AiOutlineThunderbolt className="text-[#EAB308]" />
-                <span className="font-semibold">{user?.exp}</span>
+                <span className="font-semibold">{session?.exp}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Rank Badge</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
-                <GiRank2 className={`${getRankColor(user?.exp)}`} />
-                <span className="font-semibold">{getUserRank(user?.exp)}</span>
+                <GiRank2 className={`${getRankColor(session?.exp)}`} />
+                <span className="font-semibold">
+                  {getUserRank(session?.exp)}
+                </span>
               </div>
             </div>
           </div>

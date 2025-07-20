@@ -6,7 +6,6 @@ import ModalLogin from "./modal_login";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
-import { PiBrainLight } from "react-icons/pi";
 
 // icons
 import { BiLogOut } from "react-icons/bi";
@@ -17,6 +16,8 @@ import { deleteSession } from "@/lib/session";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { MdOutlineLeaderboard } from "react-icons/md";
+import { PiBrainLight } from "react-icons/pi";
+import { IoChatbubblesOutline } from "react-icons/io5";
 
 export default function Navbar() {
   const [hasMounted, setHasMounted] = useState(false);
@@ -196,11 +197,13 @@ export default function Navbar() {
                   onClick={handleProfileClick}
                 >
                   {user?.data?.photo ? (
-                    <img
-                      src={user?.data?.photo}
-                      className="w-14 h-14 rounded-full object-cover"
-                      alt=""
-                    />
+                    <Link href="/profile">
+                      <img
+                        src={user?.data?.photo}
+                        className="w-14 h-14 rounded-full object-cover"
+                        alt=""
+                      />
+                    </Link>
                   ) : (
                     <div className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
                       {generateUsername(user?.data?.name)}
@@ -239,6 +242,13 @@ export default function Navbar() {
               >
                 <MdOutlineLeaderboard className="text-xl" />
                 <span>Leaderboard</span>
+              </Link>
+              <Link
+                href="/discussion"
+                className="cursor-pointer w-full  py-3 px-5 hover:bg-[#0F171B]/70   flex items-center space-x-[1rem]"
+              >
+                <IoChatbubblesOutline className="text-xl" />
+                <span>Discussion</span>
               </Link>
               <button
                 className="cursor-pointer w-full  py-3 px-5  hover:bg-[#0F171B]/70    flex items-center space-x-[1rem]"

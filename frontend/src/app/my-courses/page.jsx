@@ -83,7 +83,7 @@ const MyCourse = () => {
         <h1 className="font-bold text-4xl md:mb-0 mb-[1.5rem]">My Courses</h1>
 
         {/* input field */}
-        <div className="rounded-full bg-[#0F171B] flex items-center space-x-[1rem] p-3  text-sm  ">
+        <div className="rounded-lg bg-[#0F171B] flex items-center space-x-[1rem] p-3  text-sm  ">
           <IoIosSearch className="opacity-60 text-lg" />
           <input
             type="text"

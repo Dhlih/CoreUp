@@ -11,48 +11,39 @@ export default function CreateCourse() {
   const [topic, setTopic] = useState("");
   const [level, setLevel] = useState("");
   const [language, setLanguage] = useState("");
+  const [session, setSession] = useState(null);
   const [createLoading, setCreateLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showAlertModal, setShowAlertModal] = useState(false);
-  const [name, setName] = useState("");
   const [progressValue, setProgressValue] = useState(0);
 
+  const fetchProfile = async () => {
+    const session = await getSession();
+    console.log("session di create course", session);
+    setSession(session);
+
+    try {
+      // Simulasikan progress
+      let val = 0;
+      const interval = setInterval(() => {
+        val += 10;
+        setProgressValue(val);
+        if (val >= 100) {
+          clearInterval(interval);
+          setCreateLoading(false);
+        }
+      }, 200);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 800);
+    } catch (error) {
+      console.error("Gagal ambil profil:", error);
+      setCreateLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      const session = await getSession();
-      console.log("session di create course : ", session);
-
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-          headers: {
-            Authorization: session.token,
-          },
-        });
-
-        const data = await res.json();
-
-        setName(data.data.name || "User");
-
-        // Simulasikan progress
-        let val = 0;
-        const interval = setInterval(() => {
-          val += 10;
-          setProgressValue(val);
-          if (val >= 100) {
-            clearInterval(interval);
-            setCreateLoading(false);
-          }
-        }, 200);
-
-        setTimeout(() => {
-          setLoading(false);
-        }, 800);
-      } catch (error) {
-        console.error("Gagal ambil profil:", error);
-        setCreateLoading(false);
-      }
-    };
-
     fetchProfile();
   }, []);
 
@@ -140,7 +131,9 @@ export default function CreateCourse() {
       ) : (
         <div className="w-full max-w-xl md:mx-auto space-y-6">
           <div>
-            <p className="text-lg md:text-xl font-medium mb-1">Hello {name}!</p>
+            <p className="text-lg md:text-xl font-medium mb-1">
+              Hello {session?.name}!
+            </p>
             <h1 className="text-2xl md:text-4xl font-bold">
               What do you want to learn?
             </h1>
@@ -179,7 +172,7 @@ export default function CreateCourse() {
           <div className="flex justify-end">
             <button
               onClick={handleSubmit}
-              className="btn py-3 px-4 bg-[#3B82F6] mt-[0.5rem] text-white rounded-md hover:bg-[#3B82F6]/70 transition font-semibold text-sm"
+              className="btn px-4 py-6 bg-[#3B82F6] mt-[0.5rem] text-white rounded-md hover:bg-[#3B82F6]/70 transition font-semibold text-sm"
               disabled={createLoading}
             >
               Create Roadmap

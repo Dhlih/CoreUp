@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
+import { GoComment } from "react-icons/go";
+import { IoIosAdd } from "react-icons/io";
 
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
@@ -137,14 +139,14 @@ export default function Discussion() {
   );
 
   return (
-    <div className="min-h-screen bg-[#131F24] text-white px-4 md:px-20 py-[3rem]">
+    <div className=" bg-[#131F24] text-white md:px-20 px-[1.5rem]  py-[3rem] relative">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex-1">
           <h1 className="text-4xl font-bold mb-4 md:mb-[1rem]">Discussion</h1>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-4 w-full sm:max-w-md">
-              <div className="flex items-center bg-[#0F171B] px-3 py-2 rounded-md w-full">
+              <div className="flex items-center bg-[#0F171B] px-3 py-2 rounded-lg md:w-[20rem] w-full">
                 <IoIosSearch className="text-white/50 mr-2 text-2xl" />
                 <input
                   type="text"
@@ -156,7 +158,7 @@ export default function Discussion() {
               </div>
               <button
                 onClick={handleFilterClick}
-                className={`p-2 rounded-md cursor-pointer ${
+                className={`p-2 rounded-md cursor-pointer  ${
                   filterByCommentCount
                     ? "bg-blue-600 border-blue-400"
                     : "bg-[#0F171B] border-white/10"
@@ -166,7 +168,7 @@ export default function Discussion() {
               </button>
             </div>
 
-            <Link href="/create-discussion" className="w-full sm:w-auto ">
+            <Link href="/create-discussion" className="  md:block hidden">
               <button className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-sm font-medium px-4 py-3 rounded-md w-full sm:w-auto">
                 Create Discussion
               </button>
@@ -186,95 +188,98 @@ export default function Discussion() {
         ) : filteredPosts.length === 0 ? (
           <p className="text-gray-400">Tidak ada postingan yang cocok.</p>
         ) : (
-          filteredPosts.map((post) => (
-            <div
-              key={post.id}
-              className="bg-[#0F171B] p-4 rounded-lg shadow transition relative"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-4">
-                  {post.user?.photo ? (
-                    <img
-                      src={post.user.photo}
-                      referrerPolicy="no-referrer"
-                      className="w-10 h-10 rounded-full object-cover border border-white/20 cursor-pointer"
-                      alt={post.user.name || "User"}
-                      onClick={handleProfileClick}
-                    />
-                  ) : (
-                    <div
-                      className="w-10 h-10 rounded-full bg-[#131F24] border border-white/20 flex items-center justify-center cursor-pointer text-sm"
-                      onClick={handleProfileClick}
-                    >
-                      {generateUsername(post.user?.name || "U")}
-                    </div>
-                  )}
-
-                  <div>
-                    <p className="font-semibold">
-                      {post.user?.name || "Anonim"}
-                    </p>
-                    <p className="text-sm text-gray-400">
-                      Posted{" "}
-                      {post.created_at
-                        ? new Date(post.created_at).toLocaleString()
-                        : "unknown"}
-                    </p>
-                  </div>
-                </div>
-
-                {post.user?.id === currentUserId && (
-                  <div className="relative inline-block text-left">
-                    <button
-                      onClick={() => {
-                        const dropdown = document.getElementById(
-                          `dropdown-${post.id}`
-                        );
-                        dropdown.classList.toggle("hidden");
-                      }}
-                      className="text-white/70 hover:text-white"
-                    >
-                      ⋮
-                    </button>
-
-                    <div
-                      id={`dropdown-${post.id}`}
-                      className="absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-[#1c2a30] ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-20"
-                    >
-                      <button
-                        onClick={() =>
-                          router.push(`/create-discussion?id=${post.id}`)
-                        }
-                        className="block px-4 py-2 text-sm text-white hover:bg-blue-600 w-full text-left"
+          <div className="flex flex-col space-y-[2rem]">
+            {filteredPosts.map((post) => (
+              <div
+                key={post.id}
+                className="bg-[#0F171B] p-4 rounded-lg shadow transition relative"
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-4">
+                    {post.user?.photo ? (
+                      <img
+                        src={post.user.photo}
+                        referrerPolicy="no-referrer"
+                        className="w-10 h-10 rounded-full object-cover border border-white/20 cursor-pointer"
+                        alt={post.user.name || "User"}
+                        onClick={handleProfileClick}
+                      />
+                    ) : (
+                      <div
+                        className="w-10 h-10 rounded-full bg-[#131F24] border border-white/20 flex items-center justify-center cursor-pointer text-sm"
+                        onClick={handleProfileClick}
                       >
-                        Edit
-                      </button>
+                        {generateUsername(post?.user?.name)}
+                      </div>
+                    )}
+
+                    <div>
+                      <p className="font-semibold">
+                        {post.user?.name || "Anonim"}
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        Posted{" "}
+                        {post.created_at
+                          ? new Date(post.created_at).toLocaleString()
+                          : "unknown"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {post.user?.id === currentUserId && (
+                    <div className="relative inline-block text-left">
                       <button
                         onClick={() => {
-                          setSelectedPostId(post.id);
-                          document.getElementById("delete_modal").showModal();
+                          const dropdown = document.getElementById(
+                            `dropdown-${post.id}`
+                          );
+                          dropdown.classList.toggle("hidden");
                         }}
-                        className="block px-4 py-2 text-sm text-white hover:bg-red-600 w-full text-left"
+                        className="text-white/70 hover:text-white"
                       >
-                        Delete
+                        ⋮
                       </button>
+
+                      <div
+                        id={`dropdown-${post.id}`}
+                        className="absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-[#1c2a30] ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-20"
+                      >
+                        <button
+                          onClick={() =>
+                            router.push(`/create-discussion?id=${post.id}`)
+                          }
+                          className="block px-4 py-2 text-sm text-white hover:bg-blue-600 w-full text-left"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedPostId(post.id);
+                            document.getElementById("delete_modal").showModal();
+                          }}
+                          className="block px-4 py-2 text-sm text-white hover:bg-red-600 w-full text-left"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <Link
-                href={`/discussion/${post.id}`}
-                className="text-sm text-gray-100 hover:text-gray/70"
-              >
-                {post.description}
-              </Link>
+                <Link
+                  href={`/discussion/${post.id}`}
+                  className="text-lg text-gray-100 hover:text-gray-50"
+                >
+                  {post.description}
+                </Link>
 
-              <div className="mt-2 text-sm text-gray-400 flex items-center gap-2">
-                💬 {post.comments_count || 0}
+                <div className="mt-2 text-gray-400 flex items-center space-x-[1rem]">
+                  <GoComment className="text-xl" />
+                  <p>{post.comments_count || 0}</p>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
 
@@ -323,6 +328,14 @@ export default function Discussion() {
           </div>
         </div>
       </dialog>
+
+      {/* create discussion mobile button */}
+      <div
+        className="md:hidden fixed flex items-center justify-center bottom-10 right-6 w-12 h-12 rounded-full bg-[#3B82F6] hover:bg-[#3B82F6]/70 "
+        title="Create discussion"
+      >
+        <IoIosAdd className="text-4xl" />
+      </div>
     </div>
   );
 }
