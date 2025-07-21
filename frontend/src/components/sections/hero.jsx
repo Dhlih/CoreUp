@@ -13,10 +13,10 @@ export default function Hero() {
   const router = useRouter();
 
   const checkSession = async () => {
-    const session = await getSession;
-    const user = setUser(session);
+    const session = await getSession();
+    setUser(session);
 
-    if (!user) {
+    if (!session) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);

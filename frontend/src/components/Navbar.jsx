@@ -6,6 +6,7 @@ import ModalLogin from "./modal_login";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
+import { timeAgo } from "@/lib/time";
 
 // icons
 import { BiLogOut } from "react-icons/bi";
@@ -104,38 +105,41 @@ export default function Navbar() {
 
   return (
     <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg md:py-[1rem] py-[0.8rem] ">
-      {/* left side */}
       <div className="relative w-full md:px-15 px-[1rem] flex items-center justify-between ">
+        {/* left side */}
         <Link href="/" className="flex items-center space-x-[0.8rem]">
           <PiBrainLight className="text-5xl text-[#4F9CF9]" />
           <h2 className="md:text-2xl text-xl font-bold text-white">CoreUp</h2>
         </Link>
 
+        {/* center side */}
+        {user && (
+          <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
+            <Link
+              className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
+              href="/discussion"
+            >
+              Discussion
+            </Link>
+
+            <Link
+              className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
+              href="/leaderboard"
+            >
+              Leaderboard
+            </Link>
+            <Link
+              className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold "
+              href="/my-courses"
+            >
+              My Courses
+            </Link>
+          </ul>
+        )}
+
         {/* right side */}
         {user ? (
           <div className="flex items-center md:space-x-[2.5rem] space-x-[1.5rem] ">
-            <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
-              <Link
-                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
-                href="/discussion"
-              >
-                Discussion
-              </Link>
-
-              <Link
-                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
-                href="/leaderboard"
-              >
-                Leaderboard
-              </Link>
-              <Link
-                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold "
-                href="/my-courses"
-              >
-                My Courses
-              </Link>
-            </ul>
-
             <Link
               className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-3 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
               href="/create-course"

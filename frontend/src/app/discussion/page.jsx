@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
-import { GoComment } from "react-icons/go";
+import { FaRegComment } from "react-icons/fa";
 import { IoIosAdd } from "react-icons/io";
+import { BsThreeDots } from "react-icons/bs";
 
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
+import { timeAgo } from "@/lib/time";
 
 export default function Discussion() {
   const [posts, setPosts] = useState([]);
@@ -125,7 +127,7 @@ export default function Discussion() {
   }, []);
 
   const SkeletonCard = () => (
-    <div className="bg-[#0F171B] p-4 rounded-lg animate-pulse">
+    <div className="bg-[#0F171B] p-6 rounded-lg animate-pulse">
       <div className="flex items-center gap-4 mb-2">
         <div className="w-10 h-10 bg-[#1c2a30] rounded-full" />
         <div className="flex-1 space-y-2">
@@ -142,7 +144,7 @@ export default function Discussion() {
     <div className=" bg-[#131F24] text-white md:px-20 px-[1.5rem]  py-[3rem] relative">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex-1">
-          <h1 className="text-4xl font-bold mb-4 md:mb-[1rem]">Discussion</h1>
+          <h1 className="text-4xl font-bold mb-[1rem]">Discussion</h1>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-4 w-full sm:max-w-md">
@@ -180,11 +182,11 @@ export default function Discussion() {
       {/* comment lists */}
       <div className="space-y-4">
         {isLoading ? (
-          <>
+          <div className="flex flex-col space-y-[2rem]">
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
-          </>
+          </div>
         ) : filteredPosts.length === 0 ? (
           <p className="text-gray-400">Tidak ada postingan yang cocok.</p>
         ) : (
@@ -192,21 +194,21 @@ export default function Discussion() {
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className="bg-[#0F171B] p-4 rounded-lg shadow transition relative"
+                className="bg-[#0F171B] p-6 rounded-lg shadow transition relative flex flex-col space-y-[1rem]"
               >
-                <div className="flex items-start justify-between mb-2">
+                <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
                     {post.user?.photo ? (
                       <img
                         src={post.user.photo}
                         referrerPolicy="no-referrer"
-                        className="w-10 h-10 rounded-full object-cover border border-white/20 cursor-pointer"
+                        className="w-12 h-12 rounded-full object-cover border border-white/20 cursor-pointer"
                         alt={post.user.name || "User"}
                         onClick={handleProfileClick}
                       />
                     ) : (
                       <div
-                        className="w-10 h-10 rounded-full bg-[#131F24] border border-white/20 flex items-center justify-center cursor-pointer text-sm"
+                        className="w-12 h-12 rounded-full bg-[#131F24] border border-white/20 flex items-center justify-center cursor-pointer text-sm"
                         onClick={handleProfileClick}
                       >
                         {generateUsername(post?.user?.name)}
@@ -218,10 +220,7 @@ export default function Discussion() {
                         {post.user?.name || "Anonim"}
                       </p>
                       <p className="text-sm text-gray-400">
-                        Posted{" "}
-                        {post.created_at
-                          ? new Date(post.created_at).toLocaleString()
-                          : "unknown"}
+                        Posted {timeAgo(post.created_at)}
                       </p>
                     </div>
                   </div>
@@ -235,14 +234,14 @@ export default function Discussion() {
                           );
                           dropdown.classList.toggle("hidden");
                         }}
-                        className="text-white/70 hover:text-white"
+                        className="text-white/70 hover:text-white  cursor-pointer"
                       >
-                        ⋮
+                        <BsThreeDots className="text-xl" />
                       </button>
 
                       <div
                         id={`dropdown-${post.id}`}
-                        className="absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-[#1c2a30] ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-20"
+                        className="absolute right-0 mt-2 w-28 rounded-lg bg-[#1c2a30] hidden z-20"
                       >
                         <button
                           onClick={() =>
@@ -268,14 +267,14 @@ export default function Discussion() {
 
                 <Link
                   href={`/discussion/${post.id}`}
-                  className="text-lg text-gray-100 hover:text-gray-50"
+                  className="text-lg text-gray-100 hover:text-gray-100/70"
                 >
                   {post.description}
                 </Link>
 
-                <div className="mt-2 text-gray-400 flex items-center space-x-[1rem]">
-                  <GoComment className="text-xl" />
-                  <p>{post.comments_count || 0}</p>
+                <div className=" text-gray-400 flex items-center space-x-[0.8rem]">
+                  <FaRegComment className="text-xl" />
+                  <p>{post.comments_count || 0} comments</p>
                 </div>
               </div>
             ))}

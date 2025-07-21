@@ -93,8 +93,9 @@ export default function CreateDiscussion() {
       );
 
       const data = await res.json();
+
       if (res.ok) {
-        router.push("/discussion");
+        router.push(`/discussion/${postId}`);
       } else {
         console.error(data);
         alert("Gagal menyimpan postingan!");
@@ -108,77 +109,74 @@ export default function CreateDiscussion() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#131F24] text-white px-4 py-[3rem]">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 bg-[#0F171B] p-6 rounded-lg shadow-lg"
-      >
-        <h1 className="text-2xl font-bold text-center">
-          {isEditMode ? "Edit Discussion" : "Create Discussion"}
-        </h1>
-
-        <textarea
-          placeholder="Insert Description."
-          className="w-full p-3 rounded bg-gray-700 placeholder-gray-400"
-          rows={3}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <label className="block text-sm font-medium text-white">Image</label>
-
-        <div className="relative border-2 border-dashed border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-700 transition">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoChange}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+    <div className=" bg-[#131F24] text-white px-80 mx-auto py-[4rem]">
+      <h1 className="text-4xl font-bold text-left">
+        {isEditMode ? "Edit Discussion" : "Create Discussion"}
+      </h1>
+      <div className="flex items-center justify-center mt-[1.5rem] max-w-[600px] w-full ">
+        <form onSubmit={handleSubmit} className="w-full">
+          <textarea
+            placeholder="Insert description..."
+            className="w-full p-3 rounded-lg bg-[#0F171B] resize-none outline-none"
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
-          {preview ? (
-            <img
-              src={preview}
-              alt="Preview"
-              className="max-h-48 mx-auto object-contain"
+
+          <div className="relative border-2 border-dashed border-gray-600 bg-[#0F171B] rounded-lg p-4 mt-[1rem]  text-center cursor-pointer hover:bg-[#0F171B]/50 transition">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer "
             />
-          ) : (
-            <p className="text-gray-400">Click to Select Image</p>
-          )}
-        </div>
-
-        {showSizeAlert && (
-          <div
-            role="alert"
-            className="alert bg-blue-100 text-blue-800 px-4 py-3 rounded flex items-center space-x-2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-blue-500 h-6 w-6 shrink-0"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <span>Image size must not exceed 3 MB.</span>
+            {preview ? (
+              <img
+                src={preview}
+                alt="Preview"
+                className="max-h-48 object-cover w-full"
+              />
+            ) : (
+              <p className="text-gray-400 text-sm">Click to Select Image</p>
+            )}
           </div>
-        )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className={`${
-            loading
-              ? "bg-gray-700 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-          } text-white px-4 py-2 rounded transition w-full`}
-        >
-          {loading ? "..." : isEditMode ? "Update" : "Post"}
-        </button>
-      </form>
+          {showSizeAlert && (
+            <div
+              role="alert"
+              className="alert bg-blue-100 text-blue-800 px-4 py-3 rounded flex items-center space-x-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="stroke-blue-500 h-6 w-6 shrink-0"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              <span>Image size must not exceed 3 MB.</span>
+            </div>
+          )}
+          <div className="flex justify-end mt-[2rem]">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`${
+                loading
+                  ? "bg-gray-700 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              } text-white py-3 px-10 transition rounded-lg cursor-pointer `}
+            >
+              {loading ? "..." : isEditMode ? "Update" : "Create"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

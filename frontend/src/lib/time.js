@@ -9,12 +9,12 @@ export function timeAgo(dateString) {
   const days = Math.floor(hours / 24);
 
   if (days > 0) {
-    return `${days} hari yang lalu`;
+    return `${days} day${days > 1 ? "s" : ""} ago`;
   } else if (hours > 0) {
-    return `${hours} jam yang lalu`;
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
   } else if (minutes > 0) {
-    return `${minutes} menit yang lalu`;
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
   } else {
-    return "Baru saja";
+    return "Just now";
   }
 }

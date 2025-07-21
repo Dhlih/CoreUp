@@ -8,6 +8,7 @@ import { getSession } from "@/lib/session";
 import { timeAgo } from "@/lib/time";
 import { AiOutlineDelete } from "react-icons/ai";
 import { MdOutlineModeEdit } from "react-icons/md";
+
 import ErrorAlert from "@/components/ErrorAlert";
 import Alert from "@/components/SuccessAlert";
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -52,6 +53,7 @@ const DiscussionById = () => {
       }
 
       const data = await response.json();
+      console.log(data.data);
       setPost(data.data);
       setLoading(false);
     } catch (error) {
@@ -195,6 +197,7 @@ const DiscussionById = () => {
         setEditCommentId(null);
         setEditedComment("");
         setSuccessAlert("Comment updated successfully");
+
         fetchData();
         setTimeout(() => setSuccessAlert(false), 1500);
       } else {
@@ -236,8 +239,8 @@ const DiscussionById = () => {
           </div>
         </div>
       </div>
-      <div className="mt-4 h-4  bg-gray-700  rounded w-full" />
-      <div className="mt-2 h-4  bg-gray-700  rounded w-2/3" />
+      <div className="mt-4 h-4 bg-gray-700 rounded w-full" />
+      <div className="mt-2 h-4 bg-gray-700 rounded w-2/3" />
     </div>
   );
 
@@ -296,9 +299,7 @@ const DiscussionById = () => {
                   <div
                     className="flex items-center space-x-[1rem] hover:bg-[#0F171B]/70 px-3 py-2 cursor-pointer"
                     onClick={() => {
-                      setIsEditPost(true);
-                      setEditedPostContent(post.description);
-                      setShowOption(false);
+                      router.push(`/create-discussion?id=${post.id}`);
                     }}
                   >
                     <MdOutlineModeEdit className="text-xl" />
@@ -320,39 +321,14 @@ const DiscussionById = () => {
           )}
         </div>
 
-        {isEditPost ? (
-          <div className="mt-[1rem]">
-            <textarea
-              value={editedPostContent}
-              onChange={(e) => setEditedPostContent(e.target.value)}
-              className="w-full outline-none resize-none text-lg bg-[#131F24] p-3 rounded-lg"
-              rows={4}
-            />
-            <div className="flex justify-end items-center space-x-[1rem] mt-2">
-              <button
-                className="rounded-lg py-2 px-4 bg-gray-600 hover:bg-gray-700 cursor-pointer"
-                onClick={() => setIsEditPost(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="rounded-lg py-2 px-4 bg-blue-500 hover:bg-blue-600 cursor-pointer"
-                onClick={updatePost}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        ) : (
-          <p className="my-[1rem] text-lg whitespace-pre-wrap">
-            {post?.description}
-          </p>
-        )}
+        <p className="my-[1rem] text-xl whitespace-pre-wrap">
+          {post?.description}
+        </p>
 
         {post?.photo && !isEditPost && (
           <img
             src={post.photo}
-            className="w-full max-h-[500px] object-cover rounded-lg"
+            className="w-full max-h-[450px] object-cover rounded-lg"
             alt="Post content"
           />
         )}
@@ -463,7 +439,7 @@ const DiscussionById = () => {
                   </div>
                 </div>
               ) : (
-                <p className="mt-[1rem] text-lg whitespace-pre-wrap">
+                <p className="mt-[1rem] whitespace-pre-wrap">
                   {comment.comment}
                 </p>
               )}
