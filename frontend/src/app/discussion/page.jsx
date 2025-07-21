@@ -331,12 +331,14 @@ export default function Discussion() {
       </dialog>
 
       {/* create discussion mobile button */}
-      <div
-        className="md:hidden fixed flex items-center justify-center bottom-10 right-6 w-12 h-12 rounded-full bg-[#3B82F6] hover:bg-[#3B82F6]/70 "
-        title="Create discussion"
-      >
-        <IoIosAdd className="text-4xl" />
-      </div>
+      <Link href="/discussion">
+        <div
+          className="md:hidden fixed flex items-center justify-center bottom-10 right-6 w-12 h-12 rounded-full bg-[#3B82F6] hover:bg-[#3B82F6]/70 cursor-pointer shadow-lg transition-all"
+          title="Create discussion"
+        >
+          <IoIosAdd className="text-4xl text-white" />
+        </div>
+      </Link>
     </div>
   );
 }

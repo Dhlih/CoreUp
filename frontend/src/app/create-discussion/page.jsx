@@ -70,7 +70,7 @@ function CreateDiscussionContent() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const maxSize = 3 * 1024 * 1024; // 3 MB
+    const maxSize = 500 * 1024;
     if (file.size > maxSize) {
       setShowSizeAlert(true);
       setPhoto(null);
@@ -116,7 +116,7 @@ function CreateDiscussionContent() {
         : `${apiUrl}/api/posts`;
 
       const res = await fetch(url, {
-        method: isEditMode ? "PUT" : "POST", // Use proper HTTP methods
+        method: isEditMode ? "POST" : "POST", // Use proper HTTP methods
         headers: {
           Authorization: session.token,
         },
@@ -233,7 +233,7 @@ function CreateDiscussionContent() {
                   </svg>
                 </div>
                 <p className="text-gray-400 text-sm">Click to Select Image</p>
-                <p className="text-gray-500 text-xs mt-1">Max 3MB</p>
+                <p className="text-gray-500 text-xs mt-1">Max 500 KB</p>
               </div>
             )}
           </div>
@@ -253,7 +253,7 @@ function CreateDiscussionContent() {
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
                 />
               </svg>
-              <span>Image size must not exceed 3 MB.</span>
+              <span>Image size must not exceed 500 KB.</span>
             </div>
           )}
 
