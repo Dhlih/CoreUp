@@ -304,7 +304,9 @@ const Profile = () => {
                   <IoMdBook className="md:text-3xl text-xl" />
                 </div>
                 <Link href={`/my-courses/${course.title}`}>
-                  <h3 className=" md:text-xl text-base ">{course.title}</h3>
+                  <h3 className=" md:text-lg text-base hover:text-white/70">
+                    {course.title}
+                  </h3>
                 </Link>
               </div>
             ))}

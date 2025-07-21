@@ -6,8 +6,9 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import CompletionMaterial from "@/components/CompletionMaterial";
 import { useRouter } from "next/navigation";
-import Loading from "@/components/Loading";
+import ReactMarkdown from "react-markdown";
 import { getCourseProgress } from "@/lib/progress";
+import remarkGfm from "remark-gfm";
 
 const ModuleMaterial = () => {
   const [moduleData, setModuleData] = useState(null);
@@ -127,13 +128,15 @@ const ModuleMaterial = () => {
         <h2 className="text-lg font-medium">{moduleData.title}</h2>
       </Link>
 
-      <h1 className="text-2xl md:text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[85%]">
+      <h1 className="text-2xl md:text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[95%]">
         {materialData.title}
       </h1>
 
-      <p className="text-lg opacity-80 md:max-w-[95%] w-full">
-        {materialData.content || "Konten belum tersedia."}
-      </p>
+      <div className="prose prose-invert max-w-none">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {materialData.content}
+        </ReactMarkdown>
+      </div>
 
       <div className="flex justify-end mt-[3rem] md:mr-[5rem]">
         <button
