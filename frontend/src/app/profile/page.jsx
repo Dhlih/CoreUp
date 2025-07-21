@@ -203,7 +203,7 @@ const Profile = () => {
       )}
 
       <div className="py-[4rem] bg-[#131F24] md:px-30 px-[1.5rem] flex flex-col space-y-[2rem]">
-        <h1 className="font-bold md:text-4xl text-3xl">My Profile</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">My Profile</h1>
 
         <div className="bg-[#0F171B] p-6 rounded-xl">
           <div className="flex items-center justify-between">

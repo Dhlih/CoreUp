@@ -89,7 +89,7 @@ export default function CoursePage() {
   return (
     <div className="min-h-screen text-white py-[3.5rem] md:px-20 px-[1.5rem]">
       <div className="flex justify-between items-center mb-4 md:max-w-[80%]">
-        <h1 className="text-4xl font-bold">{course?.title}</h1>
+        <h1 className="text-2xl md:text-4xl font-bold">{course?.title}</h1>
       </div>
       <p className="mb-4 opacity-80 text-lg md:my-0 ">{course?.description}</p>
 
@@ -113,9 +113,7 @@ export default function CoursePage() {
                     <div className="bg-[#131F24] p-3 text-xl rounded-lg">
                       <LuBookText />
                     </div>
-                    <p className="font-medium text-lg text-white">
-                      {material?.title}
-                    </p>
+                    <p className="font-medium  text-white">{material?.title}</p>
                   </div>
 
                   {material.is_done === 1 && (
@@ -125,7 +123,7 @@ export default function CoursePage() {
               </Link>
             ))}
             <button
-              className="btn bg-[#4F9CF9] text-white p-6 mt-[1.5rem] rounded-lg flex items-center space-x-[0.1rem] w-full hover:bg-[#4F9CF9]/70 transition-colors"
+              className=" bg-[#4F9CF9] text-white p-3 mt-[1.5rem] rounded-lg flex items-center justify-center space-x-[0.5rem] cursor-pointer  w-full hover:bg-[#4F9CF9]/70 transition-colors"
               onClick={() => handleQuizClick(module)}
             >
               <MdOutlineAssignment className="text-2xl" />

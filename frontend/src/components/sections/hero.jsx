@@ -7,14 +7,12 @@ import ErrorAlert from "../ErrorAlert";
 import { useRouter } from "next/navigation";
 
 export default function Hero() {
-  const [user, setUser] = useState("");
   const [showAlert, setShowAlert] = useState(false);
 
   const router = useRouter();
 
   const checkSession = async () => {
     const session = await getSession();
-    setUser(session);
 
     if (!session) {
       setShowAlert(true);

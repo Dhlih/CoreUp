@@ -41,6 +41,7 @@ const ModuleMaterial = () => {
           },
         }
       );
+
       const courses = await response.json();
 
       const course = courses.find((c) => c.title === courseTitle);
@@ -97,11 +98,12 @@ const ModuleMaterial = () => {
 
   if (loading)
     return (
-      <div className="py-[4rem] px-30 animate-pulse text-white space-y-4">
+      <div className="py-[4rem] md:px-30 px-[1.5rem] animate-pulse text-white space-y-4">
         <div className="h-6 bg-gray-700 rounded w-1/4"></div>
         <div className="h-10 bg-gray-700 rounded w-3/4 mt-4"></div>
         <div className="h-4 bg-gray-700 rounded w-full mt-2"></div>
         <div className="h-4 bg-gray-700 rounded w-[95%] mt-2"></div>
+        <div className="h-4 bg-gray-700 rounded w-[90%] mt-2"></div>
         <div className="h-4 bg-gray-700 rounded w-[90%] mt-2"></div>
         <div className="flex justify-end mt-[3rem] md:mr-[5rem]">
           <div className="h-10 w-36 bg-gray-700 rounded-lg"></div>
@@ -125,7 +127,7 @@ const ModuleMaterial = () => {
         <h2 className="text-lg font-medium">{moduleData.title}</h2>
       </Link>
 
-      <h1 className="text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[85%]">
+      <h1 className="text-2xl md:text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[85%]">
         {materialData.title}
       </h1>
 

@@ -168,7 +168,7 @@ function CreateDiscussionContent() {
 
   return (
     <div className="bg-[#131F24] text-white px-4 md:px-80 mx-auto py-16">
-      <h1 className="text-4xl font-bold text-left mb-6">
+      <h1 className="text-2xl md:text-4xl font-bold text-left mb-6">
         {isEditMode ? "Edit Discussion" : "Create Discussion"}
       </h1>
 

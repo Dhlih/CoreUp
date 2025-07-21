@@ -107,7 +107,7 @@ export default function CreateCourse() {
           <h1 className="font-semibold text-xl mt-[-2rem]">Loading...</h1>
           <div className="flex flex-col items-center w-full space-y-4">
             <progress
-              className="progress w-[30%]"
+              className="progress md:w-[30%] w-[70%]"
               value={progressValue}
               max={100}
             ></progress>

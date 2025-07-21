@@ -144,7 +144,9 @@ export default function Discussion() {
     <div className=" bg-[#131F24] text-white md:px-20 px-[1.5rem]  py-[3rem] relative">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex-1">
-          <h1 className="text-4xl font-bold mb-[1rem]">Discussion</h1>
+          <h1 className="text-2xl md:text-4xl font-bold mb-[1rem]">
+            Discussion
+          </h1>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-4 w-full sm:max-w-md">
@@ -188,7 +190,7 @@ export default function Discussion() {
             <SkeletonCard />
           </div>
         ) : filteredPosts.length === 0 ? (
-          <p className="text-gray-400">Tidak ada postingan yang cocok.</p>
+          <p className="text-gray-400">Belum ada postingan...</p>
         ) : (
           <div className="flex flex-col space-y-[2rem]">
             {filteredPosts.map((post) => (

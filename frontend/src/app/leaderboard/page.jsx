@@ -18,6 +18,10 @@ const Leaderboard = () => {
       const topThree = sortedUsers.slice(0, 3);
       const otherUsers = sortedUsers.slice(4);
 
+      console.log("sorted users :", sortedUsers);
+      console.log("top three : ", topThree);
+      console.log(otherUsers);
+
       setOtherUsers(otherUsers);
       setTopThree(topThree);
 
@@ -32,41 +36,40 @@ const Leaderboard = () => {
   }, []);
 
   if (loading) {
-  return (
-    <div className="md:px-20 px-[1.5rem] py-[4rem] animate-pulse">
-      <div className="flex justify-between items-center mb-4">
-        <div className="h-8 w-40 bg-gray-700 rounded" />
-        <div className="h-8 w-24 bg-gray-700 rounded-full" />
-      </div>
+    return (
+      <div className="md:px-20 px-[1.5rem] py-[4rem] animate-pulse">
+        <div className="flex justify-between items-center mb-4">
+          <div className="h-8 w-40 bg-gray-700 rounded" />
+          <div className="h-8 w-24 bg-gray-700 rounded-full" />
+        </div>
 
-      <div className="bg-[#0F171B] rounded-xl flex items-end justify-center md:space-x-[6rem] space-x-[1.5rem] pt-[2rem]">
-        {[...Array(3)].map((_, index) => (
-          <div key={index} className="flex flex-col items-center space-y-2">
-            <div className="bg-gray-700 rounded-full w-10 h-10" />
-            <div className="h-4 w-20 bg-gray-700 rounded" />
-            <div className="h-4 w-16 bg-gray-700 rounded" />
-            <div className="rounded-lg bg-gray-700 w-16 md:w-24 h-16 md:h-24 mt-2" />
-          </div>
-        ))}
-      </div>
+        <div className="bg-[#0F171B] rounded-xl flex items-end justify-center md:space-x-[6rem] space-x-[1.5rem] pt-[2rem]">
+          {[...Array(3)].map((_, index) => (
+            <div key={index} className="flex flex-col items-center space-y-2">
+              <div className="bg-gray-700 rounded-full w-10 h-10" />
+              <div className="h-4 w-20 bg-gray-700 rounded" />
+              <div className="h-4 w-16 bg-gray-700 rounded" />
+              <div className="rounded-lg bg-gray-700 w-16 md:w-24 h-16 md:h-24 mt-2" />
+            </div>
+          ))}
+        </div>
 
-      <div className="mt-6 space-y-4">
-        {[...Array(5)].map((_, index) => (
-          <div
-            key={index}
-            className="bg-[#0F171B] rounded-lg h-12 md:h-14 w-full"
-          ></div>
-        ))}
+        <div className="mt-6 space-y-4">
+          {[...Array(5)].map((_, index) => (
+            <div
+              key={index}
+              className="bg-[#0F171B] rounded-lg h-12 md:h-14 w-full"
+            ></div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
-
+    );
+  }
 
   return (
     <div className="md:px-20 px-[1.5rem] py-[4rem]">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Leaderboard</h1>
+        <h1 className="text-2xl md:text-4xl font-bold">Leaderboard</h1>
         <div className="bg-[#0F171B] rounded-full px-6 py-2 font-medium">
           All time
         </div>
@@ -88,33 +91,33 @@ const Leaderboard = () => {
             const actual = topThree[heightOrder[index]];
 
             return (
-              <div key={actual.id}>
+              <div key={index}>
                 <div className="flex flex-col items-center justify-center">
                   {actual === topThree[0] && (
                     <FaCrown className="text-yellow-300 text-5xl" />
                   )}
 
-                  {!actual.img ? (
+                  {!actual?.photo ? (
                     <div className="bg-[#212C31] flex items-center justify-center md:w-14 md:h-14 h-12 w-12 p-4 rounded-full">
-                      <p>{generateUsername(actual.name)}</p>
+                      <p>{generateUsername(actual?.name)}</p>
                     </div>
                   ) : (
                     <img
-                      src={actual.photo}
+                      src={actual?.photo}
                       alt="avatar"
                       className="w-8 h-8 rounded-full object-cover bg-[#212C31] "
                     />
                   )}
 
                   <p className="mt-[0.5rem] font-semibold text-center ">
-                    {actual.name}
+                    {actual?.name}
                   </p>
                   <div className="flex items-center justify-start space-x-1">
                     <GiRank2
-                      className={`text-xl ${getRankColor(actual.exp)}`}
+                      className={`text-xl ${getRankColor(actual?.exp)}`}
                     />
                     <span className="font-semibold md:text-base text-sm">
-                      {getUserRank(actual.exp)}
+                      {getUserRank(actual?.exp)}
                     </span>
                   </div>
                 </div>
@@ -147,14 +150,14 @@ const Leaderboard = () => {
               <tbody>
                 {otherUsers.map((user, index) => (
                   <tr
-                    key={user.id}
+                    key={user?.id}
                     className="bg-[#0F171B] hover:bg-[#212C31] cursor-pointer transition-colors rounded-lg"
                   >
                     <td className="px-6 py-4 md:text-2xl text-lg font-semibold text-white rounded-lg">
                       {index + 4}
                     </td>
                     <td className="px-6 py-4 flex items-center space-x-3">
-                      {!user.img ? (
+                      {!user?.photo ? (
                         <div className="bg-[#212C31] flex items-center justify-center md:w-12 md:h-12 h-10 w-10 p-4 rounded-full">
                           <p className="text-xs">
                             {generateUsername(user?.name)}
@@ -169,18 +172,18 @@ const Leaderboard = () => {
                       )}
 
                       <span className="text-white text-center">
-                        {user.name}
+                        {user?.name}
                       </span>
                     </td>
-                    <td className="px-6 py-4">{user.exp} EXP</td>
-                    <td className="px-6 py-4 rounded-r-lg">{user.level}</td>
+                    <td className="px-6 py-4">{user?.exp} EXP</td>
+                    <td className="px-6 py-4 rounded-r-lg">{user?.level}</td>
                     <td className="px-6 py-4 rounded-r-lg">
                       <div className="flex items-center justify-start space-x-2">
                         <GiRank2
                           className={`text-3xl ${getRankColor(user?.exp)}`}
                         />
                         <span className="font-semibold">
-                          {getUserRank(user.exp)}
+                          {getUserRank(user?.exp)}
                         </span>
                       </div>
                     </td>
