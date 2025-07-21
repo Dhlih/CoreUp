@@ -28,7 +28,7 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [session, setSession] = useState(null);
   const [password, setPassword] = useState("");
-  const [passwordAlert, setPasswordAlert] = useState(false);
+  const [fieldAlert, setFieldAlert] = useState(false);
   const [img, setImg] = useState(null);
   const [previewImg, setPreviewImg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -77,8 +77,8 @@ const Profile = () => {
   }, []);
 
   const editProfile = async () => {
-    if (!password) {
-      setPasswordAlert(true);
+    if (!password || !name) {
+      setFieldAlert(true);
       return;
     }
 
@@ -314,8 +314,8 @@ const Profile = () => {
                 value={password}
               />
 
-              {passwordAlert && (
-                <p className="text-red-400 text-sm">*Field is required</p>
+              {fieldAlert && (
+                <p className="text-red-400 text-sm">*Fill all the field</p>
               )}
 
               <button
