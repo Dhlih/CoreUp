@@ -75,7 +75,7 @@ const ModulCard = ({
         <div className="md:w-auto w-full flex items-center justify-between md:mt-0 mt-[1.5rem]">
           <div className="flex md:hidden items-center space-x-[0.5rem] text-base">
             <LuBookMinus />
-            <span>{moduleAmount} Module</span>
+            <span>{moduleAmount}</span>
           </div>
           <div className="flex items-center md:space-x-[2rem] space-x-[0.8rem]">
             <Link href={`/my-courses/${title}`}>
