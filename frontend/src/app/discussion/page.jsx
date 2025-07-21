@@ -1,12 +1,16 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
 import { FaRegComment } from "react-icons/fa";
 import { IoIosAdd } from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
+import { AiOutlineDelete } from "react-icons/ai";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
@@ -190,7 +194,7 @@ export default function Discussion() {
             <SkeletonCard />
           </div>
         ) : filteredPosts.length === 0 ? (
-          <p className="text-gray-400">Belum ada postingan...</p>
+          <p className="text-gray-400">No post yet...</p>
         ) : (
           <div className="flex flex-col space-y-[2rem]">
             {filteredPosts.map((post) => (
@@ -243,25 +247,27 @@ export default function Discussion() {
 
                       <div
                         id={`dropdown-${post.id}`}
-                        className="absolute right-0 mt-2 w-28 rounded-lg bg-[#1c2a30] hidden z-20"
+                        className="bg-[#212C31] absolute top-8 right-0 rounded-lg z-50 min-w-[120px] shadow-lg hidden"
                       >
-                        <button
-                          onClick={() =>
-                            router.push(`/create-discussion?id=${post.id}`)
-                          }
-                          className="block px-4 py-2 text-sm text-white hover:bg-blue-600 w-full text-left"
+                        <div
+                          className="flex items-center space-x-[1rem] hover:bg-[#0F171B]/70 px-3 py-2 cursor-pointer"
+                          onClick={() => {
+                            router.push(`/create-discussion?id=${post.id}`);
+                          }}
                         >
-                          Edit
-                        </button>
-                        <button
+                          <MdOutlineModeEdit className="text-xl" />
+                          <p>Edit</p>
+                        </div>
+                        <div
+                          className="flex items-center space-x-[1rem] hover:bg-[#0F171B]/70 px-4 py-3 cursor-pointer"
                           onClick={() => {
                             setSelectedPostId(post.id);
                             document.getElementById("delete_modal").showModal();
                           }}
-                          className="block px-4 py-2 text-sm text-white hover:bg-red-600 w-full text-left"
                         >
-                          Delete
-                        </button>
+                          <AiOutlineDelete className="text-red-400 text-xl" />
+                          <p>Delete</p>
+                        </div>
                       </div>
                     </div>
                   )}

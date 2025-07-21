@@ -276,14 +276,25 @@ const DiscussionById = () => {
       <div className="bg-[#0F171B] rounded-lg p-8">
         <div className="flex items-center justify-between ">
           <div className="flex items-center space-x-[1rem]">
-            <img
-              src="/images/luffy.webp"
-              className="w-14 h-14 rounded-full object-cover"
-              alt=""
-            />
+            {post.user.photo ? (
+              <img
+                src="/images/luffy.webp"
+                className="md:w-14 md:h-14 w-12 h-12 rounded-full object-cover"
+                alt=""
+              />
+            ) : (
+              <div
+                className="md:w-14 md:h-14 w-12 h-12 bg-[#131F24] rounded-full border border-white/20 flex items-center justify-center"
+                style={{ aspectRatio: 1 }}
+              >
+                <p className="text-base leading-none">
+                  {generateUsername(session?.name)}
+                </p>
+              </div>
+            )}
             <div>
               <div className="flex items-center space-x-[0.8rem]">
-                <h3 className="font-semibold text-lg">Ifad Yusuf</h3>
+                <h3 className="font-semibold ">{post.user.name}</h3>
               </div>
               <p className="opacity-80 ">{timeAgo(post.created_at)}</p>
             </div>
@@ -349,8 +360,13 @@ const DiscussionById = () => {
                 alt="Your avatar"
               />
             ) : (
-              <div className=" w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
-                <p>{generateUsername(session?.name)}</p>
+              <div
+                className="w-12 h-12 bg-[#131F24] rounded-full border border-white/20 flex items-center justify-center"
+                style={{ aspectRatio: 1 }}
+              >
+                <p className="text-base leading-none">
+                  {generateUsername(session?.name)}
+                </p>
               </div>
             )}
             <div className="rounded-lg bg-[#131F24] w-full relative">

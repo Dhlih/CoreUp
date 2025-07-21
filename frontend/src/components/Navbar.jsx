@@ -108,7 +108,7 @@ export default function Navbar() {
       <div className="relative w-full md:px-15 px-[1rem] flex items-center justify-between ">
         {/* left side */}
         <Link href="/" className="flex items-center space-x-[0.8rem]">
-          <PiBrainLight className="text-5xl text-[#4F9CF9]" />
+          <PiBrainLight className="md:text-5xl text-4xl text-[#4F9CF9]" />
           <h2 className="md:text-2xl text-xl font-bold text-white">CoreUp</h2>
         </Link>
 
@@ -141,7 +141,7 @@ export default function Navbar() {
         {user ? (
           <div className="flex items-center md:space-x-[2.5rem] space-x-[1.5rem] ">
             <Link
-              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-3 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
+              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-2 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
               href="/create-course"
             >
               Create
@@ -156,11 +156,11 @@ export default function Navbar() {
               {user?.data?.photo ? (
                 <img
                   src={user?.data?.photo}
-                  className=" w-13 h-13 rounded-full object-cover border-white/20 "
+                  className="md:w-13 md:h-13 w-11 h-11 rounded-full object-cover border-white/20 "
                   alt=""
                 />
               ) : (
-                <div className=" w-13 h-13 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div className="md:w-13 md:h-13 w-11 h-11 bg-[#131F24] rounded-full md:text-base text-sm object-cover border border-white/20  flex items-center justify-center">
                   {generateUsername(user?.data?.name)}
                 </div>
               )}
@@ -220,7 +220,7 @@ export default function Navbar() {
                 </div>
               </div>
               <IoCloseOutline
-                className="text-2xl cursor-pointer mr-3 mt-2"
+                className="text-4xl cursor-pointer mr-3 mt-2"
                 onClick={() => setIsClicked(false)}
               />
             </div>
