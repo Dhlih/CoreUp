@@ -158,9 +158,13 @@ export default function Navbar() {
                   src={user?.data?.photo}
                   className="md:w-13 md:h-13 w-11 h-11 rounded-full object-cover border-white/20 "
                   alt=""
+                  style={{ aspectRatio: 1 }}
                 />
               ) : (
-                <div className="md:w-13 md:h-13 w-11 h-11 bg-[#131F24] rounded-full md:text-base text-sm object-cover border border-white/20  flex items-center justify-center">
+                <div
+                  className="md:w-13 md:h-13 w-11 h-11 bg-[#131F24] rounded-full md:text-base text-sm object-cover border border-white/20  flex items-center justify-center"
+                  style={{ aspectRatio: 1 }}
+                >
                   {generateUsername(user?.data?.name)}
                 </div>
               )}
@@ -206,10 +210,14 @@ export default function Navbar() {
                         src={user?.data?.photo}
                         className="w-14 h-14 rounded-full object-cover"
                         alt=""
+                        style={{ aspectRatio: 1 }}
                       />
                     </Link>
                   ) : (
-                    <div className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                    <div
+                      className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center"
+                      style={{ aspectRatio: 1 }}
+                    >
                       {generateUsername(user?.data?.name)}
                     </div>
                   )}

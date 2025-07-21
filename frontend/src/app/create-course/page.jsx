@@ -87,21 +87,31 @@ export default function CreateCourse() {
           }, 500);
         }, 300);
       } else {
-        setCreateLoading(false);
         setShowAlertModal(true);
+        setCreateLoading(false);
+
+        setTimeout(() => {
+          setShowAlertModal(false);
+        }, 1000);
       }
     } catch (error) {
-      setShowAlertModal(true);
       setCreateLoading(false);
+      setShowAlertModal(true);
+
+      setTimeout(() => {
+        setShowAlertModal(false);
+      }, 1000);
     }
   };
 
   return (
     <div className="py-[4rem] text-white md:px-20 px-[1.5rem]">
+      <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
+        {showAlertModal && <ErrorAlert text="An error occured!" />}
+      </div>
+
       {createLoading ? (
         <div className="flex flex-col justify-center items-center space-y-[1rem]">
-          {showAlertModal && <ErrorAlert text={"An error occured"} />}
-
           <img src="/images/studying.svg" alt="" className="w-90 h-90" />
 
           <h1 className="font-semibold text-xl mt-[-2rem]">Loading...</h1>

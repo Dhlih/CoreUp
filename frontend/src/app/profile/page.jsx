@@ -263,9 +263,13 @@ const Profile = () => {
                   src={previewImg || session.photo}
                   className="w-18 h-18 rounded-full object-cover border-white/20"
                   alt=""
+                  style={{ aspectRatio: 1 }}
                 />
               ) : (
-                <div className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
+                <div
+                  className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center"
+                  style={{ aspectRatio: 1 }}
+                >
                   {generateUsername(session?.name)}
                 </div>
               )}
@@ -277,7 +281,7 @@ const Profile = () => {
                 className="hidden"
               />
               <div
-                className="absolute top-10 right-22 bg-[#3B82F6] p-2 rounded-full text-sm cursor-pointer"
+                className="absolute top-10 md:right-30 right-22 bg-[#3B82F6] p-2 rounded-full text-sm cursor-pointer"
                 onClick={() => fileInputRef.current.click()}
               >
                 <MdOutlineModeEdit />
@@ -336,9 +340,13 @@ const Profile = () => {
                   src={session?.photo}
                   className="w-16 h-16 rounded-full object-cover"
                   alt=""
+                  style={{ aspectRatio: 1 }}
                 />
               ) : (
-                <div className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
+                <div
+                  className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center"
+                  style={{ aspectRatio: 1 }}
+                >
                   {generateUsername(session?.name)}
                 </div>
               )}

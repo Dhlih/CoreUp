@@ -80,7 +80,9 @@ const MyCourse = () => {
       )}
 
       <div className="flex md:flex-row flex-col md:items-center justify-between">
-        <h1 className="font-bold text-4xl md:mb-0 mb-[1.5rem]">My Courses</h1>
+        <h1 className="font-bold md:text-4xl text-2xl md:mb-0 mb-[1.5rem]">
+          My Courses
+        </h1>
 
         {/* input field */}
         <div className="rounded-lg bg-[#0F171B] flex items-center space-x-[1rem] p-3  text-sm  ">

@@ -35,8 +35,9 @@ function CreateDiscussionContent() {
       try {
         const s = await getSession();
         setSession(s);
+        console.log("Session:", s);
 
-        if (postId && s?.value) {
+        if (postId) {
           const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
           if (!apiUrl) {
             console.error("API URL not configured");
@@ -45,8 +46,7 @@ function CreateDiscussionContent() {
 
           const res = await fetch(`${apiUrl}/api/posts/${postId}`, {
             headers: {
-              "Content-Type": "application/json",
-              Authorization: s.value,
+              Authorization: s.token,
             },
           });
 
@@ -107,6 +107,7 @@ function CreateDiscussionContent() {
 
       const formData = new FormData();
       formData.append("description", description.trim());
+
       if (photo) {
         formData.append("photo", photo);
       }
@@ -269,7 +270,7 @@ function CreateDiscussionContent() {
                   loading || !description.trim()
                     ? "bg-gray-700 cursor-not-allowed"
                     : "bg-blue-500 hover:bg-blue-600"
-                } text-white py-3 px-6 transition rounded-lg font-medium`}
+                } text-white py-3 px-6 transition rounded-lg font-medium cursor-pointer`}
               >
                 {loading ? "Saving..." : isEditMode ? "Update" : "Create"}
               </button>

@@ -273,12 +273,12 @@ const DiscussionById = () => {
 
   return (
     <div className="py-[4rem] md:px-30 px-[1.5rem] relative">
-      <div className="bg-[#0F171B] rounded-lg p-8">
+      <div className="bg-[#0F171B] rounded-lg md:p-8 p-6">
         <div className="flex items-center justify-between ">
           <div className="flex items-center space-x-[1rem]">
             {post.user.photo ? (
               <img
-                src="/images/luffy.webp"
+                src={post.user.photo}
                 className="md:w-14 md:h-14 w-12 h-12 rounded-full object-cover"
                 alt=""
               />
@@ -296,7 +296,7 @@ const DiscussionById = () => {
               <div className="flex items-center space-x-[0.8rem]">
                 <h3 className="font-semibold ">{post.user.name}</h3>
               </div>
-              <p className="opacity-80 ">{timeAgo(post.created_at)}</p>
+              <p className="opacity-80 text-sm">{timeAgo(post.created_at)}</p>
             </div>
           </div>
 
@@ -333,7 +333,7 @@ const DiscussionById = () => {
           )}
         </div>
 
-        <p className="my-[1rem] text-xl whitespace-pre-wrap">
+        <p className="my-[1rem] md:text-xl  whitespace-pre-wrap">
           {post?.description}
         </p>
 
@@ -347,21 +347,21 @@ const DiscussionById = () => {
       </div>
 
       <div className="mt-[2rem] flex flex-col space-y-[1.5rem] ">
-        <h2 className="text-2xl font-semibold ">
+        <h2 className="md:text-2xl text-lg font-semibold ">
           {post.comments.length} Comments
         </h2>
 
-        <div className="rounded-lg p-6 bg-[#0F171B]">
-          <div className="flex space-x-[1.5rem]">
+        <div className="rounded-lg md:p-6 p-4 bg-[#0F171B]">
+          <div className="flex md:space-x-[1.5rem] space-x-[1rem]">
             {session?.photo ? (
               <img
-                src="/images/luffy.webp"
-                className="w-12 h-12 rounded-full object-cover"
+                src={session.photo}
+                className="md:w-12 md:h-12 w-10 h-10 rounded-full object-cover"
                 alt="Your avatar"
               />
             ) : (
               <div
-                className="w-12 h-12 bg-[#131F24] rounded-full border border-white/20 flex items-center justify-center"
+                className="md:w-12 md:h-12 w-10 h-10  bg-[#131F24] rounded-full border border-white/20 flex items-center justify-center"
                 style={{ aspectRatio: 1 }}
               >
                 <p className="text-base leading-none">
@@ -371,7 +371,7 @@ const DiscussionById = () => {
             )}
             <div className="rounded-lg bg-[#131F24] w-full relative">
               <textarea
-                className="resize-none w-full pr-10 rounded-lg p-3 bg-transparent text-white outline-none"
+                className="resize-none w-full pr-10 rounded-lg p-3 bg-transparent text-white outline-none md:text-base text-sm"
                 placeholder="Write your comment here"
                 rows={2}
                 onChange={(e) => setComment(e.target.value)}
@@ -388,24 +388,29 @@ const DiscussionById = () => {
 
         <div className="mt-[1rem] space-y-[2rem]">
           {post?.comments?.map((comment) => (
-            <div className="rounded-lg p-6 bg-[#0F171B] " key={comment.id}>
+            <div
+              className="rounded-lg md:p-6 p-4 bg-[#0F171B] "
+              key={comment.id}
+            >
               <div className="flex items-center justify-between ">
                 <div className="flex items-center space-x-[1rem]">
                   {comment.user.photo ? (
                     <img
                       src={comment.user.photo}
-                      className="w-12 h-12 rounded-full object-cover"
+                      className="md:w-12 md:h-12 w-10 h-10  rounded-full object-cover"
                       alt={`${comment.user.name}'s avatar`}
                     />
                   ) : (
-                    <div className=" w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                    <div className="md:w-12 md:h-12 w-10 h-10  bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
                       {generateUsername(comment?.user?.name)}
                     </div>
                   )}
 
                   <div>
                     <h3 className="font-semibold">{comment.user.name}</h3>
-                    <p className="opacity-80">{timeAgo(comment.created_at)}</p>
+                    <p className="opacity-80  text-sm">
+                      {timeAgo(comment.created_at)}
+                    </p>
                   </div>
                 </div>
 
@@ -469,7 +474,7 @@ const DiscussionById = () => {
                   </div>
                 </div>
               ) : (
-                <p className="mt-[1rem] whitespace-pre-wrap text-lg">
+                <p className="mt-[1rem] whitespace-pre-wrap md:text-lg">
                   {comment.comment}
                 </p>
               )}
@@ -516,7 +521,7 @@ const DiscussionById = () => {
 
       {errorAlert && (
         <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
-          <ErrorAlert text={errorAlert || "Terjadi kesalahan!"} />
+          <ErrorAlert text={errorAlert || "An error occured!"} />
         </div>
       )}
     </div>

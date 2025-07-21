@@ -123,7 +123,7 @@ export default function CoursePage() {
               </Link>
             ))}
             <button
-              className=" bg-[#4F9CF9] text-white p-3 mt-[1.5rem] rounded-lg flex items-center justify-center space-x-[0.5rem] cursor-pointer  w-full hover:bg-[#4F9CF9]/70 transition-colors"
+              className=" bg-[#4F9CF9] text-white p-2 mt-[1.5rem] rounded-lg flex items-center justify-center space-x-[0.5rem] cursor-pointer  w-full hover:bg-[#4F9CF9]/70 transition-colors"
               onClick={() => handleQuizClick(module)}
             >
               <MdOutlineAssignment className="text-2xl" />
@@ -138,7 +138,7 @@ export default function CoursePage() {
           onClose={handleModalClose}
           onConfirm={handleQuizConfirm}
           description={`Click continue to take the quiz "${selectedModule.title}".`}
-          confirmText={"Lanjutkan"}
+          confirmText={"Continue"}
           confirmBg={"bg-[#2563EB]"}
         />
       )}

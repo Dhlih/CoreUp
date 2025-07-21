@@ -194,13 +194,14 @@ export default function Discussion() {
             <SkeletonCard />
           </div>
         ) : filteredPosts.length === 0 ? (
-          <p className="text-gray-400">No post yet...</p>
+          <p className="text-gray-400">No posts yet...</p>
         ) : (
           <div className="flex flex-col space-y-[2rem]">
             {filteredPosts.map((post) => (
-              <div
+              <Link
+                href={`/discussion/${post.id}`}
                 key={post.id}
-                className="bg-[#0F171B] p-6 rounded-lg shadow transition relative flex flex-col space-y-[1rem]"
+                className="bg-[#0F171B] hover:bg-[#0F171B]/70 p-4  rounded-lg shadow transition relative flex flex-col space-y-[1rem]"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -284,7 +285,7 @@ export default function Discussion() {
                   <FaRegComment className="text-xl" />
                   <p>{post.comments_count || 0} comments</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
