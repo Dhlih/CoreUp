@@ -10,7 +10,7 @@ const ConfirmationModal = ({
 }) => {
   return (
     <div
-      className="fixed inset-0 z-10 overflow-y-auto md:px-0 px-[1.5rem]"
+      className="fixed inset-0 z-10 overflow-y-auto md:px-0 px-[3rem]"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -42,7 +42,7 @@ const ConfirmationModal = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-center space-x-[3rem] mt-[1rem]">
+          <div className="flex items-center justify-center space-x-[1rem] mt-[1rem]">
             <button
               onClick={onClose}
               className="w-full px-4 py-2 mt-2 text-sm font-medium tracking-wide text-gray-700 capitalize transition-colors duration-300 transform border border-gray-200 rounded-md sm:mt-0 sm:w-auto sm:mx-2 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800  focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-40 cursor-pointer"

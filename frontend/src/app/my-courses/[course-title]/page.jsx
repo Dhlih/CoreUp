@@ -137,7 +137,7 @@ export default function CoursePage() {
         <ConfirmationModal
           onClose={handleModalClose}
           onConfirm={handleQuizConfirm}
-          description={`Klik lanjutkan untuk mengambil quiz "${selectedModule.title}"?`}
+          description={`Click continue to take the quiz "${selectedModule.title}".`}
           confirmText={"Lanjutkan"}
           confirmBg={"bg-[#2563EB]"}
         />

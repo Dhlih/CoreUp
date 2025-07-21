@@ -8,6 +8,7 @@ import { getSession } from "@/lib/session";
 import { timeAgo } from "@/lib/time";
 import { AiOutlineDelete } from "react-icons/ai";
 import { MdOutlineModeEdit } from "react-icons/md";
+import generateUsername from "@/lib/username";
 
 import ErrorAlert from "@/components/ErrorAlert";
 import Alert from "@/components/SuccessAlert";
@@ -327,7 +328,7 @@ const DiscussionById = () => {
 
         {post?.photo && !isEditPost && (
           <img
-            src={post.photo}
+            src={post?.photo}
             className="w-full max-h-[450px] object-cover rounded-lg"
             alt="Post content"
           />
@@ -341,11 +342,17 @@ const DiscussionById = () => {
 
         <div className="rounded-lg p-6 bg-[#0F171B]">
           <div className="flex space-x-[1.5rem]">
-            <img
-              src="/images/luffy.webp"
-              className="w-12 h-12 rounded-full object-cover"
-              alt="Your avatar"
-            />
+            {session?.photo ? (
+              <img
+                src="/images/luffy.webp"
+                className="w-12 h-12 rounded-full object-cover"
+                alt="Your avatar"
+              />
+            ) : (
+              <div className=" w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <p>{generateUsername(session?.name)}</p>
+              </div>
+            )}
             <div className="rounded-lg bg-[#131F24] w-full relative">
               <textarea
                 className="resize-none w-full pr-10 rounded-lg p-3 bg-transparent text-white outline-none"
@@ -368,11 +375,18 @@ const DiscussionById = () => {
             <div className="rounded-lg p-6 bg-[#0F171B] " key={comment.id}>
               <div className="flex items-center justify-between ">
                 <div className="flex items-center space-x-[1rem]">
-                  <img
-                    src={comment.user.photo}
-                    className="w-12 h-12 rounded-full object-cover"
-                    alt={`${comment.user.name}'s avatar`}
-                  />
+                  {comment.user.photo ? (
+                    <img
+                      src={comment.user.photo}
+                      className="w-12 h-12 rounded-full object-cover"
+                      alt={`${comment.user.name}'s avatar`}
+                    />
+                  ) : (
+                    <div className=" w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                      {generateUsername(comment?.user?.name)}
+                    </div>
+                  )}
+
                   <div>
                     <h3 className="font-semibold">{comment.user.name}</h3>
                     <p className="opacity-80">{timeAgo(comment.created_at)}</p>
@@ -439,7 +453,7 @@ const DiscussionById = () => {
                   </div>
                 </div>
               ) : (
-                <p className="mt-[1rem] whitespace-pre-wrap">
+                <p className="mt-[1rem] whitespace-pre-wrap text-lg">
                   {comment.comment}
                 </p>
               )}
@@ -457,6 +471,9 @@ const DiscussionById = () => {
           onConfirm={deleteComment}
           confirmBg={"bg-red-400"}
           confirmText={"Delete"}
+          description={
+            "Are you sure you want to delete? This action cannot be undone."
+          }
         />
       )}
 
@@ -469,6 +486,9 @@ const DiscussionById = () => {
           onConfirm={deletePost}
           confirmBg={"bg-red-400"}
           confirmText={"Delete"}
+          description={
+            "Are you sure you want to delete? This action cannot be undone."
+          }
         />
       )}
 
