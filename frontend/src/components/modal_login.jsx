@@ -69,7 +69,7 @@ export default function ModalLogin({ setIsSuccess }) {
     <>
       {showAlert && (
         <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
-          <ErrorAlert text="Terjadi kesalahan!" />
+          <ErrorAlert text="An error occured!" />
         </div>
       )}
 

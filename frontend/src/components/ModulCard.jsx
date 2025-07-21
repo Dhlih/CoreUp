@@ -17,7 +17,7 @@ const ModulCard = ({
   const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
-    console.log(courseProgress);
+    console.log("course progress : ", courseProgress);
   }, []);
 
   const deleteCourse = async () => {
@@ -48,7 +48,7 @@ const ModulCard = ({
           href={`/my-courses/${title}/`}
           className="md:max-w-[65%] w-full text-lg font-semibold "
         >
-          <h3 className="hover:text-white/70 text-red">
+          <h3 className="hover:text-white/70 text-red md:text-xl">
             {title.length > 65 ? `${title.slice(0, 65)}...` : title}
           </h3>
         </Link>

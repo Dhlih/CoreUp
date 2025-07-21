@@ -1,5 +1,4 @@
 "use server";
-
 import { cookies } from "next/headers";
 
 export const createSession = async (token) => {
@@ -51,6 +50,84 @@ export const getSession = async () => {
     return session ? JSON.parse(session.value) : null;
   } catch (error) {
     console.log(error);
+  }
+};
+
+// Tambahkan fungsi untuk update session
+export const updateSession = async (updatedUserData) => {
+  try {
+    const cookieStore = cookies();
+    const currentSession = await getSession();
+
+    if (!currentSession) {
+      throw new Error("No session found");
+    }
+
+    // Merge data session lama dengan data baru
+    const updatedSession = {
+      ...currentSession,
+      ...updatedUserData,
+    };
+
+    // Update cookie dengan data baru
+    cookieStore.set("user_session", JSON.stringify(updatedSession), {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24, // 1 day
+    });
+
+    return updatedSession;
+  } catch (error) {
+    console.log("gagal update session :", error);
+    throw error;
+  }
+};
+
+export const refreshSession = async () => {
+  try {
+    const currentSession = await getSession();
+
+    if (!currentSession) {
+      throw new Error("No session found");
+    }
+
+    // Fetch updated user data from API
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: currentSession.token,
+        },
+      }
+    );
+
+    const user = await response.json();
+
+    // Update session dengan data terbaru dari API
+    const updatedSession = {
+      token: currentSession.token,
+      name: user.data.name,
+      email: user.data.email,
+      photo: user.data.photo,
+      level: user.data.level,
+      exp: user.data.exp,
+      id: user.data.id,
+    };
+
+    const cookieStore = cookies();
+    cookieStore.set("user_session", JSON.stringify(updatedSession), {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24, // 1 day
+    });
+
+    return updatedSession;
+  } catch (error) {
+    console.log("gagal refresh session :", error);
+    throw error;
   }
 };
 

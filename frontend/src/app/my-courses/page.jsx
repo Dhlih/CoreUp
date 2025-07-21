@@ -31,7 +31,7 @@ const MyCourse = () => {
           }
         );
         // hitung progress berdasarkan 2 data di atas
-        const progressCourses = getCourseProgress();
+        const progressCourses = await getCourseProgress();
         setCourses(courseRes.data);
         setCourseProgress(progressCourses);
       } catch (err) {
