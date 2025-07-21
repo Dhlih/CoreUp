@@ -337,7 +337,7 @@ export default function Discussion() {
       </dialog>
 
       {/* create discussion mobile button */}
-      <Link href="/discussion">
+      <Link href="/create-discussion">
         <div
           className="md:hidden fixed flex items-center justify-center bottom-10 right-6 w-12 h-12 rounded-full bg-[#3B82F6] hover:bg-[#3B82F6]/70 cursor-pointer shadow-lg transition-all"
           title="Create discussion"

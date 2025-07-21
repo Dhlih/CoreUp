@@ -194,7 +194,7 @@ const Leaderboard = () => {
 
             {otherUsers.length === 0 && (
               <p className="text-center text-gray-400 mt-4">
-                Belum ada data lainnya.
+                No other data yet.
               </p>
             )}
           </div>

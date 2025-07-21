@@ -156,7 +156,7 @@ function CreateDiscussionContent() {
   // Show loading state while mounting
   if (!mounted) {
     return (
-      <div className="bg-[#131F24] text-white px-4 md:px-80 mx-auto py-16">
+      <div className="bg-[#131F24] text-white px-[1.5rem] md:px-80 mx-auto py-[3rem]">
         <div className="animate-pulse">
           <div className="h-10 bg-gray-700 rounded w-1/3 mb-6"></div>
           <div className="h-32 bg-gray-700 rounded mb-4"></div>
@@ -167,7 +167,7 @@ function CreateDiscussionContent() {
   }
 
   return (
-    <div className="bg-[#131F24] text-white px-4 md:px-80 mx-auto py-16">
+    <div className="bg-[#131F24] text-white px-[1.5rem] md:px-80 mx-auto py-16">
       <h1 className="text-2xl md:text-4xl font-bold text-left mb-6">
         {isEditMode ? "Edit Discussion" : "Create Discussion"}
       </h1>
@@ -177,7 +177,7 @@ function CreateDiscussionContent() {
           <textarea
             placeholder="Insert description..."
             className="w-full p-3 rounded-lg bg-[#0F171B] resize-none outline-none focus:ring-2 focus:ring-blue-500 transition"
-            rows={4}
+            rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
