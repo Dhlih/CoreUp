@@ -198,10 +198,9 @@ export default function Discussion() {
         ) : (
           <div className="flex flex-col space-y-[2rem]">
             {filteredPosts.map((post) => (
-              <Link
-                href={`/discussion/${post.id}`}
+              <div
                 key={post.id}
-                className="bg-[#0F171B] hover:bg-[#0F171B]/70 p-4  rounded-lg shadow transition relative flex flex-col space-y-[1rem]"
+                className="bg-[#0F171B] hover:bg-[#0F171B]/70 p-4 rounded-lg shadow transition relative flex flex-col space-y-[1rem]"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
@@ -211,12 +210,18 @@ export default function Discussion() {
                         referrerPolicy="no-referrer"
                         className="w-12 h-12 rounded-full object-cover border border-white/20 cursor-pointer"
                         alt={post.user.name || "User"}
-                        onClick={handleProfileClick}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProfileClick();
+                        }}
                       />
                     ) : (
                       <div
                         className="w-12 h-12 rounded-full bg-[#131F24] border border-white/20 flex items-center justify-center cursor-pointer text-sm"
-                        onClick={handleProfileClick}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProfileClick();
+                        }}
                       >
                         {generateUsername(post?.user?.name)}
                       </div>
@@ -233,15 +238,19 @@ export default function Discussion() {
                   </div>
 
                   {post.user?.id === currentUserId && (
-                    <div className="relative inline-block text-left">
+                    <div
+                      className="relative inline-block text-left"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           const dropdown = document.getElementById(
                             `dropdown-${post.id}`
                           );
                           dropdown.classList.toggle("hidden");
                         }}
-                        className="text-white/70 hover:text-white  cursor-pointer"
+                        className="text-white/70 hover:text-white cursor-pointer"
                       >
                         <BsThreeDots className="text-xl" />
                       </button>
@@ -249,6 +258,7 @@ export default function Discussion() {
                       <div
                         id={`dropdown-${post.id}`}
                         className="bg-[#212C31] absolute top-8 right-0 rounded-lg z-50 min-w-[120px] shadow-lg hidden"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <div
                           className="flex items-center space-x-[1rem] hover:bg-[#0F171B]/70 px-3 py-2 cursor-pointer"
@@ -274,18 +284,20 @@ export default function Discussion() {
                   )}
                 </div>
 
-                <p
-                  href={`/discussion/${post.id}`}
-                  className="text-lg text-gray-100 hover:text-gray-100/70"
+                <div
+                  className="cursor-pointer space-y-[0.5rem]"
+                  onClick={() => router.push(`/discussion/${post.id}`)}
                 >
-                  {post.description}
-                </p>
+                  <p className="text-lg text-gray-100 hover:text-gray-100/70">
+                    {post.description}
+                  </p>
 
-                <div className=" text-gray-400 flex items-center space-x-[0.8rem]">
-                  <FaRegComment className="text-xl" />
-                  <p>{post.comments_count || 0} comments</p>
+                  <div className="text-gray-400 flex items-center space-x-[0.8rem]">
+                    <FaRegComment className="text-xl" />
+                    <p>{post.comments_count || 0} comments</p>
+                  </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
