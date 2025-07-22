@@ -67,7 +67,7 @@ export default function CoursePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen text-white py-[3.5rem] md:px-20 px-[1.5rem] animate-pulse">
+      <div className="min-h-screen text-white py-[3.5rem] md:px-30 px-[1.5rem] animate-pulse">
         <div className="h-10 w-1/2 bg-gray-700 rounded mb-4"></div>
         <div className="h-6 w-3/4 bg-gray-700 rounded mb-6"></div>
 
@@ -87,8 +87,8 @@ export default function CoursePage() {
   }
 
   return (
-    <div className="min-h-screen text-white py-[3.5rem] md:px-20 px-[1.5rem]">
-      <div className="flex justify-between items-center mb-4 md:max-w-[80%]">
+    <div className="min-h-screen text-white py-[3.5rem] md:px-30 px-[1.5rem]">
+      <div className="flex justify-between items-center mb-4 ">
         <h1 className="text-2xl md:text-4xl font-bold">{course?.title}</h1>
       </div>
       <p className="mb-4 opacity-80 text-lg md:my-0 ">{course?.description}</p>
@@ -97,7 +97,7 @@ export default function CoursePage() {
         {course?.modules?.map((module, index) => (
           <div key={module?.id}>
             <div className="flex md:flex-row flex-col items-center justify-between my-[2rem] mb-[1.5rem] md:space-y-0 space-y-[1.5rem]">
-              <h2 className="text-2xl font-semibold md:max-w-[70%] w-full">
+              <h2 className="md:text-2xl text-xl font-semibold md:max-w-[70%] w-full">
                 {module?.title}
               </h2>
             </div>
@@ -108,12 +108,14 @@ export default function CoursePage() {
                 href={`/my-courses/${course.title}/${module.id}/${material.id}`}
                 className="block bg-[#0F171B] p-4 rounded-[10px] mb-[1.5rem] hover:bg-[#1c2a31] transition"
               >
-                <div className="flex items-center justify-between w-full">
+                <div className="flex items-center justify-between w-full md:space-x-0 space-x-[0.5rem]">
                   <div className="flex items-center space-x-[1.5rem]">
                     <div className="bg-[#131F24] p-3 text-xl rounded-lg">
                       <LuBookText />
                     </div>
-                    <p className="font-medium  text-white">{material?.title}</p>
+                    <p className=" text-white font-semibold ">
+                      {material?.title}
+                    </p>
                   </div>
 
                   {material.is_done === 1 && (

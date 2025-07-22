@@ -13,7 +13,7 @@ export default function CreateCourse() {
   const [language, setLanguage] = useState("");
   const [session, setSession] = useState(null);
   const [createLoading, setCreateLoading] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Tetap gunakan untuk loading awal halaman
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
 
@@ -23,23 +23,13 @@ export default function CreateCourse() {
     setSession(session);
 
     try {
-      // Simulasikan progress
-      let val = 0;
-      const interval = setInterval(() => {
-        val += 10;
-        setProgressValue(val);
-        if (val >= 100) {
-          clearInterval(interval);
-          setCreateLoading(false);
-        }
-      }, 200);
-
+      // Tidak ada simulasi progress di sini
       setTimeout(() => {
-        setLoading(false);
-      }, 800);
+        setLoading(false); // Selesai loading awal setelah data sesi diambil
+      }, 800); // Simulasi waktu loading data sesi
     } catch (error) {
       console.error("Gagal ambil profil:", error);
-      setCreateLoading(false);
+      setLoading(false); // Pastikan loading selesai meskipun ada error
     }
   };
 
@@ -56,7 +46,19 @@ export default function CreateCourse() {
     }
 
     setCreateLoading(true);
-    setProgressValue(40);
+    setProgressValue(10); // Mulai dari 10% saat mulai membuat kursus
+
+    // Simulasi progress saat menunggu fetch
+    let currentProgress = 10;
+    const progressInterval = setInterval(() => {
+      currentProgress += 5; // Tambahkan 5% setiap interval
+      if (currentProgress < 70) {
+        // Jangan sampai 70% sebelum response diterima
+        setProgressValue(currentProgress);
+      } else {
+        clearInterval(progressInterval);
+      }
+    }, 200); // Update setiap 200ms
 
     try {
       const response = await fetch(
@@ -71,14 +73,15 @@ export default function CreateCourse() {
         }
       );
 
+      clearInterval(progressInterval); // Hentikan interval setelah fetch selesai
       const data = await response.json();
       console.log("📦 Data respons dari server:", data);
 
       if (response.ok) {
-        setProgressValue(80);
+        setProgressValue(80); // Langsung ke 80% setelah sukses
 
         setTimeout(() => {
-          setProgressValue(100);
+          setProgressValue(100); // Selesaikan ke 100%
           setTimeout(() => {
             setTopic("");
             setLevel("");
@@ -89,14 +92,17 @@ export default function CreateCourse() {
       } else {
         setShowAlertModal(true);
         setCreateLoading(false);
+        setProgressValue(0); // Reset progress jika ada error
 
         setTimeout(() => {
           setShowAlertModal(false);
         }, 1000);
       }
     } catch (error) {
+      clearInterval(progressInterval); // Pastikan interval dihentikan jika ada error
       setCreateLoading(false);
       setShowAlertModal(true);
+      setProgressValue(0); // Reset progress jika ada error
 
       setTimeout(() => {
         setShowAlertModal(false);
@@ -110,11 +116,14 @@ export default function CreateCourse() {
         {showAlertModal && <ErrorAlert text="An error occured!" />}
       </div>
 
+      {/* Tampilan saat membuat kursus (createLoading) */}
       {createLoading ? (
         <div className="flex flex-col justify-center items-center space-y-[1rem]">
           <img src="/images/studying.svg" alt="" className="w-90 h-90" />
 
-          <h1 className="font-semibold text-xl mt-[-2rem]">Loading...</h1>
+          <h1 className="font-semibold text-xl mt-[-2rem]">
+            Creating course...
+          </h1>
           <div className="flex flex-col items-center w-full space-y-4">
             <progress
               className="progress md:w-[30%] w-[70%]"
@@ -124,7 +133,8 @@ export default function CreateCourse() {
             <p className="text-gray-300">{progressValue}%</p>
           </div>
         </div>
-      ) : loading ? (
+      ) : /* Tampilan saat loading awal halaman (fetchProfile) */
+      loading ? (
         <div className="w-full max-w-xl md:mx-auto space-y-6 animate-pulse">
           <div>
             <div className="h-6 w-[40%] bg-gray-700 rounded mb-2"></div>
@@ -139,6 +149,7 @@ export default function CreateCourse() {
           </div>
         </div>
       ) : (
+        /* Tampilan utama setelah loading selesai */
         <div className="w-full max-w-xl md:mx-auto space-y-6">
           <div>
             <p className="text-lg md:text-xl font-medium mb-1">
@@ -185,7 +196,7 @@ export default function CreateCourse() {
               className="btn px-4 py-6 bg-[#3B82F6] mt-[0.5rem] text-white rounded-md hover:bg-[#3B82F6]/70 transition font-semibold text-sm"
               disabled={createLoading}
             >
-              Create Roadmap
+              Create Course
             </button>
           </div>
         </div>

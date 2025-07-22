@@ -228,7 +228,7 @@ export default function Navbar() {
                 </div>
               </div>
               <IoCloseOutline
-                className="text-4xl cursor-pointer mr-3 mt-2"
+                className="text-2xl cursor-pointer mr-3 mt-2"
                 onClick={() => setIsClicked(false)}
               />
             </div>

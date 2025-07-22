@@ -145,7 +145,7 @@ export default function Discussion() {
   );
 
   return (
-    <div className=" bg-[#131F24] text-white md:px-20 px-[1.5rem]  py-[3rem] relative">
+    <div className=" bg-[#131F24] text-white md:px-30 px-[1.5rem]  py-[3rem] relative">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex-1">
           <h1 className="text-2xl md:text-4xl font-bold mb-[1rem]">
@@ -274,12 +274,12 @@ export default function Discussion() {
                   )}
                 </div>
 
-                <Link
+                <p
                   href={`/discussion/${post.id}`}
                   className="text-lg text-gray-100 hover:text-gray-100/70"
                 >
                   {post.description}
-                </Link>
+                </p>
 
                 <div className=" text-gray-400 flex items-center space-x-[0.8rem]">
                   <FaRegComment className="text-xl" />
