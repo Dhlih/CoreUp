@@ -55,7 +55,7 @@ const MyCourse = () => {
 
   if (loading) {
     return (
-      <div className="bg-[#131F24] md:px-20 px-[1.5rem] py-[3rem]">
+      <div className="bg-[#131F24] md:px-30 px-[1.5rem] py-[3rem]">
         <h1 className="font-bold text-4xl mb-[2rem]">My Courses</h1>
         {[...Array(3)].map((_, idx) => (
           <div
@@ -96,7 +96,6 @@ const MyCourse = () => {
           />
         </div>
       </div>
-
       {/* main content */}
       <div className="mt-[2rem] space-y-[2.5rem]">
         {courses.length === 0 ? (

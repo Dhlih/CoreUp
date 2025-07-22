@@ -5,7 +5,6 @@ import { getSession } from "@/lib/session";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import CompletionMaterial from "@/components/CompletionMaterial";
-import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { getCourseProgress } from "@/lib/progress";
 import remarkGfm from "remark-gfm";
@@ -23,7 +22,8 @@ const ModuleMaterial = () => {
   const moduleId = Number(params["module-id"]);
   const materialId = Number(params["material-id"]);
   const courseTitle = decodeURIComponent(params["course-title"]);
-  const router = useRouter();
+
+  const isMarkdown = (text) => /[#*_\-\[\]`]/.test(text);
 
   const getProgress = async () => {
     const previousProgress = await getCourseProgress();
@@ -44,17 +44,13 @@ const ModuleMaterial = () => {
       );
 
       const courses = await response.json();
-
       const course = courses.find((c) => c.title === courseTitle);
-      console.log("course :", course);
-
       if (!course) return;
+
       setCourseId(course.id);
 
       const module = course.modules.find((m) => m.id === moduleId);
       const material = module?.materials.find((mat) => mat.id === materialId);
-
-      console.log("material :", material);
 
       setModuleData(module);
       setMaterialData(material);
@@ -84,10 +80,6 @@ const ModuleMaterial = () => {
       );
 
       if (response.ok) {
-        const text = await response.text();
-        const data = text ? JSON.parse(text) : null;
-
-        console.log("update data:", data);
         setIsFinished(true);
       } else {
         console.error("Gagal mengupdate material");
@@ -97,7 +89,7 @@ const ModuleMaterial = () => {
     }
   };
 
-  if (loading)
+  if (loading) {
     return (
       <div className="py-[4rem] md:px-30 px-[1.5rem] animate-pulse text-white space-y-4">
         <div className="h-6 bg-gray-700 rounded w-1/4"></div>
@@ -111,6 +103,7 @@ const ModuleMaterial = () => {
         </div>
       </div>
     );
+  }
 
   return isFinished ? (
     <CompletionMaterial
@@ -128,9 +121,25 @@ const ModuleMaterial = () => {
         <h2 className="text-lg font-medium">{moduleData.title}</h2>
       </Link>
 
-      <h1 className="text-2xl md:text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[95%]">
-        {materialData.title}
-      </h1>
+      {isMarkdown(materialData.title) ? (
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            h1: ({ node, ...props }) => (
+              <h1
+                className="text-2xl md:text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[95%]"
+                {...props}
+              />
+            ),
+          }}
+        >
+          {materialData.title}
+        </ReactMarkdown>
+      ) : (
+        <h1 className="text-2xl md:text-4xl font-bold mb-[1rem] mt-[1rem] max-w-[95%]">
+          {materialData.title}
+        </h1>
+      )}
 
       <div className="prose prose-invert max-w-none">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -138,7 +147,7 @@ const ModuleMaterial = () => {
         </ReactMarkdown>
       </div>
 
-      <div className="flex justify-end mt-[3rem] md:mr-[5rem]">
+      <div className="flex justify-end mt-[3rem] md:mr-[1rem]">
         <button
           onClick={finishMaterial}
           className="btn bg-[#3B82F6] hover:bg-[#3B82F6]/70 p-6 rounded-lg"
