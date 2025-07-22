@@ -6,7 +6,8 @@ import { useParams, useRouter } from "next/navigation";
 import { MdOutlineAssignment } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { LuBookText } from "react-icons/lu";
-import Loading from "@/components/Loading";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import ConfirmationModal from "@/components/ConfirmationModal";
 
@@ -114,9 +115,11 @@ export default function CoursePage() {
                       <div className="bg-[#131F24] p-3 text-xl rounded-lg">
                         <LuBookText />
                       </div>
-                      <p className="text-white font-semibold relative z-10">
-                        {material?.title}
-                      </p>
+                      <div className="text-white font-semibold relative z-10">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {material?.title}
+                        </ReactMarkdown>
+                      </div>
                     </div>
 
                     {material.is_done === 1 && (

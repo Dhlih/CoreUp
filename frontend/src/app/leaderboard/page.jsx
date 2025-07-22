@@ -169,7 +169,7 @@ const Leaderboard = () => {
                         <img
                           src={user?.photo}
                           alt="avatar"
-                          className="w-8 h-8 rounded-full object-cover bg-[#212C31] "
+                          className="md:w-12 md:h-12 h-10 w-10 rounded-full object-cover bg-[#212C31] "
                         />
                       )}
 
