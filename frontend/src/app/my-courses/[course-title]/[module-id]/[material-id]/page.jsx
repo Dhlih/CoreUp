@@ -141,13 +141,13 @@ const ModuleMaterial = () => {
         </h1>
       )}
 
-      <div className="prose prose-invert max-w-none">
+      <div className="prose prose-invert md:max-w-[90%] w-full">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {materialData.content}
         </ReactMarkdown>
       </div>
 
-      <div className="flex justify-end mt-[3rem] md:mr-[1rem]">
+      <div className="flex justify-end mt-[3rem] md:mr-[6rem]">
         <button
           onClick={finishMaterial}
           className="btn bg-[#3B82F6] hover:bg-[#3B82F6]/70 p-6 rounded-lg"

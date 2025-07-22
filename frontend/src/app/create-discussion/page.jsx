@@ -215,7 +215,7 @@ function CreateDiscussionContent() {
                         document.querySelector('input[type="file"]');
                       if (fileInput) fileInput.value = "";
                     }}
-                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                    className="absolute top-2 right-2 bg-[#F43F5E] text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
                   >
                     ×
                   </button>
@@ -269,7 +269,7 @@ function CreateDiscussionContent() {
                 className={`${
                   loading || !description.trim()
                     ? "bg-gray-700 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-600"
+                    : "bg-[#3B82F6] hover:bg-[#3B82F6]/70"
                 } text-white py-3 px-6 transition rounded-lg font-medium cursor-pointer`}
               >
                 {loading ? "Saving..." : isEditMode ? "Update" : "Create"}

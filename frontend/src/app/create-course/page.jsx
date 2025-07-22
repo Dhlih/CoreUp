@@ -58,7 +58,7 @@ export default function CreateCourse() {
       } else {
         clearInterval(progressInterval);
       }
-    }, 200); // Update setiap 200ms
+    }, 700); // Update setiap 200ms
 
     try {
       const response = await fetch(

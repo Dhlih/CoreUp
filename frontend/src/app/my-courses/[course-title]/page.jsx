@@ -78,7 +78,7 @@ export default function CoursePage() {
               {[...Array(4)].map((_, j) => (
                 <div key={j} className="h-15 bg-gray-800 rounded mb-3"></div>
               ))}
-              <div className="h-12 bg-blue-700/70 rounded"></div>
+              <div className="h-12 bg-[#3B82F6] rounded"></div>
             </div>
           ))}
         </div>
@@ -108,19 +108,21 @@ export default function CoursePage() {
                 href={`/my-courses/${course.title}/${module.id}/${material.id}`}
                 className="block bg-[#0F171B] p-4 rounded-[10px] mb-[1.5rem] hover:bg-[#1c2a31] transition"
               >
-                <div className="flex items-center justify-between w-full md:space-x-0 space-x-[0.5rem]">
-                  <div className="flex items-center space-x-[1.5rem]">
-                    <div className="bg-[#131F24] p-3 text-xl rounded-lg">
-                      <LuBookText />
+                <div className="w-full relative ">
+                  <div className=" flex items-center justify-between space-x-[1.5rem]">
+                    <div className="flex items-center space-x-[1.5rem] ">
+                      <div className="bg-[#131F24] p-3 text-xl rounded-lg">
+                        <LuBookText />
+                      </div>
+                      <p className="text-white font-semibold relative z-10">
+                        {material?.title}
+                      </p>
                     </div>
-                    <p className=" text-white font-semibold ">
-                      {material?.title}
-                    </p>
-                  </div>
 
-                  {material.is_done === 1 && (
-                    <FaRegCircleCheck className="text-3xl opacity-50" />
-                  )}
+                    {material.is_done === 1 && (
+                      <FaRegCircleCheck className="absolute right-0 md:text-3xl text-2xl opacity-20 z-0" />
+                    )}
+                  </div>
                 </div>
               </Link>
             ))}

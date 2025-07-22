@@ -1,4 +1,6 @@
 "use client";
+
+import ErrorAlert from "./ErrorAlert";
 import { useState } from "react";
 
 export default function ModalDaftar() {
@@ -94,7 +96,7 @@ export default function ModalDaftar() {
             <input
               name="name"
               type="text"
-              placeholder="Username"
+              placeholder="Username (Max 10 characters)"
               value={formData.name}
               onChange={handleChange}
               className="input input-bordered w-full"
@@ -116,7 +118,7 @@ export default function ModalDaftar() {
             <input
               name="password"
               type="password"
-              placeholder="Password"
+              placeholder="Password (Min 8 characters)"
               value={formData.password}
               onChange={handleChange}
               className="input input-bordered w-full"

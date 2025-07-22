@@ -466,7 +466,7 @@ const DiscussionById = () => {
                       Cancel
                     </button>
                     <button
-                      className="rounded-lg py-2 px-4 bg-blue-500 hover:bg-blue-600 cursor-pointer"
+                      className="rounded-lg py-2 px-4 bg-[#3B82F6] hover:bg-[#3B82F6]/70 cursor-pointer"
                       onClick={updateComment}
                     >
                       Save
@@ -490,7 +490,7 @@ const DiscussionById = () => {
             setActiveOptionId(null);
           }}
           onConfirm={deleteComment}
-          confirmBg={"bg-red-400"}
+          confirmBg={"bg-[#F43F5E]"}
           confirmText={"Delete"}
           description={
             "Are you sure you want to delete? This action cannot be undone."
@@ -505,7 +505,7 @@ const DiscussionById = () => {
             setActiveOptionId(null);
           }}
           onConfirm={deletePost}
-          confirmBg={"bg-red-400"}
+          confirmBg={"bg-[#F43F5E]"}
           confirmText={"Delete"}
           description={
             "Are you sure you want to delete? This action cannot be undone."

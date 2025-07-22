@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSession } from "@/lib/session";
@@ -69,7 +70,7 @@ export default function ModalLogin({ setIsSuccess }) {
     <>
       {showAlert && (
         <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
-          <ErrorAlert text="An error occured!" />
+          <ErrorAlert text="Email or password is incorrect" />
         </div>
       )}
 

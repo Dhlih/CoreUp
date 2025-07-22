@@ -168,7 +168,7 @@ export default function Discussion() {
                 onClick={handleFilterClick}
                 className={`p-2 rounded-md cursor-pointer  ${
                   filterByCommentCount
-                    ? "bg-blue-600 border-blue-400"
+                    ? "bg-[#3B82F6] "
                     : "bg-[#0F171B] border-white/10"
                 }`}
               >
@@ -177,7 +177,7 @@ export default function Discussion() {
             </div>
 
             <Link href="/create-discussion" className="  md:block hidden">
-              <button className="bg-blue-500 cursor-pointer hover:bg-blue-600 text-sm font-medium px-4 py-3 rounded-md w-full sm:w-auto">
+              <button className="bg-[#3B82F6] cursor-pointer hover:bg-[#3B82F6]/70 text-sm font-medium px-4 py-3 rounded-md w-full sm:w-auto">
                 Create Discussion
               </button>
             </Link>
@@ -313,7 +313,7 @@ export default function Discussion() {
             <form method="dialog" className="flex gap-2">
               <button className="btn btn-outline">Cancel</button>
               <button
-                className="btn bg-red-600 text-white hover:bg-red-700"
+                className="btn bg-[#F43F5E] text-white hover:bg-[#F43F5E]/70"
                 onClick={async () => {
                   try {
                     const session = await getSession();

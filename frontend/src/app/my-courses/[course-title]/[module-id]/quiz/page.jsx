@@ -186,7 +186,7 @@ const Quiz = () => {
         <div className="flex justify-end w-full md:hidden">
           <div
             className={`rounded-full bg-[#4F9CF9] py-2 px-6 flex font-medium  items-center space-x-[0.5rem] mb-[1.5rem]  ${
-              timeLeft <= 30 ? "text-red-500" : "text-white"
+              timeLeft <= 30 ? "text-[#F43F5E]" : "text-white"
             }`}
           >
             <LuClock2 />
@@ -212,7 +212,7 @@ const Quiz = () => {
           {/* TIMER */}
           <div
             className={`rounded-full bg-[#4F9CF9] py-2 px-6 md:flex hidden font-medium  items-center space-x-[0.5rem] mb-[1.5rem]  ${
-              timeLeft < 30 ? "text-red-500" : "text-white"
+              timeLeft < 30 ? "text-[#F43F5E]" : "text-white"
             }`}
           >
             <LuClock2 />

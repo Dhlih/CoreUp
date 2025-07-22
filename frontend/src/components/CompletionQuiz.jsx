@@ -7,7 +7,6 @@ import { getCourseProgress } from "@/lib/progress";
 
 const CompletionQuiz = ({
   courseTitle,
-  title,
   correctAnswers,
   previousProgress,
   courseId,

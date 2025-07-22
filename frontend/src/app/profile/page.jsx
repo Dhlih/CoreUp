@@ -315,7 +315,7 @@ const Profile = () => {
               />
 
               {fieldAlert && (
-                <p className="text-red-400 text-sm">*Fill all the field</p>
+                <p className="text-[#F43F5E] text-sm">*Fill all the field</p>
               )}
 
               <button

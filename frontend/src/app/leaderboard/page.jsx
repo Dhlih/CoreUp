@@ -81,7 +81,7 @@ const Leaderboard = () => {
           {topThree.map((user, index) => {
             const rankClass = [
               "bg-[#4F9CF9] md:h-[140px] h-[100px] md:w-[120px] w-[80px]",
-              "bg-blue-600 md:h-[170px] h-[125px] md:w-[120px] w-[80px]",
+              "bg-[#3B82F6] md:h-[170px] h-[125px] md:w-[120px] w-[80px]",
               "bg-[#93C5FD] md:h-[110px] h-[80px] md:w-[120px] w-[80px]",
             ];
             const rankLabel = ["2", "1", "3"];
