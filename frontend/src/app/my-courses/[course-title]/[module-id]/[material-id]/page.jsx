@@ -80,7 +80,9 @@ const ModuleMaterial = () => {
       );
 
       if (response.ok) {
-        setIsFinished(true);
+        const data = await response.json();
+        console.log(data);
+        // setIsFinished(true);
       } else {
         console.error("Gagal mengupdate material");
       }

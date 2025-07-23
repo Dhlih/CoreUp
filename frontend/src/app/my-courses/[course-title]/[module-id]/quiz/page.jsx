@@ -139,9 +139,9 @@ const Quiz = () => {
       const data = await response.json();
       console.log(data.message);
 
-      if (indexQuestion === quizzes.length - 1) {
-        setShowCompletionPage(true);
-      }
+      // if (indexQuestion === quizzes.length - 1) {
+      //   setShowCompletionPage(true);
+      // }
     } catch (error) {
       console.log(error);
     }

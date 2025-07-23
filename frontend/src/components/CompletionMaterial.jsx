@@ -32,7 +32,13 @@ const CompletionMaterial = ({
         className="w-[24rem] h-[24rem]"
         alt="Completion Illustration"
       />
-      <h1 className="text-3xl font-bold mt-[-1rem]">Lesson Completed</h1>
+      <a
+        href="https://storyset.com/education"
+        className="text-sm text-white/70 mt-[-1rem]"
+      >
+        Education illustrations by Storyset
+      </a>
+      <h1 className="text-3xl font-bold mt-[0.5rem]">Lesson Completed</h1>
 
       <div className="flex items-center md:gap-[2rem] gap-[1rem] md:mt-[2rem] mt-[0.8rem]">
         <div className="bg-[#0F171B] p-6 rounded-md md:w-[200px] w-[160px]">

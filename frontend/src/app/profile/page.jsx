@@ -1,3 +1,4 @@
+// components/Profile.jsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -16,7 +17,7 @@ import ErrorAlert from "@/components/ErrorAlert";
 
 import generateUsername from "@/lib/username";
 import { getLeaderboardRank, getRankColor } from "@/lib/rank";
-import { countExpLeft } from "@/lib/exp";
+import { countExpLeft } from "@/lib/exp"; // Import fungsi yang sudah dimodifikasi
 import { getSession, updateSession, refreshSession } from "@/lib/session";
 import { getUserRank } from "@/lib/rank";
 
@@ -27,6 +28,7 @@ const Profile = () => {
   const [editedUser, setEditedUser] = useState("");
   const [name, setName] = useState("");
   const [session, setSession] = useState(null);
+  const [userData, setUserData] = useState(null); // State untuk data user dari API
   const [password, setPassword] = useState("");
   const [fieldAlert, setFieldAlert] = useState(false);
   const [img, setImg] = useState(null);
@@ -34,32 +36,60 @@ const Profile = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [rank, setRank] = useState("");
-  const [exp, setExp] = useState("");
+  const [exp, setExp] = useState(""); // State untuk hasil perhitungan EXP
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fileInputRef = useRef(null);
 
-  const fetchUserData = async () => {
-    const session = await getSession();
-    setSession(session);
+  // Fungsi untuk mengambil data user dari API
+  const fetchUserDataFromAPI = async () => {
+    try {
+      const currentSession = await getSession(); // Ambil sesi terbaru
+      const response = await fetch(
+        `https://coreup-api.up.railway.app/api/user`,
+        {
+          headers: {
+            Authorization: currentSession.token,
+          },
+        }
+      );
 
-    const exp = await countExpLeft();
-    const rank = await getLeaderboardRank();
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data.data); // Set data user dari API ke state
+      } else {
+        console.log("Failed to fetch user data from API:", response.statusText);
+      }
+    } catch (error) {
+      console.log("Error fetching user data:", error);
+    }
+  };
 
-    setExp(exp);
-    setRank(rank);
+  const fetchInitialData = async () => {
+    setLoading(true);
+    const currentSession = await getSession();
+    setSession(currentSession);
+
+    // Ambil data user dari API terlebih dahulu
+    await fetchUserDataFromAPI();
+
+    // Ambil rank leaderboard
+    const userRank = await getLeaderboardRank();
+    setRank(userRank);
+
+    setLoading(false);
   };
 
   const fetchCourseData = async () => {
-    const session = await getSession();
+    const currentSession = await getSession();
 
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
         {
           headers: {
-            Authorization: session.token,
+            Authorization: currentSession.token,
           },
         }
       );
@@ -71,10 +101,22 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchUserData();
+    fetchInitialData();
     fetchCourseData();
-    setLoading(false);
   }, []);
+
+  // Gunakan useEffect terpisah untuk menghitung EXP ketika userData berubah
+  useEffect(() => {
+    if (userData) {
+      // Panggil countExpLeft dengan data terbaru dari userData
+      const expData = countExpLeft(userData.exp, userData.level);
+      setExp(expData);
+    } else if (session) {
+      // Fallback ke data session jika userData belum tersedia (misalnya saat loading awal)
+      const expData = countExpLeft(session.exp, session.level);
+      setExp(expData);
+    }
+  }, [userData, session]); // Dependensi pada userData dan session
 
   const editProfile = async () => {
     if (!password || !name) {
@@ -89,13 +131,13 @@ const Profile = () => {
     if (img) formData.append("photo", img);
 
     try {
-      const session = await getSession();
+      const currentSession = await getSession();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user/update`,
         {
           method: "POST",
           headers: {
-            Authorization: session.token,
+            Authorization: currentSession.token,
           },
           body: formData,
         }
@@ -108,24 +150,28 @@ const Profile = () => {
 
         try {
           const updatedSessionData = {
-            name: data.data.name || session.name,
-            photo: data.data.photo || session.photo,
+            name: data.data.name || currentSession.name,
+            photo: data.data.photo || currentSession.photo,
           };
 
           await updateSession(updatedSessionData);
 
-          await fetchUserData();
+          // Setelah update berhasil, ambil ulang data user dari API untuk memastikan tampilan terbaru
+          await fetchUserDataFromAPI();
         } catch (sessionError) {
           console.log("Error updating session:", sessionError);
 
           try {
             await refreshSession();
-            await fetchUserData();
+            await fetchUserDataFromAPI(); // Ambil ulang data setelah refresh sesi
           } catch (refreshError) {
             console.log("Error refreshing session:", refreshError);
             window.location.reload();
           }
         }
+      } else {
+        setIsSuccess(false);
+        console.log("Failed to update profile:", response.statusText);
       }
     } catch (error) {
       console.log(error);
@@ -153,7 +199,7 @@ const Profile = () => {
 
   // Set initial values ketika edit mode dibuka
   const handleEditClick = () => {
-    setName(session?.name || "");
+    setName(userData?.name || session?.name || "");
     setIsEdit(true);
   };
 
@@ -258,9 +304,9 @@ const Profile = () => {
               />
             </div>
             <div className="flex justify-center relative">
-              {previewImg || session?.photo ? (
+              {previewImg || userData?.photo || session?.photo ? (
                 <img
-                  src={previewImg || session.photo}
+                  src={previewImg || userData?.photo || session?.photo}
                   className="w-18 h-18 rounded-full object-cover border-white/20"
                   alt=""
                   style={{ aspectRatio: 1 }}
@@ -270,7 +316,7 @@ const Profile = () => {
                   className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center"
                   style={{ aspectRatio: 1 }}
                 >
-                  {generateUsername(session?.name)}
+                  {generateUsername(userData?.name || session?.name)}
                 </div>
               )}
               <input
@@ -302,7 +348,7 @@ const Profile = () => {
                 type="text"
                 className="w-full bg-[#131F24] rounded-lg p-2 px-4"
                 disabled={true}
-                value={session?.email}
+                value={userData?.email || session?.email}
               />
 
               <span>Password :</span>
@@ -313,6 +359,9 @@ const Profile = () => {
                 placeholder="Your password or new password"
                 value={password}
               />
+              <p className="text-[#F43F5E] text-xs mt-1">
+                *A password must be entered to save profile changes.
+              </p>
 
               {fieldAlert && (
                 <p className="text-[#F43F5E] text-sm">*Fill all the field</p>
@@ -335,9 +384,9 @@ const Profile = () => {
         <div className="bg-[#0F171B] p-6 rounded-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-[1.5rem]">
-              {session?.photo ? (
+              {userData?.photo || session?.photo ? (
                 <img
-                  src={session?.photo}
+                  src={userData?.photo || session?.photo}
                   className="w-16 h-16 rounded-full object-cover"
                   alt=""
                   style={{ aspectRatio: 1 }}
@@ -347,12 +396,16 @@ const Profile = () => {
                   className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center"
                   style={{ aspectRatio: 1 }}
                 >
-                  {generateUsername(session?.name)}
+                  {generateUsername(userData?.name || session?.name)}
                 </div>
               )}
               <div>
-                <h3 className="font-semibold text-xl">{session?.name}</h3>
-                <p className="opacity-80">{session?.email}</p>
+                <h3 className="font-semibold text-xl">
+                  {userData?.name || session?.name}
+                </h3>
+                <p className="opacity-80">
+                  {userData?.email || session?.email}
+                </p>
               </div>
             </div>
             <button
@@ -366,9 +419,9 @@ const Profile = () => {
 
           <div className="w-full mt-[1rem]">
             <div className="flex items-center justify-between">
-              <span>Level {session?.level}</span>
+              <span>Level {userData?.level || session?.level}</span>
               <span>
-                {session?.exp} / {exp?.nextLevelExp} EXP
+                {userData?.exp || session?.exp} / {exp?.nextLevelExp} EXP
               </span>
             </div>
             <progress
@@ -393,22 +446,28 @@ const Profile = () => {
               <h3>Level</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
                 <FaRegStar className="text-[#38BDF8]" />
-                <span className=" font-semibold">{session?.level}</span>
+                <span className=" font-semibold">
+                  {userData?.level || session?.level}
+                </span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Exp</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
                 <AiOutlineThunderbolt className="text-[#EAB308]" />
-                <span className="font-semibold">{session?.exp}</span>
+                <span className="font-semibold">
+                  {userData?.exp || session?.exp}
+                </span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Rank Badge</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
-                <GiRank2 className={`${getRankColor(session?.exp)}`} />
+                <GiRank2
+                  className={`${getRankColor(userData?.exp || session?.exp)}`}
+                />
                 <span className="font-semibold">
-                  {getUserRank(session?.exp)}
+                  {getUserRank(userData?.exp || session?.exp)}
                 </span>
               </div>
             </div>

@@ -120,10 +120,13 @@ export default function CreateCourse() {
       {createLoading ? (
         <div className="flex flex-col justify-center items-center space-y-[1rem]">
           <img src="/images/studying.svg" alt="" className="w-90 h-90" />
-
-          <h1 className="font-semibold text-xl mt-[-2rem]">
-            Creating course...
-          </h1>
+          <a
+            href="https://storyset.com/education"
+            className="text-sm text-white/70 mt-[-2rem]"
+          >
+            Education illustrations by Storyset
+          </a>
+          <h1 className="font-semibold text-xl ">Creating course...</h1>
           <div className="flex flex-col items-center w-full space-y-4">
             <progress
               className="progress md:w-[30%] w-[70%]"

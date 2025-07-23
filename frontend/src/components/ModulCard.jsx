@@ -88,7 +88,7 @@ const ModulCard = ({
             </Link>
 
             <button
-              className="btn bg-[#F43F5E] md:p-6 p-4 hover:bg-[#F43F5E]/70 text-sm rounded-lg"
+              className="btn md:p-6 p-4 bg-[#F43F5E] hover:bg-[#F43F5E]/70 text-sm rounded-lg"
               onClick={() => setIsDelete(!isDelete)}
             >
               Delete
