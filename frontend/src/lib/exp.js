@@ -1,35 +1,31 @@
-import next from "next";
-import { getSession } from "./session";
-
-export const countExpLeft = async () => {
+export const countExpLeft = (currentExp, currentLevel) => {
   try {
-    const session = await getSession();
+    const expPerLevel = 1000; // Jumlah EXP yang dibutuhkan per level
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
-      {
-        headers: {
-          Authorization: session.value,
-        },
-      }
-    );
-    const user = await response.json();
-
-    const expPerLevel = 1000;
-    const currentLevelStart = user.data.level * expPerLevel;
-    const nextLevelExp = (user.data.level + 1) * expPerLevel; // 1000
+    // Hitung EXP awal untuk level saat ini
+    const currentLevelStart = currentLevel * expPerLevel;
+    // Hitung total EXP yang dibutuhkan untuk mencapai level berikutnya
+    const nextLevelExp = (currentLevel + 1) * expPerLevel;
 
     console.log("next level exp : ", nextLevelExp);
 
-    const expLeft = nextLevelExp - user.data.exp;
-    const progress = ((user.data.exp - currentLevelStart) / expPerLevel) * 100;
+    // Hitung sisa EXP yang dibutuhkan untuk naik level
+    const expLeft = nextLevelExp - currentExp;
+    // Hitung progres dalam persentase untuk level saat ini
+    const progress = ((currentExp - currentLevelStart) / expPerLevel) * 100;
 
     return {
       expLeft,
       nextLevelExp,
-      progressValue: Math.round(progress),
+      progressValue: Math.round(progress), // Bulatkan nilai progres
     };
   } catch (error) {
-    console.log(error);
+    console.log("Error in countExpLeft:", error);
+    // Kembalikan nilai default jika terjadi error
+    return {
+      expLeft: 0,
+      nextLevelExp: 0,
+      progressValue: 0,
+    };
   }
 };

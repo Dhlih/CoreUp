@@ -1,4 +1,6 @@
 "use client";
+
+import ErrorAlert from "./ErrorAlert";
 import { useState } from "react";
 
 export default function ModalDaftar() {
@@ -66,7 +68,7 @@ export default function ModalDaftar() {
     <>
       {showAlert && (
         <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500 ease-in-out opacity-100 animate-fade">
-          <ErrorAlert text="Terjadi kesalahan!" />
+          <ErrorAlert text="An error occured!" />
         </div>
       )}
 
@@ -94,7 +96,7 @@ export default function ModalDaftar() {
             <input
               name="name"
               type="text"
-              placeholder="Username"
+              placeholder="Username (Max 10 characters)"
               value={formData.name}
               onChange={handleChange}
               className="input input-bordered w-full"
@@ -116,7 +118,7 @@ export default function ModalDaftar() {
             <input
               name="password"
               type="password"
-              placeholder="Password"
+              placeholder="Password (Min 8 characters)"
               value={formData.password}
               onChange={handleChange}
               className="input input-bordered w-full"

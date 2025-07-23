@@ -4,17 +4,7 @@ import { getSession } from "./lib/session";
 export async function middleware(request) {
   const session = await getSession();
 
-  const protectedPaths = [
-    "/create-course",
-    "/my-courses",
-    "/my-courses/", // pastikan cocok dengan /my-courses/
-  ];
-
-  const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  if (isProtected && !session) {
+  if (!session) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -22,5 +12,12 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/create-course", "/my-courses/:path*", "/my-courses"],
+  matcher: [
+    "/create-course",
+    "/my-courses/:path*",
+    "/profile",
+    "/discussion",
+    "/create-discussion",
+    "/leaderboard",
+  ],
 };

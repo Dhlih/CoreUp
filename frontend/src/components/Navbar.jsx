@@ -6,7 +6,7 @@ import ModalLogin from "./modal_login";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
 import generateUsername from "@/lib/username";
-import { PiBrainLight } from "react-icons/pi";
+import { timeAgo } from "@/lib/time";
 
 // icons
 import { BiLogOut } from "react-icons/bi";
@@ -17,6 +17,8 @@ import { deleteSession } from "@/lib/session";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { MdOutlineLeaderboard } from "react-icons/md";
+import { PiBrainLight } from "react-icons/pi";
+import { IoChatbubblesOutline } from "react-icons/io5";
 
 export default function Navbar() {
   const [hasMounted, setHasMounted] = useState(false);
@@ -58,7 +60,7 @@ export default function Navbar() {
       // Ambil data profil
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       })
         .then((res) => res.json())
@@ -81,7 +83,7 @@ export default function Navbar() {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
         method: "POST",
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       });
       const isLogout = await deleteSession();
@@ -103,33 +105,43 @@ export default function Navbar() {
 
   return (
     <div className="navbar fixed top-0 left-0 z-50 bg-[#212C31] backdrop-blur-lg shadow-lg md:py-[1rem] py-[0.8rem] ">
-      {/* left side */}
-      <div className="relative w-full md:px-20 px-[1rem] flex items-center justify-between ">
+      <div className="relative w-full md:px-15 px-[1rem] flex items-center justify-between ">
+        {/* left side */}
         <Link href="/" className="flex items-center space-x-[0.8rem]">
-          <PiBrainLight className="text-5xl text-[#4F9CF9]" />
+          <PiBrainLight className="md:text-5xl text-4xl text-[#4F9CF9]" />
           <h2 className="md:text-2xl text-xl font-bold text-white">CoreUp</h2>
         </Link>
+
+        {/* center side */}
+        {user && (
+          <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
+            <Link
+              className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
+              href="/discussion"
+            >
+              Discussion
+            </Link>
+
+            <Link
+              className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
+              href="/leaderboard"
+            >
+              Leaderboard
+            </Link>
+            <Link
+              className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold "
+              href="/my-courses"
+            >
+              My Courses
+            </Link>
+          </ul>
+        )}
 
         {/* right side */}
         {user ? (
           <div className="flex items-center md:space-x-[2.5rem] space-x-[1.5rem] ">
-            <ul className="hidden md:flex space-x-[3rem]  font-medium text-white">
-              <Link
-                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold"
-                href="/leaderboard"
-              >
-                Leaderboard
-              </Link>
-              <Link
-                className="cursor-pointer hover:text-[#60A5FA] hover:font-semibold "
-                href="/my-courses"
-              >
-                My Courses
-              </Link>
-            </ul>
-
             <Link
-              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-3 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
+              className="btn btn-primary text-white md:text-base text-sm  font-medium md:p-6 p-2 rounded-lg bg-[#3B82F6] hover:bg-[#3B82F6]/70 shadow-none "
               href="/create-course"
             >
               Create
@@ -144,11 +156,15 @@ export default function Navbar() {
               {user?.data?.photo ? (
                 <img
                   src={user?.data?.photo}
-                  className="md:w-14 md:h-14 w-12 h-12 rounded-full object-cover border-white/20 "
+                  className="md:w-13 md:h-13 w-11 h-11 rounded-full object-cover border-white/20 "
                   alt=""
+                  style={{ aspectRatio: 1 }}
                 />
               ) : (
-                <div className="md:w-14 md:h-14 w-12 h-12 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                <div
+                  className="md:w-13 md:h-13 w-11 h-11 bg-[#131F24] rounded-full md:text-base text-sm object-cover border border-white/20  flex items-center justify-center"
+                  style={{ aspectRatio: 1 }}
+                >
                   {generateUsername(user?.data?.name)}
                 </div>
               )}
@@ -189,13 +205,19 @@ export default function Navbar() {
                   onClick={handleProfileClick}
                 >
                   {user?.data?.photo ? (
-                    <img
-                      src={user?.data?.photo}
-                      className="w-14 h-14 rounded-full object-cover"
-                      alt=""
-                    />
+                    <Link href="/profile">
+                      <img
+                        src={user?.data?.photo}
+                        className="w-14 h-14 rounded-full object-cover"
+                        alt=""
+                        style={{ aspectRatio: 1 }}
+                      />
+                    </Link>
                   ) : (
-                    <div className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                    <div
+                      className="w-14 h-14 bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center"
+                      style={{ aspectRatio: 1 }}
+                    >
                       {generateUsername(user?.data?.name)}
                     </div>
                   )}
@@ -232,6 +254,13 @@ export default function Navbar() {
               >
                 <MdOutlineLeaderboard className="text-xl" />
                 <span>Leaderboard</span>
+              </Link>
+              <Link
+                href="/discussion"
+                className="cursor-pointer w-full  py-3 px-5 hover:bg-[#0F171B]/70   flex items-center space-x-[1rem]"
+              >
+                <IoChatbubblesOutline className="text-xl" />
+                <span>Discussion</span>
               </Link>
               <button
                 className="cursor-pointer w-full  py-3 px-5  hover:bg-[#0F171B]/70    flex items-center space-x-[1rem]"

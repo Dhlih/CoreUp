@@ -17,7 +17,7 @@ const ModulCard = ({
   const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
-    console.log(courseProgress);
+    console.log("course progress : ", courseProgress);
   }, []);
 
   const deleteCourse = async () => {
@@ -28,7 +28,7 @@ const ModulCard = ({
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${id}`,
         {
           headers: {
-            Authorization: session.value,
+            Authorization: session.token,
             "Content-Type": "application/json",
           },
         }
@@ -46,23 +46,20 @@ const ModulCard = ({
       <div className="flex md:flex-row flex-col md:items-center justify-between ">
         <Link
           href={`/my-courses/${title}/`}
-          className="md:max-w-[65%] w-full text-xl font-semibold "
+          className="md:max-w-[65%] w-full text-lg font-semibold "
         >
-          <h3 className="hover:text-white/70">
-            {title.length > 50 ? `${title.slice(0, 65)}...` : title}
+          <h3 className="hover:text-white/70 text-red md:text-xl">
+            {title.length > 65 ? `${title.slice(0, 65)}...` : title}
           </h3>
         </Link>
-        {/*  */}
-        <div className="flex items-center space-x-[2rem] md:text-xl text-lg md:mt-0 mt-[1rem]">
-          <div className="flex items-center space-x-[0.5rem] text-base">
-            <LuBookMinus />
-            <span>{moduleAmount} Module</span>
-          </div>
+        <div className="md:flex hidden items-center space-x-[0.5rem] text-base">
+          <LuBookMinus />
+          <span>{moduleAmount} Module</span>
         </div>
       </div>
 
       {/* bottom side */}
-      <div className="flex md:flex-row flex-col items-center md:justify-between mt-[1.5rem] md:space-x-[2rem]">
+      <div className="flex md:flex-row flex-col items-center md:justify-between md:mt-[1.5rem] mt-[1rem] md:space-x-[2rem]">
         <div className="w-full ">
           <div className="flex items-center justify-between ">
             <span>Progress</span>
@@ -75,22 +72,28 @@ const ModulCard = ({
           ></progress>
         </div>
 
-        <div className=" flex items-center md:justify-start justify-end  md:space-x-[2rem] space-x-[1.5rem] md:mt-0 mt-[1.5rem]">
-          <Link href={`/my-courses/${title}`}>
-            <button
-              className="btn bg-[#3B82F6] md:p-6 p-4 hover:bg-[#3B82F6]/70 text-sm rounded-lg"
-              onClick={() => console.log(id)}
-            >
-              Continue
-            </button>
-          </Link>
+        <div className="md:w-auto w-full flex items-center justify-between md:mt-0 mt-[1.5rem]">
+          <div className="flex md:hidden items-center space-x-[0.5rem] text-base">
+            <LuBookMinus />
+            <span>{moduleAmount}</span>
+          </div>
+          <div className="flex items-center md:space-x-[2rem] space-x-[0.8rem]">
+            <Link href={`/my-courses/${title}`}>
+              <button
+                className="btn bg-[#3B82F6] md:p-6 p-4 hover:bg-[#3B82F6]/70 text-sm rounded-lg"
+                onClick={() => console.log(id)}
+              >
+                Continue
+              </button>
+            </Link>
 
-          <button
-            className="btn bg-[#F43F5E] md:p-6 p-4 hover:bg-[#F43F5E]/70 text-sm rounded-lg"
-            onClick={() => setIsDelete(!isDelete)}
-          >
-            Delete
-          </button>
+            <button
+              className="btn md:p-6 p-4 bg-[#F43F5E] hover:bg-[#F43F5E]/70 text-sm rounded-lg"
+              onClick={() => setIsDelete(!isDelete)}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
 
@@ -101,7 +104,7 @@ const ModulCard = ({
           onConfirm={deleteCourse}
           confirmText={"Delete"}
           description={
-            "Apakah Anda yakin ingin menghapus? Tindakan ini tidak dapat dibatalkan."
+            "Are you sure you want to delete? This action cannot be undone."
           }
         />
       )}

@@ -30,7 +30,6 @@ const Quiz = () => {
   const moduleId = Number(params["module-id"]);
   const router = useRouter();
 
-  // ✅ TIMER
   useEffect(() => {
     if (timeLeft <= 0) return;
 
@@ -67,7 +66,7 @@ const Quiz = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses/`,
         {
-          headers: { Authorization: session.value },
+          headers: { Authorization: session.token },
         }
       );
 
@@ -76,16 +75,8 @@ const Quiz = () => {
         (item) => item.title === courseTitle
       );
 
-      const detailResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/courses/${selectedCourse.id}`,
-        {
-          headers: {
-            Authorization: session.value,
-          },
-        }
-      );
-
-      const moduleList = detailResponse.data.modules;
+      console.log(selectedCourse);
+      const moduleList = selectedCourse.modules;
       const selectedModule = moduleList.find((mod) => mod.id === moduleId);
 
       setModule(selectedModule);
@@ -139,7 +130,7 @@ const Quiz = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: session.value,
+            Authorization: session.token,
           },
           body: JSON.stringify({ answer: currentAnswer }),
         }
@@ -148,10 +139,9 @@ const Quiz = () => {
       const data = await response.json();
       console.log(data.message);
 
-      // ✅ Redirect terakhir pakai useEffect (supaya gak error)
-      if (indexQuestion === quizzes.length - 1) {
-        setShowCompletionPage(true);
-      }
+      // if (indexQuestion === quizzes.length - 1) {
+      //   setShowCompletionPage(true);
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -196,7 +186,7 @@ const Quiz = () => {
         <div className="flex justify-end w-full md:hidden">
           <div
             className={`rounded-full bg-[#4F9CF9] py-2 px-6 flex font-medium  items-center space-x-[0.5rem] mb-[1.5rem]  ${
-              timeLeft <= 30 ? "text-red-500" : "text-white"
+              timeLeft <= 30 ? "text-[#F43F5E]" : "text-white"
             }`}
           >
             <LuClock2 />
@@ -222,7 +212,7 @@ const Quiz = () => {
           {/* TIMER */}
           <div
             className={`rounded-full bg-[#4F9CF9] py-2 px-6 md:flex hidden font-medium  items-center space-x-[0.5rem] mb-[1.5rem]  ${
-              timeLeft < 30 ? "text-red-500" : "text-white"
+              timeLeft < 30 ? "text-[#F43F5E]" : "text-white"
             }`}
           >
             <LuClock2 />

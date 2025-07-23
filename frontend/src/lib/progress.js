@@ -10,7 +10,7 @@ export const getCourseProgress = async () => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
       {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       }
     );
@@ -20,7 +20,7 @@ export const getCourseProgress = async () => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/quiz-user`,
       {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       }
     );
@@ -56,10 +56,6 @@ export const getCourseProgress = async () => {
       });
 
       const percent = total === 0 ? 0 : Math.round((done / total) * 100);
-      // {
-      //   "c1": 80,
-      //   "c2": 45,
-      // }
       progressMap[course.id] = percent;
     });
 

@@ -8,7 +8,7 @@ export const getLeaderboardRank = async () => {
       `${process.env.NEXT_PUBLIC_API_URL}/api/user/all`,
       {
         headers: {
-          Authorization: session.value,
+          Authorization: session.token,
         },
       }
     );
@@ -16,16 +16,7 @@ export const getLeaderboardRank = async () => {
 
     const sortedUsers = result.data.sort((a, b) => b.exp - a.exp);
 
-    const userResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
-      {
-        headers: {
-          Authorization: session.value,
-        },
-      }
-    );
-    const userData = await userResponse.json();
-    const currentUserId = userData.data.id;
+    const currentUserId = session.id;
 
     const userRankIndex = sortedUsers.findIndex(
       (user) => user.id === currentUserId

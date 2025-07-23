@@ -1,3 +1,4 @@
+// components/Profile.jsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -16,64 +17,79 @@ import ErrorAlert from "@/components/ErrorAlert";
 
 import generateUsername from "@/lib/username";
 import { getLeaderboardRank, getRankColor } from "@/lib/rank";
-import { countExpLeft } from "@/lib/exp";
-import { getSession } from "@/lib/session";
+import { countExpLeft } from "@/lib/exp"; // Import fungsi yang sudah dimodifikasi
+import { getSession, updateSession, refreshSession } from "@/lib/session";
 import { getUserRank } from "@/lib/rank";
-import { TbMilitaryRank } from "react-icons/tb";
 
 import Loading from "@/components/Loading";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const [user, setUser] = useState("");
+  const [editedUser, setEditedUser] = useState("");
   const [name, setName] = useState("");
+  const [session, setSession] = useState(null);
+  const [userData, setUserData] = useState(null); // State untuk data user dari API
   const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [fieldAlert, setFieldAlert] = useState(false);
   const [img, setImg] = useState(null);
   const [previewImg, setPreviewImg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [rank, setRank] = useState("");
-  const [exp, setExp] = useState("");
+  const [exp, setExp] = useState(""); // State untuk hasil perhitungan EXP
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fileInputRef = useRef(null);
 
-  const fetchUserData = async () => {
-    const session = await getSession();
+  // Fungsi untuk mengambil data user dari API
+  const fetchUserDataFromAPI = async () => {
+    try {
+      const currentSession = await getSession(); // Ambil sesi terbaru
+      const response = await fetch(
+        `https://coreup-api.up.railway.app/api/user`,
+        {
+          headers: {
+            Authorization: currentSession.token,
+          },
+        }
+      );
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: session.value,
-        },
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data.data); // Set data user dari API ke state
+      } else {
+        console.log("Failed to fetch user data from API:", response.statusText);
       }
-    );
+    } catch (error) {
+      console.log("Error fetching user data:", error);
+    }
+  };
 
-    const user = await response.json();
-    const exp = await countExpLeft();
+  const fetchInitialData = async () => {
+    setLoading(true);
+    const currentSession = await getSession();
+    setSession(currentSession);
 
-    console.log("exp di profile :", exp);
-    const rank = await getLeaderboardRank();
+    // Ambil data user dari API terlebih dahulu
+    await fetchUserDataFromAPI();
 
-    setExp(exp);
-    setUser(user.data);
-    setName(user.data.name);
-    setRank(rank);
+    // Ambil rank leaderboard
+    const userRank = await getLeaderboardRank();
+    setRank(userRank);
+
+    setLoading(false);
   };
 
   const fetchCourseData = async () => {
-    const session = await getSession();
+    const currentSession = await getSession();
 
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
         {
           headers: {
-            Authorization: session.value,
+            Authorization: currentSession.token,
           },
         }
       );
@@ -85,34 +101,77 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchUserData();
+    fetchInitialData();
     fetchCourseData();
-    setLoading(false);
   }, []);
 
+  // Gunakan useEffect terpisah untuk menghitung EXP ketika userData berubah
+  useEffect(() => {
+    if (userData) {
+      // Panggil countExpLeft dengan data terbaru dari userData
+      const expData = countExpLeft(userData.exp, userData.level);
+      setExp(expData);
+    } else if (session) {
+      // Fallback ke data session jika userData belum tersedia (misalnya saat loading awal)
+      const expData = countExpLeft(session.exp, session.level);
+      setExp(expData);
+    }
+  }, [userData, session]); // Dependensi pada userData dan session
+
   const editProfile = async () => {
+    if (!password || !name) {
+      setFieldAlert(true);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("password", password);
-    formData.append("password_confirmation", passwordConfirmation);
+
     if (img) formData.append("photo", img);
 
     try {
-      const session = await getSession();
+      const currentSession = await getSession();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user/update`,
         {
           method: "POST",
           headers: {
-            Authorization: session.value,
+            Authorization: currentSession.token,
           },
           body: formData,
         }
       );
 
       if (response.ok) {
+        const data = await response.json();
         setIsSuccess(true);
-        fetchUserData();
+        setEditedUser(data.data);
+
+        try {
+          const updatedSessionData = {
+            name: data.data.name || currentSession.name,
+            photo: data.data.photo || currentSession.photo,
+          };
+
+          await updateSession(updatedSessionData);
+
+          // Setelah update berhasil, ambil ulang data user dari API untuk memastikan tampilan terbaru
+          await fetchUserDataFromAPI();
+        } catch (sessionError) {
+          console.log("Error updating session:", sessionError);
+
+          try {
+            await refreshSession();
+            await fetchUserDataFromAPI(); // Ambil ulang data setelah refresh sesi
+          } catch (refreshError) {
+            console.log("Error refreshing session:", refreshError);
+            window.location.reload();
+          }
+        }
+      } else {
+        setIsSuccess(false);
+        console.log("Failed to update profile:", response.statusText);
       }
     } catch (error) {
       console.log(error);
@@ -122,6 +181,12 @@ const Profile = () => {
     setIsEdit(false);
     setShowAlert(true);
     setTimeout(() => setShowAlert(false), 1000);
+
+    // Reset form
+    setName("");
+    setPassword("");
+    setImg(null);
+    setPreviewImg("");
   };
 
   const handleUploadFile = (e) => {
@@ -132,7 +197,84 @@ const Profile = () => {
     }
   };
 
-  if (loading) return <Loading />;
+  // Set initial values ketika edit mode dibuka
+  const handleEditClick = () => {
+    setName(userData?.name || session?.name || "");
+    setIsEdit(true);
+  };
+
+  const ProfileSkeleton = () => {
+    return (
+      <div className="w-full min-h-screen animate-pulse">
+        <div className="py-[4rem] bg-[#131F24] md:px-30 px-[1.5rem] flex flex-col space-y-[2rem]">
+          {/* Header Section */}
+          <div className="h-8 bg-[#0F171B] rounded-lg w-48 mb-6"></div>
+
+          {/* Profile Info Section */}
+          <div className="bg-[#0F171B] p-6 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-[1.5rem]">
+                <div className="w-16 h-16 rounded-full bg-[#131F24]"></div>
+                <div>
+                  <div className="h-6 bg-[#131F24] rounded w-32 mb-2"></div>
+                  <div className="h-4 bg-[#131F24] rounded w-48"></div>
+                </div>
+              </div>
+              <div className="h-8 w-20 bg-[#131F24] rounded-md"></div>
+            </div>
+
+            <div className="w-full mt-[1rem]">
+              <div className="flex items-center justify-between">
+                <div className="h-4 bg-[#131F24] rounded w-24"></div>
+                <div className="h-4 bg-[#131F24] rounded w-32"></div>
+              </div>
+              <div className="progress w-full h-2 bg-[#131F24] rounded-full mt-2"></div>
+            </div>
+          </div>
+
+          {/* Statistics Section */}
+          <div>
+            <div className="h-7 bg-[#0F171B] rounded-lg w-40 my-[2rem]"></div>
+            <div className="grid md:grid-cols-4 grid-cols-2 gap-[2rem] max-w-[500px] md:max-w-none">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full"
+                >
+                  <div className="h-5 bg-[#131F24] rounded w-20"></div>
+                  <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
+                    <div className="h-8 w-8 bg-[#131F24] rounded-full"></div>
+                    <div className="h-8 bg-[#131F24] rounded w-16"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* My Courses Section */}
+          <div>
+            <div className="flex items-center justify-between my-[1.5rem]">
+              <div className="h-7 bg-[#0F171B] rounded-lg w-40"></div>
+              <div className="h-6 bg-[#131F24] rounded w-24"></div>
+            </div>
+            <div className="flex flex-col space-y-[1.5rem]">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-[#0F171B] px-6 py-4 rounded-xl flex items-center space-x-[1.5rem]"
+                >
+                  <div className="bg-[#131F24] p-4 rounded-lg h-12 w-12"></div>
+                  <div className="h-6 bg-[#131F24] rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  if (loading) return <ProfileSkeleton />;
 
   return (
     <div className="w-full relative min-h-screen">
@@ -147,24 +289,34 @@ const Profile = () => {
       )}
 
       {isEdit && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-[1.2rem]">
           <div className="bg-[#212C31] p-6 rounded-xl w-full max-w-sm mx-4 shadow-lg relative">
             <div className="flex justify-end">
               <IoCloseOutline
                 className="text-2xl cursor-pointer"
-                onClick={() => setIsEdit(false)}
+                onClick={() => {
+                  setIsEdit(false);
+                  setPreviewImg("");
+                  setImg(null);
+                  setName("");
+                  setPassword("");
+                }}
               />
             </div>
             <div className="flex justify-center relative">
-              {previewImg || user.photo ? (
+              {previewImg || userData?.photo || session?.photo ? (
                 <img
-                  src={previewImg || user.photo}
+                  src={previewImg || userData?.photo || session?.photo}
                   className="w-18 h-18 rounded-full object-cover border-white/20"
                   alt=""
+                  style={{ aspectRatio: 1 }}
                 />
               ) : (
-                <div className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
-                  {generateUsername(user.name)}
+                <div
+                  className="w-18 h-18 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center"
+                  style={{ aspectRatio: 1 }}
+                >
+                  {generateUsername(userData?.name || session?.name)}
                 </div>
               )}
               <input
@@ -175,7 +327,7 @@ const Profile = () => {
                 className="hidden"
               />
               <div
-                className="absolute top-10 right-26 bg-[#3B82F6] p-2 rounded-full text-sm cursor-pointer"
+                className="absolute top-10 md:right-30 right-22 bg-[#3B82F6] p-2 rounded-full text-sm cursor-pointer"
                 onClick={() => fileInputRef.current.click()}
               >
                 <MdOutlineModeEdit />
@@ -196,22 +348,24 @@ const Profile = () => {
                 type="text"
                 className="w-full bg-[#131F24] rounded-lg p-2 px-4"
                 disabled={true}
-                value={user?.email}
+                value={userData?.email || session?.email}
               />
 
               <span>Password :</span>
               <input
-                type="text"
+                type="password"
                 className="w-full bg-[#131F24] rounded-lg py-2 px-4"
                 onChange={(evt) => setPassword(evt.target.value)}
+                placeholder="Your password or new password"
+                value={password}
               />
+              <p className="text-[#F43F5E] text-xs mt-1">
+                *A password must be entered to save profile changes.
+              </p>
 
-              <span>Password Confirmation :</span>
-              <input
-                type="text"
-                className="w-full bg-[#131F24] rounded-lg py-2 px-4"
-                onChange={(evt) => setPasswordConfirmation(evt.target.value)}
-              />
+              {fieldAlert && (
+                <p className="text-[#F43F5E] text-sm">*Fill all the field</p>
+              )}
 
               <button
                 className="bg-[#3B82F6] hover:bg-[#3B82F6]/70 mt-[1.5rem] rounded-lg p-2 font-semibold cursor-pointer"
@@ -225,30 +379,38 @@ const Profile = () => {
       )}
 
       <div className="py-[4rem] bg-[#131F24] md:px-30 px-[1.5rem] flex flex-col space-y-[2rem]">
-        <h1 className="font-bold md:text-4xl text-3xl">My Profile</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">My Profile</h1>
 
         <div className="bg-[#0F171B] p-6 rounded-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-[1.5rem]">
-              {user.photo ? (
+              {userData?.photo || session?.photo ? (
                 <img
-                  src={user.photo}
+                  src={userData?.photo || session?.photo}
                   className="w-16 h-16 rounded-full object-cover"
                   alt=""
+                  style={{ aspectRatio: 1 }}
                 />
               ) : (
-                <div className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center">
-                  {generateUsername(user.name)}
+                <div
+                  className="w-16 h-16 bg-[#131F24] rounded-full object-cover border border-white/20 flex items-center justify-center"
+                  style={{ aspectRatio: 1 }}
+                >
+                  {generateUsername(userData?.name || session?.name)}
                 </div>
               )}
               <div>
-                <h3 className="font-semibold text-xl">{user.name}</h3>
-                <p className="opacity-80">{user.email}</p>
+                <h3 className="font-semibold text-xl">
+                  {userData?.name || session?.name}
+                </h3>
+                <p className="opacity-80">
+                  {userData?.email || session?.email}
+                </p>
               </div>
             </div>
             <button
               className="md:py-2 py-[6px] md:px-6 px-2 md:rounded-lg rounded-md bg-[#4F9CF9] hover:bg-[#4F9CF9]/70 font-semibold cursor-pointer flex items-center justify-center md:self-auto self-start mt-[-10px]"
-              onClick={() => setIsEdit(true)}
+              onClick={handleEditClick}
             >
               <span className="hidden md:block">Edit</span>
               <MdOutlineModeEdit className="md:hidden md:text-xl text-sm" />
@@ -257,14 +419,14 @@ const Profile = () => {
 
           <div className="w-full mt-[1rem]">
             <div className="flex items-center justify-between">
-              <span>Level {user?.level}</span>
+              <span>Level {userData?.level || session?.level}</span>
               <span>
-                {user?.exp} / {exp?.nextLevelExp} EXP
+                {userData?.exp || session?.exp} / {exp?.nextLevelExp} EXP
               </span>
             </div>
             <progress
               className="progress w-full transition-none"
-              value={exp.progressValue}
+              value={exp?.progressValue || 0}
               max={100}
             ></progress>
           </div>
@@ -276,29 +438,37 @@ const Profile = () => {
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Rank</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl ">
-                <RiFireLine />
-                <span className="font-semibold">{rank.userRank}</span>
+                <RiFireLine className="text-[#F97316]" />
+                <span className="font-semibold">{rank?.userRank}</span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Level</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
-                <FaRegStar />
-                <span className=" font-semibold">{user?.level}</span>
+                <FaRegStar className="text-[#38BDF8]" />
+                <span className=" font-semibold">
+                  {userData?.level || session?.level}
+                </span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Exp</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
-                <AiOutlineThunderbolt />
-                <span className="font-semibold">{user?.exp}</span>
+                <AiOutlineThunderbolt className="text-[#EAB308]" />
+                <span className="font-semibold">
+                  {userData?.exp || session?.exp}
+                </span>
               </div>
             </div>
             <div className="bg-[#0F171B] px-6 py-8 rounded-lg space-y-[1rem] max-w-[250px] w-full">
               <h3>Rank Badge</h3>
               <div className="flex items-center md:space-x-[1rem] space-x-[0.8rem] md:text-3xl text-xl">
-                <GiRank2 className={`${getRankColor(user?.exp)}`} />
-                <span className="font-semibold">{getUserRank(user?.exp)}</span>
+                <GiRank2
+                  className={`${getRankColor(userData?.exp || session?.exp)}`}
+                />
+                <span className="font-semibold">
+                  {getUserRank(userData?.exp || session?.exp)}
+                </span>
               </div>
             </div>
           </div>
@@ -316,17 +486,18 @@ const Profile = () => {
           </div>
           <div className="flex flex-col space-y-[1.5rem]">
             {courses?.slice(0, 4).map((course, index) => (
-              <div
-                className="bg-[#0F171B] px-6 py-4 rounded-xl flex items-center space-x-[1.5rem]"
+              <Link
+                href={`/my-courses/${course.title}`}
+                className="bg-[#0F171B] px-6 py-4 rounded-xl flex items-center space-x-[1.5rem] hover:bg-[#1c2a31] transition"
                 key={index}
               >
                 <div className="bg-[#131F24] p-4 rounded-lg">
                   <IoMdBook className="md:text-3xl text-xl" />
                 </div>
-                <Link href={`/my-courses/${course.title}`}>
-                  <h3 className=" md:text-xl text-base ">{course.title}</h3>
-                </Link>
-              </div>
+                <h3 className=" md:text-lg text-base hover:text-white/70">
+                  {course.title}
+                </h3>
+              </Link>
             ))}
           </div>
         </div>
