@@ -288,13 +288,13 @@ const DiscussionById = () => {
                 style={{ aspectRatio: 1 }}
               >
                 <p className="text-base leading-none">
-                  {generateUsername(session?.name)}
+                  {generateUsername(post?.user.name)}
                 </p>
               </div>
             )}
             <div>
               <div className="flex items-center space-x-[0.8rem]">
-                <h3 className="font-semibold ">{post.user.name}</h3>
+                <h3 className="font-semibold">{post.user.name}</h3>
               </div>
               <p className="opacity-80 text-sm">{timeAgo(post.created_at)}</p>
             </div>
@@ -358,13 +358,14 @@ const DiscussionById = () => {
                 src={session.photo}
                 className="md:w-12 md:h-12 w-10 h-10 rounded-full object-cover"
                 alt="Your avatar"
+                style={{ aspectRatio: 1 }}
               />
             ) : (
               <div
                 className="md:w-12 md:h-12 w-10 h-10  bg-[#131F24] rounded-full border border-white/20 flex items-center justify-center"
                 style={{ aspectRatio: 1 }}
               >
-                <p className="text-base leading-none">
+                <p className="md:text-base text-sm leading-none">
                   {generateUsername(session?.name)}
                 </p>
               </div>
@@ -401,7 +402,7 @@ const DiscussionById = () => {
                       alt={`${comment.user.name}'s avatar`}
                     />
                   ) : (
-                    <div className="md:w-12 md:h-12 w-10 h-10  bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
+                    <div className="md:w-12 md:h-12 w-10 h-10 md:text-base text-sm  bg-[#131F24] rounded-full object-cover border border-white/20  flex items-center justify-center">
                       {generateUsername(comment?.user?.name)}
                     </div>
                   )}
@@ -474,7 +475,7 @@ const DiscussionById = () => {
                   </div>
                 </div>
               ) : (
-                <p className="mt-[1rem] whitespace-pre-wrap md:text-lg">
+                <p className="mt-[1rem] whitespace-pre-wrap md:text-lg ">
                   {comment.comment}
                 </p>
               )}
